@@ -12,6 +12,8 @@ pthread_mutex_t child_mutex;
 pthread_cond_t parent_condition;
 pthread_cond_t child_condition;
 
+int parent_predicate, child_predicate;
+
 void display(char *str) {
     char *tmp;
     for (tmp=str;*tmp;tmp++) {
@@ -29,8 +31,12 @@ void *parent(){
 	for (i=0;i<10;i++)
 	{ 
 		pthread_mutex_lock(&parent_mutex);
-		pthread_cond_wait(&parent_condition,&parent_mutex);
+		while(parent_predicate == 0)
+			pthread_cond_wait(&parent_condition,&parent_mutex);
+		parent_predicate == 0
 		display("ab");
+		
+		child_predicate = 1;
 		pthread_cond_signal(&child_condition);
 		pthread_mutex_unlock(&parent_mutex);
 
@@ -43,8 +49,12 @@ void *child(){
 	for (i=0;i<10;i++)
 	{
 		pthread_mutex_lock(&child_mutex);
-		pthread_cond_wait(&child_condition,&child_mutex);
+		while(child_predicate == 0)
+			pthread_cond_wait(&child_condition,&child_mutex);
+		child_predicate = 0;
 		display("cd\n");
+		
+		parent_predicate = 1;
 		pthread_cond_signal(&parent_condition);
 		pthread_mutex_unlock(&child_mutex);
 
@@ -53,6 +63,9 @@ void *child(){
 }
 
 int main() {
+	parent_predicate = 1;
+	child_predicate = 0;
+	
     pthread_t parent_id;
 	pthread_t child_id;
 	pthread_attr_t attr;
@@ -66,17 +79,9 @@ int main() {
 	pthread_cond_init(&child_condition, NULL);
 	
 	
-	
-	
-	
-	pthread_mutex_lock(&parent_mutex);
 	pthread_create(&parent_id, &attr, parent, NULL);
-	pthread_cond_signal(&parent_condition);
-	pthread_mutex_unlock(&parent_mutex);
-
 	pthread_create(&child_id, &attr, child, NULL);
-	
-	
+		
 	pthread_join(parent_id, NULL);
 	pthread_join(child_id, NULL);
 	
