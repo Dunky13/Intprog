@@ -22,7 +22,7 @@ int main() {
 	semop(semaphore,&up, 1);
     if (fork()) {
         for (i=0;i<10;i++){ 
-			if(semop(semaphore,&down, 1) != 0){ /* SEMOP Was succesful*/
+			if(semop(semaphore,&down, 1) >= 0){ /* SEMOP Was succesful*/
 				display("Hello world\n");
 				semop(semaphore,&up, 1);
 			}
@@ -32,7 +32,7 @@ int main() {
     }
     else {
         for (i=0;i<10;i++){
-			if(semop(semaphore,&down, 1) != 0){ /* SEMOP Was succesful*/
+			if(semop(semaphore,&down, 1) >= 0){ /* SEMOP Was succesful*/
 				display("Bonjour monde\n");
 				semop(semaphore,&up, 1);
 			}
