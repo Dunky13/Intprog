@@ -39,7 +39,7 @@ int main() {
 			perror("Locking removing semaphore");
     }
     else
-		{
+	{
         for (i=0;i<10;i++)
 		{
 			if(semop(semaphore,&down, 1) >= 0)
