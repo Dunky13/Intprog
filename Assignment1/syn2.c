@@ -22,7 +22,7 @@ int main() {
 	
 	if(semaphore < 0) perror("Could not initialize semaphore");
 	
-	if(semop(semaphore,&up, 1) < 0) perror("Locking initial semaphore failed");
+	if(semop(semaphore,&parent_up, 1) < 0) perror("Locking initial semaphore failed");
     if (fork()) 
 	{
         for (i=0;i<10;i++)
