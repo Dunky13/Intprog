@@ -33,7 +33,8 @@ void *child(){
 		pthread_mutex_lock(&mutex);
 		display("Bonjour monde\n");
 		pthread_mutex_unlock(&mutex);
-	}		
+	}
+	return 0;
 }
 
 int main() {
