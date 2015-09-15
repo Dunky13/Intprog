@@ -36,11 +36,9 @@ int main() {
 				perror("Locking semaphore failed");
 		}
         wait(NULL);
-		if(semctl(semaphore, 0, IPC_RMID) < 0)
+		if(semctl(semaphore, 1, IPC_RMID) < 0)
 			perror("Removing parent semaphore");
 		
-		if(semctl(semaphore, 1, IPC_RMID) < 0)
-			perror("Removing child semaphore");
     }
     else 
 	{
