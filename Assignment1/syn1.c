@@ -36,7 +36,7 @@ int main() {
 		}
         wait(NULL);
 		if(semctl(semaphore, 0, IPC_RMID) < 0)
-			perror("Locking removing semaphore");
+			perror("Removing semaphore");
     }
     else
 	{
