@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 
-#include <sys/ipc.h>
-#include <sys/sem.h>
 #include <pthread.h>
 
 pthread_mutex_t mutex;
@@ -18,6 +17,7 @@ void display(char *str) {
 }
 
 void parent(){
+	int i;
 	for (i=0;i<10;i++)
 	{ 
 		pthread_mutex_lock(&mutex);
@@ -27,6 +27,7 @@ void parent(){
 }
 
 void *child(){
+	int i;
 	for (i=0;i<10;i++)
 	{
 		pthread_mutex_lock(&mutex);
@@ -36,15 +37,15 @@ void *child(){
 }
 
 int main() {
-    int i;
     pthread_t id;
 	pthread_attr_t attr;
-	pthread_attr_init(&attr);
+	pthread_mutexattr_t mut_attr;
 
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init(&attr);
-	pthread_mutex_init(&mutex, &attr);
-	pthread_create(&id, &attr, func, NULL);
+	pthread_attr_init(&attr);
+	pthread_mutexattr_init(&mut_attr);
+	pthread_mutex_init(&mutex, &mut_attr);
+
+	pthread_create(&id, &attr, child, NULL);
 	parent();
 	
 	pthread_join(id, NULL);
