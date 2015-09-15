@@ -33,7 +33,7 @@ void *parent(){
 		pthread_mutex_lock(&parent_mutex);
 		while(parent_predicate == 0)
 			pthread_cond_wait(&parent_condition,&parent_mutex);
-		parent_predicate == 0
+		parent_predicate == 0;
 		display("ab");
 		
 		child_predicate = 1;
