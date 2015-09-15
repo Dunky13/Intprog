@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+
+#include <sys/ipc.h>
+#include <sys/sem.h>
 void display(char *str) {
     char *tmp;
     for (tmp=str;*tmp;tmp++) {
