@@ -16,7 +16,7 @@ void display(char *str) {
     }
 }
 
-void parent(){
+void *parent(){
 	int i;
 	for (i=0;i<10;i++)
 	{ 
@@ -24,6 +24,7 @@ void parent(){
 		display("Hello world\n");
 		pthread_mutex_unlock(&mutex);
 	}
+	return 0;
 }
 
 void *child(){
@@ -38,7 +39,8 @@ void *child(){
 }
 
 int main() {
-    pthread_t id;
+    pthread_t parent_id;
+	pthread_t child_id;
 	pthread_attr_t attr;
 	pthread_mutexattr_t mut_attr;
 
@@ -46,10 +48,12 @@ int main() {
 	pthread_mutexattr_init(&mut_attr);
 	pthread_mutex_init(&mutex, &mut_attr);
 
-	pthread_create(&id, &attr, child, NULL);
-	parent();
+	pthread_create(&parent_id, &attr, parent, NULL);
+	pthread_create(&child_id, &attr, child, NULL);
+	//parent();
 	
-	pthread_join(id, NULL);
+	pthread_join(parent_id, NULL);
+	pthread_join(child_id, NULL);
 	pthread_mutex_destroy(&mutex);
 	
 	
