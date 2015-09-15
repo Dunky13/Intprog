@@ -12,7 +12,6 @@ pthread_mutex_t child_mutex;
 pthread_cond_t parent_condition;
 pthread_cond_t child_condition;
 
-int parent_predicate, child_predicate;
 struct mutextCond{
 	pthread_mutex_t *mutex;
 	pthread_cond_t *condition;
@@ -79,15 +78,17 @@ int main() {
 	pthread_cond_init(&parent_condition, NULL);
 	pthread_cond_init(&child_condition, NULL);
 	
+	int parent_predicate = 1;
 	struct mutextCond parentCombo;
 	parentCombo.mutex = &parent_mutex;
 	parentCombo.condition = &parent_condition;
-	parentCombo.predicate = 1;
+	parentCombo.predicate = &parent_predicate;
 	
+	int child_predicate = 0;
 	struct mutextCond childCombo;
 	childCombo.mutex = &child_mutex;
 	childCombo.condition = &child_condition;
-	childCombo.predicate = 0;
+	childCombo.predicate = &child_predicate;
 	 
 	struct threadArguments parentArgs;
 	parentArgs.comb1 = &parentCombo;
