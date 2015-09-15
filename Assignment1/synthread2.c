@@ -46,7 +46,7 @@ void threadSignal(struct mutextCond *args)
 {
     if(pthread_mutex_lock(args->mutex))
 		perror("Error with locking mutex:");
-    &((*args).predicate) = 1;
+    *(args.predicate) = 1;
     pthread_cond_signal(args->condition);
     if(pthread_mutex_unlock(args->mutex))
 		perror("Error with unlocking mutex:");
