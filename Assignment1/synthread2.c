@@ -66,12 +66,15 @@ int main() {
 	pthread_cond_init(&child_condition, NULL);
 	
 	
-	pthread_create(&parent_id, &attr, parent, NULL);
-	pthread_create(&child_id, &attr, child, NULL);
+	
+	
 	
 	pthread_mutex_lock(&parent_mutex);
+	pthread_create(&parent_id, &attr, parent, NULL);
 	pthread_cond_signal(&parent_condition);
 	pthread_mutex_unlock(&parent_mutex);
+
+	pthread_create(&child_id, &attr, child, NULL);
 	
 	
 	pthread_join(parent_id, NULL);
