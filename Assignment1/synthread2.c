@@ -22,7 +22,7 @@ struct threadArguments{
 	struct mutextCond *comb1;
 	struct mutextCond *comb2;
 	char *string;
-}
+};
 
 void display(char *str) {
     char *tmp;
@@ -82,13 +82,13 @@ int main() {
 	struct mutextCond parentCombo;
 	parentCombo.mutex = &parent_mutex;
 	parentCombo.condition = &parent_condition;
-	parentCombo->predicate = 1;
+	parentCombo.predicate = 1;
 	
 	struct mutextCond childCombo;
 	childCombo.mutex = &child_mutex;
 	childCombo.condition = &child_condition;
-	childCombo->predicate = 0;
-	
+	childCombo.predicate = 0;
+	 
 	struct threadArguments parentArgs;
 	parentArgs.comb1 = &parentCombo;
 	parentArgs.comb2 = &childCombo;
