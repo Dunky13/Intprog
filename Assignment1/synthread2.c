@@ -20,6 +20,7 @@ void display(char *str) {
 }
 
 void *parent(){
+	int i;
 	for (i=0;i<10;i++)
 	{ 
 		pthread_cond_wait(&parent_condition,&mutex);
@@ -30,6 +31,7 @@ void *parent(){
 }
 
 void *child(){
+	int i;
 	for (i=0;i<10;i++)
 	{
 		pthread_cond_wait(&child_condition,&mutex);
