@@ -35,9 +35,9 @@ void threadWait(struct mutextCond *args)
 {
     if(pthread_mutex_lock(args->mutex))
 		perror("Error with locking mutex:");
-    while(args->predicate==0)
+    while(args->predicate == 0)
       pthread_cond_wait(args->condition,args->mutex);
-    (*args).predicate = 0;
+    *(args->predicate) = 0;
     if(pthread_mutex_unlock(args->mutex))
 		perror("Error with unlocking mutex:");
 }
