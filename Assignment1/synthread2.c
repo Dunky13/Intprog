@@ -23,9 +23,12 @@ void *parent(){
 	int i;
 	for (i=0;i<10;i++)
 	{ 
+		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&parent_condition,&mutex);
 		display("ab");
 		pthread_cond_signal(&child_condition);
+		pthread_mutex_unlock(&mutex);
+
 	}
 	return 0;
 }
@@ -34,9 +37,12 @@ void *child(){
 	int i;
 	for (i=0;i<10;i++)
 	{
+		pthread_mutex_lock(&mutex);
 		pthread_cond_wait(&child_condition,&mutex);
 		display("cd\n");
 		pthread_cond_signal(&parent_condition);
+		pthread_mutex_unlock(&mutex);
+
 	}
 	return 0;
 }
@@ -58,7 +64,9 @@ int main() {
 	pthread_create(&parent_id, &attr, parent, NULL);
 	pthread_create(&child_id, &attr, child, NULL);
 	
+	pthread_mutex_lock(&mutex);
 	pthread_cond_signal(&parent_condition);
+	pthread_mutex_unlock(&mutex);
 	
 	pthread_join(parent_id, NULL);
 	pthread_join(child_id, NULL);
