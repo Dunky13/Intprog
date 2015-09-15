@@ -16,7 +16,7 @@ int parent_predicate, child_predicate;
 struct mutextCond{
 	pthread_mutex_t *mutex;
 	pthread_cond_t *condition;
-	int predicate;
+	int *predicate;
 };
 struct threadArguments{
 	struct mutextCond *comb1;
@@ -34,22 +34,22 @@ void display(char *str) {
 
 void threadWait(struct mutextCond *args)
 {
-    if(pthread_mutex_lock(args.mutex))
+    if(pthread_mutex_lock(args->mutex))
 		perror("Error with locking mutex:");
-    while(args.predicate==0)
-      pthread_cond_wait(args.condition,args.mutex);
-    args.predicate = 0;
-    if(pthread_mutex_unlock(args.mutex))
+    while(args->predicate==0)
+      pthread_cond_wait(args->condition,args->mutex);
+    args->predicate = 0;
+    if(pthread_mutex_unlock(args->mutex))
 		perror("Error with unlocking mutex:");
 }
 
 void threadSignal(struct mutextCond *args)
 {
-    if(pthread_mutex_lock(args.mutex))
+    if(pthread_mutex_lock(args->mutex))
 		perror("Error with locking mutex:");
-    args.predicate = 1;
-    pthread_cond_signal(args.condition);
-    if(pthread_mutex_unlock(args.mutex))
+    args->predicate = 1;
+    pthread_cond_signal(args->condition);
+    if(pthread_mutex_unlock(args->mutex))
 		perror("Error with unlocking mutex:");
 }
 
@@ -58,9 +58,9 @@ void *printFunc(void *parm){
 	struct threadArguments *args = (struct threadArguments *)parm;
 	for (i=0;i<10;i++)
 	{ 
-		threadWait(&args->comb1);	
+		threadWait(args->comb1);	
 		display(args->string);
-		threadSignal(&args->comb2);
+		threadSignal(args->comb2);
 	}
 	return 0;
 }
@@ -82,12 +82,12 @@ int main() {
 	struct mutextCond parentCombo;
 	parentCombo.mutex = &parent_mutex;
 	parentCombo.condition = &parent_condition;
-	parentCombo.predicate = 1;
+	parentCombo->predicate = 1;
 	
 	struct mutextCond childCombo;
 	childCombo.mutex = &child_mutex;
 	childCombo.condition = &child_condition;
-	childCombo.predicate = 0;
+	childCombo->predicate = 0;
 	
 	struct threadArguments parentArgs;
 	parentArgs.comb1 = &parentCombo;
