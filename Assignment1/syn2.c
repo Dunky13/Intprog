@@ -29,7 +29,7 @@ int main() {
 		{ 
 			if(semop(semaphore,&parent_down, 1) >= 0)
 			{ /* SEMOP Was succesful*/
-				display("ab\n");
+				display("ab");
 				if(semop(semaphore,&child_up, 1) < 0)
 					perror("Unlocking semaphore failed");
 			} else 
