@@ -75,7 +75,9 @@ int main() {
 	
 	pthread_join(parent_id, NULL);
 	pthread_join(child_id, NULL);
-	pthread_mutex_destroy(&mutex);
+	
+	pthread_mutex_destroy(&parent_mutex);
+	pthread_mutex_destroy(&child_mutex);
 	
     return 0;
 }
