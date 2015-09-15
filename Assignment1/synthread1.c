@@ -50,7 +50,6 @@ int main() {
 
 	pthread_create(&parent_id, &attr, parent, NULL);
 	pthread_create(&child_id, &attr, child, NULL);
-	//parent();
 	
 	pthread_join(parent_id, NULL);
 	pthread_join(child_id, NULL);
