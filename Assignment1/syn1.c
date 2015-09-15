@@ -19,7 +19,7 @@ int main() {
 	struct sembuf down	= {0, -1, 0};
 	int semaphore = semget(IPC_PRIVATE, 1, 0600);
 	
-	
+	semop(semaphore,&up, 1);
     if (fork()) {
         for (i=0;i<10;i++){ 
 			if(semop(semaphore,&down, 1) != 0){ /* SEMOP Was succesful*/
