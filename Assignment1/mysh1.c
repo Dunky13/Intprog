@@ -10,10 +10,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <sys/wait.h>
 
 #define BUF_SIZE 	100
 
-void *trim(char *in, char *out){
+/* Removes all white space at the beginning and end of the input */
+void trim(char *in, char *out){
 	char *end;
 
 	while(isspace(*in) != '\0'){
@@ -33,52 +36,65 @@ void *trim(char *in, char *out){
 	strncpy(out, in, strlen(in)+1);
 }
 
-void execute(char *command){
-	pid_t pid;
+/* Function to execute requested program at child */
+void child_code(char *command){
+	execlp(command, command, NULL);
+
+	perror("exec"); /*will not be reached in case of a success, as exec replaces the complete program*/
+	exit(-1);
+}
+
+/* Function to wait for output of child at parent */
+void parent_code(){
 	int status;
 
-	pid = fork();
+	wait(&status);
 
-	if(pid < 0){
-		perror("fork");
+	if(status < 0){
+		perror("wait");
 		exit(-1);
 	}
-	else if(pid == 0){	/*child*/
-		execlp(command, command, NULL);
-		perror("exec"); /*will not be reached in case of a success, as exec replaces the complete program*/
-		exit(-1);
-	}
-	else{
-		wait(&status);
+}
 
-		if(status < 0){
-			perror("wait");
+/* Execute the given command. Does not support arguments */
+void execute(char *input){
+	pid_t pid;
+	char command[BUF_SIZE];
+
+	trim(input, command);
+
+	if(strcmp("exit", command) == 0){
+		printf("exiting...\n");
+		exit(0);
+	}
+	else if(strcmp("", command) != 0){
+		pid = fork();
+
+		if(pid < 0){
+			perror("fork");
 			exit(-1);
+		}
+		else if(pid == 0){	/*child*/
+			child_code(command);
+		}
+		else{				/* parent */
+			parent_code();			
 		}
 	}
 }
  
-main(int argc, char **argv){
-    
+int main(int argc, char **argv){    
     if(argc != 1){
-    	fprintf(stderr, "Usage: command\n%d parameters given", argc);
+    	fprintf(stderr, "Please start without parameters");
     	exit(-1);
     }
 
 	char input[BUF_SIZE];
-	char command[BUF_SIZE];
 
 	printf("\nCommand: ");
 
 	while(fgets(input, sizeof(input), stdin)){
-		trim(input, command);
-
-		if(strcmp("exit", command) == 0){
-			printf("exiting...\n");
-			exit(0);
-		}
-
-		execute(command);
+		execute(input);
 		printf("\nCommand: ");		
 	}
 

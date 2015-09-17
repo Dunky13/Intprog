@@ -10,12 +10,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <sys/wait.h>
 
 #define BUF_SIZE 	100
 
+/* Function header */
 void execute(int *fd, char **commands, int index_command);
 
-void *trim(char *in, char *out){
+/* Removes all white space at the beginning and end of the input */
+void trim(char *in, char *out){
 	char *end;
 
 	while(isspace(*in) != '\0'){
@@ -35,7 +39,7 @@ void *trim(char *in, char *out){
 	strncpy(out, in, strlen(in)+1);
 }
 
-/* splits a sstring on the delimiter and puts each resulting element in the array */
+/* Splits a string on the delimiter and puts each resulting element in the array */
 void str_to_array(char *str, const char *delimiter, char **array){
 	char *token;
 	int i = 0;
@@ -51,7 +55,7 @@ void str_to_array(char *str, const char *delimiter, char **array){
 	array[i+1] = NULL;
 }
 
-/* executed at child */
+/* Function to execute requested program at child */
 void child_code(int *fd, char *command, int change_stdout, int change_stdin){
 	char *parameters[BUF_SIZE/2+2]; //the parameters could consist of single characters seperated by a space. Add 1 for rounding and 1 for the null character to the array 
 	const char delimiter[2] = " ";
@@ -78,11 +82,14 @@ void child_code(int *fd, char *command, int change_stdout, int change_stdin){
 	exit(-1);
 }
 
-/* executed at parent */
+/* Function to wait for output of child at parent */
 void parent_code(int *fd, char **commands, int index_command){
 	int status;
-	pid_t pid;
-	char command[BUF_SIZE];
+
+	if(commands[index_command+1] == NULL){
+		close(fd[0]);
+		close(fd[1]);
+	}
 
 	wait(&status);
 
@@ -92,39 +99,16 @@ void parent_code(int *fd, char **commands, int index_command){
 	}
 
 	if(commands[index_command+1] != NULL){
-		pid = fork();
-
-		if(pid < 0){
-			perror("fork");
-			exit(-1);
-		}
-		else if(pid == 0){	/*child*/
-			trim(commands[1], command);
-
-			child_code(fd, command, 0, 1);
-		}
-		else{				/* parent */
-			close(fd[0]);
-			close(fd[1]);
-
-			wait(&status);
-
-			if(status < 0){
-				perror("wait");
-				exit(-1);
-			}
-		}
-	}			
-
-	/*if(commands[index_command+1] != NULL){
 		execute(fd, commands, index_command+1);
-	}*/
+	}			
 }
 
+/* Execute the given commands in the array, starting by command
+ on the position index_command. Output is piped to next command,
+ if any. Currently, index_command can only be 0 or 1 */
 void execute(int *fd, char **commands, int index_command){
 	pid_t pid;
 	char command[BUF_SIZE];
-	int use_pipe;
 
 	trim(commands[index_command], command);
 
@@ -140,8 +124,7 @@ void execute(int *fd, char **commands, int index_command){
 			exit(-1);
 		}
 		else if(pid == 0){	/*child*/
-			use_pipe = commands[index_command+1] != NULL;			
-			child_code(fd, command, use_pipe, index_command > 0);
+			child_code(fd, command, commands[index_command+1] != NULL, index_command > 0);
 		}
 		else{				/* parent */
 			parent_code(fd, commands, index_command);			
@@ -149,9 +132,9 @@ void execute(int *fd, char **commands, int index_command){
 	}
 }
  
-main(int argc, char **argv){    
+int main(int argc, char **argv){    
     if(argc != 1){
-    	fprintf(stderr, "Usage: command\n%d parameters given", argc);
+    	fprintf(stderr, "Please start without parameters");
     	exit(-1);
     }
 
