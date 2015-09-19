@@ -2,7 +2,7 @@ CC 	= gcc
 CFLAGS 	= -g -Wall 
 JC = javac
 
-all: mysh1 mysh2 mysh3 syn1 syn2 synthread1 synthread2 Syn1.class Syn2.class
+build: mysh1 mysh2 mysh3 syn1 syn2 synthread1 synthread2 Syn1.class Syn2.class
 
 synthread1: synthread1.o
 	$(CC) -o synthread1 synthread1.o -lpthread
