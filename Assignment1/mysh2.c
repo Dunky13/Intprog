@@ -14,6 +14,7 @@
 #include <sys/wait.h>
 
 #define BUF_SIZE 	100
+#define PROMPT_TEXT "$ "
 
 /* Removes all white space at the beginning and end of the input */
 void trim(char *in, char *out){
@@ -111,11 +112,11 @@ int main(int argc, char **argv){
 
 	char input[BUF_SIZE];
 
-	printf("\nCommand: ");
+	printf(PROMPT_TEXT);
 
 	while(fgets(input, sizeof(input), stdin)){
 		execute(input);
-		printf("\nCommand: ");		
+		printf(PROMPT_TEXT);		
 	}
 
     return 0;

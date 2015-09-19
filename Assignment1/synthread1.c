@@ -8,18 +8,17 @@
 
 pthread_mutex_t mutex;
 
-void display(char *str) {
-    char *tmp;
-    for (tmp=str;*tmp;tmp++) {
-        write(1,tmp,1);
-        usleep(100);
-    }
+void display(char *str){
+	char *tmp;
+	for (tmp=str;*tmp;tmp++){
+		write(1,tmp,1);
+		usleep(100);
+	}
 }
 
 void *parent(){
 	int i;
-	for (i=0;i<10;i++)
-	{ 
+	for (i=0;i<10;i++){ 
 		pthread_mutex_lock(&mutex);
 		display("Hello world\n");
 		pthread_mutex_unlock(&mutex);
@@ -29,8 +28,7 @@ void *parent(){
 
 void *child(){
 	int i;
-	for (i=0;i<10;i++)
-	{
+	for (i=0;i<10;i++){
 		pthread_mutex_lock(&mutex);
 		display("Bonjour monde\n");
 		pthread_mutex_unlock(&mutex);
@@ -38,8 +36,8 @@ void *child(){
 	return 0;
 }
 
-int main() {
-    pthread_t parent_id;
+int main(){
+	pthread_t parent_id;
 	pthread_t child_id;
 	pthread_attr_t attr;
 	pthread_mutexattr_t mut_attr;
@@ -55,6 +53,5 @@ int main() {
 	pthread_join(child_id, NULL);
 	pthread_mutex_destroy(&mutex);
 	
-	
-    return 0;
+	return 0;
 }

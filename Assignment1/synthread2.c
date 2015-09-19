@@ -17,56 +17,66 @@ struct mutextCond{
 	pthread_cond_t *condition;
 	int *predicate;
 };
+
 struct threadArguments{
 	struct mutextCond *comb1;
 	struct mutextCond *comb2;
 	char *string;
 };
 
-void display(char *str) {
-    char *tmp;
-    for (tmp=str;*tmp;tmp++) {
-        write(1,tmp,1);
-        usleep(100);
-    }
+void display(char *str){
+	char *tmp;
+	for (tmp=str;*tmp;tmp++){
+		write(1,tmp,1);
+		usleep(100);
+	}
 }
 
-void threadWait(struct mutextCond *args)
-{
-    if(pthread_mutex_lock(args->mutex))
+void threadWait(struct mutextCond *args){
+	if(pthread_mutex_lock(args->mutex)){
 		perror("Error with locking mutex:");
-    while(*args->predicate == 0)
-      pthread_cond_wait(args->condition,args->mutex);
-    *(args->predicate) = 0;
-    if(pthread_mutex_unlock(args->mutex))
+	}
+
+	while(*args->predicate == 0){
+	  pthread_cond_wait(args->condition,args->mutex);
+	}
+
+	*(args->predicate) = 0;
+	
+	if(pthread_mutex_unlock(args->mutex)){
 		perror("Error with unlocking mutex:");
+	}
 }
 
-void threadSignal(struct mutextCond *args)
-{
-    if(pthread_mutex_lock(args->mutex))
+void threadSignal(struct mutextCond *args){
+	if(pthread_mutex_lock(args->mutex)){
 		perror("Error with locking mutex:");
-    *(args->predicate) = 1;
-    pthread_cond_signal(args->condition);
-    if(pthread_mutex_unlock(args->mutex))
+	}
+	
+	*(args->predicate) = 1;
+	pthread_cond_signal(args->condition);
+	
+	if(pthread_mutex_unlock(args->mutex)){
 		perror("Error with unlocking mutex:");
+	}
 }
 
 void *printFunc(void *parm){
 	int i;
 	struct threadArguments *args = (struct threadArguments *)parm;
-	for (i=0;i<10;i++)
-	{ 
+	
+	for (i=0;i<10;i++){ 
 		threadWait(args->comb1);	
 		display(args->string);
 		threadSignal(args->comb2);
 	}
+	
 	return 0;
 }
 
 
-int main() {
-    pthread_t parent_id;
+int main(){
+	pthread_t parent_id;
 	pthread_t child_id;
 	pthread_attr_t attr;
 
@@ -98,9 +108,7 @@ int main() {
 	struct threadArguments childArgs;
 	childArgs.comb1 = &childCombo;
 	childArgs.comb2 = &parentCombo;
-	childArgs.string = "cd\n";
-	
-	
+	childArgs.string = "cd\n";	
 	
 	pthread_create(&parent_id, &attr, printFunc, (void *)&parentArgs);
 	pthread_create(&child_id, &attr, printFunc, (void *)&childArgs);
@@ -111,5 +119,5 @@ int main() {
 	pthread_mutex_destroy(&parent_mutex);
 	pthread_mutex_destroy(&child_mutex);
 	
-    return 0;
+	return 0;
 }
