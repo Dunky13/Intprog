@@ -21,7 +21,7 @@ int main(){
 	int semaphore = semget(IPC_PRIVATE, 1, 0600);
 	
 	if(semaphore < 0){
-		perror("Could not initialize semaphore")
+		perror("Could not initialize semaphore");
 	}
 	
 	if(semop(semaphore,&up, 1) < 0){
