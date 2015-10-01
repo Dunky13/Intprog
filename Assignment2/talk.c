@@ -15,7 +15,7 @@
 void server(int sockfd){
 	int bind_err, listen_err, close_err, accept_desc;
 
-	struct sockaddr_in server_addr, client_addr;
+	struct sockaddr_in server_addr, *client_addr;
 	
 	socklen_t server_addrlen, client_addrlen;
 
@@ -62,7 +62,7 @@ void client(int sockfd, char* loc){
 	resolv = gethostbyname(loc);
 	if(resolv == NULL){
 		printf("Address not found for %s\n", loc);
-		return -1;
+		exit(1);
 	}
 	addr = (struct in_addr*) resolv->h_addr_list[0];
 	
