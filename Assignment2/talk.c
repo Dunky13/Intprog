@@ -12,7 +12,7 @@
 
 #define PORT 5555
 
-server(int sockfd){
+int server(int sockfd){
 	int bind_err, listen_err, close_err, accept_desc;
 
 	sockaddr_in server_addr, client_addr;
@@ -52,7 +52,7 @@ server(int sockfd){
 	}
 }
 
-client(int sockfd, char* loc){
+int client(int sockfd, char* loc){
 	struct hostent *resolv;
 	struct in_addr *addr;
 	struct sockaddr_in server_addr;
