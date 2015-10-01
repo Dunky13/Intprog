@@ -15,9 +15,9 @@
 int server(int sockfd){
 	int bind_err, listen_err, close_err, accept_desc;
 
-	sockaddr_in server_addr, client_addr;
+	struct sockaddr_in server_addr, client_addr;
 	
-	socklen_t server_addrlen, client_addrlen;
+	struct socklen_t server_addrlen, client_addrlen;
 
 	
 	server_addr.sin_family = AF_INET;
