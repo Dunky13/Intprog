@@ -15,7 +15,7 @@
 void server(int sockfd){
 	int bind_err, listen_err, close_err, accept_desc;
 
-	struct sockaddr_in server_addr, *client_addr;
+	struct sockaddr_in server_addr, client_addr;
 	
 	socklen_t server_addrlen, client_addrlen;
 
@@ -39,7 +39,7 @@ void server(int sockfd){
 	}
 	
 	client_addrlen = (socklen_t) sizeof(struct sockaddr_in);
-	accept_desc = accept(sockfd, (struct sockaddr *) client_addr, &client_addrlen);
+	accept_desc = accept(sockfd, (struct sockaddr *) &client_addr, &client_addrlen);
 	if(accept_desc < 0){
 		perror("Could not accept from client");
 		exit(1);
