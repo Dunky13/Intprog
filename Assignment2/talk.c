@@ -17,7 +17,7 @@ void server(int sockfd){
 
 	struct sockaddr_in server_addr, client_addr;
 	
-	struct socklen_t server_addrlen, client_addrlen;
+	socklen_t server_addrlen, client_addrlen;
 
 	
 	server_addr.sin_family = AF_INET;
