@@ -12,7 +12,7 @@
 
 #define PORT 5555
 
-int server(int sockfd){
+void server(int sockfd){
 	int bind_err, listen_err, close_err, accept_desc;
 
 	struct sockaddr_in server_addr, client_addr;
@@ -26,8 +26,8 @@ int server(int sockfd){
 	
 	server_addrlen = (socklen_t) sizeof(struct sockaddr_in);
 
-	err = bind(sockfd, (struct sockaddr *) &server_addr, server_addrlen);
-	if(err < 0){
+	bind_err = bind(sockfd, (struct sockaddr *) &server_addr, server_addrlen);
+	if(bind_err < 0){
 		perror("Could not bind to socket");
 		exit(1);
 	}
@@ -52,7 +52,7 @@ int server(int sockfd){
 	}
 }
 
-int client(int sockfd, char* loc){
+void client(int sockfd, char* loc){
 	struct hostent *resolv;
 	struct in_addr *addr;
 	struct sockaddr_in server_addr;
@@ -61,7 +61,7 @@ int client(int sockfd, char* loc){
 	
 	resolv = gethostbyname(loc);
 	if(resolv == NULL){
-		printf("Address not found for %s\n", name);
+		printf("Address not found for %s\n", loc);
 		return -1;
 	}
 	addr = (struct in_addr*) resolv->h_addr_list[0];
