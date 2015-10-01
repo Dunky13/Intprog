@@ -12,8 +12,29 @@
 
 #define PORT 5555
 
+ssize_t writen(int fd, const void *vptr, size_t n)
+{
+	size_t nleft;
+	ssize_t nwritten;
+	const char *ptr;
+	ptr = vptr;
+	nleft = n;
+	while (nleft > 0) {
+		if (((nwritten = write(fd, ptr, nleft)) <= 0 ) {
+			if (errno == EINTR)
+				nwritten = 0; /* and call write() again */
+			else
+				return -1; /* error */
+		}
+		nleft -= nwritten;
+		ptr += nwritten;
+	}
+	return n;
+}
+
+
 void server(int sockfd){
-	int bind_err, listen_err, close_err, accept_desc;
+	int bind_err, listen_err, close_err, clientSockfd;
 
 	struct sockaddr_in server_addr, client_addr;
 	
@@ -39,11 +60,15 @@ void server(int sockfd){
 	}
 	
 	client_addrlen = (socklen_t) sizeof(struct sockaddr_in);
-	accept_desc = accept(sockfd, (struct sockaddr *) &client_addr, &client_addrlen);
-	if(accept_desc < 0){
+	clientSockfd = accept(sockfd, (struct sockaddr *) &client_addr, &client_addrlen);
+	if(clientSockfd < 0){
 		perror("Could not accept from client");
 		exit(1);
 	}
+	
+	
+	readFrom(clientSockfd);
+	writeTo(clientSockfd);
 	
 	close_err = close(sockfd);
 	if(close_err < 0){
