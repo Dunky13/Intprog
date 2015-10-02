@@ -144,6 +144,7 @@ void *writeTo(void *parm){
 	int err;
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
+	initscr();
 	cbreak();
 	while(keepRunning){
 		//readFromCL(message);
