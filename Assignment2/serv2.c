@@ -37,7 +37,7 @@ ssize_t writen(int fd, const void *vptr, size_t n){
 	return n;
 }
 
-void sig_chld(int) {
+void sig_chld(int) { //NOG NIET GOED
 	while(waitpid(0, NULL, WNOHANG) > 0){
 
 	}
