@@ -113,7 +113,7 @@ void *writeTo(void *parm){
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
 		readFromCL(message);
-		
+		display(message);
 		err = writen(*args->sockfd, message, strlen(message));
 		if(err < 0){
 			perror("Error writing message");
@@ -187,7 +187,7 @@ void client(int sockfd, char* loc){
 	pthread_attr_t attr;
 	struct ThreadVariables threadVariables;
 	
-	int serverSockfd, conn_err, close_err;
+	int conn_err, close_err;
 	
 	resolv = gethostbyname(loc);
 	if(resolv == NULL){
