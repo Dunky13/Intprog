@@ -130,7 +130,7 @@ void *readFrom(void *parm){
 		if(err == 0){
 			keepRunning = 0;
 		}
-		display(*message);
+		display(&message[0]);
 		//free(message);
 	}
 	return 0;
