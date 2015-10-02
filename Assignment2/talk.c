@@ -187,7 +187,7 @@ void client(int sockfd, char* loc){
 	pthread_attr_t attr;
 	struct ThreadVariables threadVariables;
 	
-	int serverSockfd, close_err;
+	int serverSockfd, conn_err, close_err;
 	
 	resolv = gethostbyname(loc);
 	if(resolv == NULL){
@@ -199,8 +199,8 @@ void client(int sockfd, char* loc){
 	server_addr.sin_family       = AF_INET;
 	server_addr.sin_port         = htons(PORT);
 	server_addr.sin_addr.s_addr  = inet_addr(inet_ntoa(*addr));
-	serverSockfd = connect(sockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
-	if(serverSockfd < 0){
+	conn_err = connect(serverSockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
+	if(conn_err < 0){
 		perror("Could not connect");
 		exit(1);
 	}
