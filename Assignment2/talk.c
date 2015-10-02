@@ -162,7 +162,7 @@ void server(int sockfd){
 		exit(1);
 	}
 	display("Client connected");
-	printf("%d - %d\n", sockfd, clientSockfd);
+	printf("Server Sock: %d - Client Sock: %d\n", sockfd, clientSockfd);
 	threadVariables.sockfd = &clientSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
@@ -206,7 +206,7 @@ void client(int sockfd, char* loc){
 	}
 	
 	display("Connected to server");
-	printf("%d - %d\n", sockfd, serverSockfd);
+	printf("Server Sock: %d - Client Sock: %d\n", serverSockfd, sockfd);
 	threadVariables.sockfd = &serverSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
