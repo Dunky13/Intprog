@@ -104,6 +104,7 @@ void *readFrom(void *parm){
 		display(message);
 		free(message);
 	}
+	return 0;
 }
 
 void *writeTo(void *parm){
@@ -123,6 +124,7 @@ void *writeTo(void *parm){
 	}
 
 	shutdown(*(args->sockfd), SHUT_WR);
+	return 0;
 }
 
 void server(int sockfd){
