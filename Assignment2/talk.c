@@ -146,7 +146,7 @@ void *writeTo(void *parm){
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
 	initscr();
-	cbreak();
+	//cbreak();
 	while(keepRunning){
 		while((c = getch()) <= 0){}
 		message[0] = (char) c;
