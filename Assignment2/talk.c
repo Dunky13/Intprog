@@ -88,10 +88,11 @@ void readFromCL(char *message){
 
 void *readFrom(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
+	printf("%d - %d\n", *args->sockfd, *(args->sockfd));
 	int err;
 	char *message = NULL;
 	while(keepRunning){
-		err = read(*(args->sockfd), message, MESSAGE_BUFFER);
+		err = read(*args->sockfd, message, MESSAGE_BUFFER);
 		if(err < 0){
 			perror("Could not read");
 			exit(1);
@@ -107,13 +108,14 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
+	printf("%d - %d\n", *args->sockfd, *(args->sockfd));
 	char *message = NULL;
 	int err;
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
 		readFromCL(message);
 		
-		err = writen(*(args->sockfd), message, strlen(message));
+		err = writen(*args->sockfd, message, strlen(message));
 		if(err < 0){
 			perror("Error writing message");
 			exit(1);
@@ -121,7 +123,7 @@ void *writeTo(void *parm){
 		free(message);
 	}
 
-	shutdown(*(args->sockfd), SHUT_WR);
+	shutdown(*args->sockfd, SHUT_WR);
 	return 0;
 }
 
