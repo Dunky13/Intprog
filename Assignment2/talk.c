@@ -164,7 +164,7 @@ void *writeTo(void *parm){
 		//free(message);
 	}
 	endwin();
-	//shutdown(*args->sockfd, SHUT_WR);
+	shutdown(*args->sockfd, SHUT_RDWR);
 	return 0;
 }
 
