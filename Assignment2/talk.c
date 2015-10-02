@@ -148,11 +148,7 @@ void *writeTo(void *parm){
 	initscr();
 	cbreak();
 	while(keepRunning){
-		//readFromCL(message);
 		while((c = getch()) <= 0){}
-		//if(c <= 0){
-		//	continue; 
-		//}
 		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
@@ -168,7 +164,7 @@ void *writeTo(void *parm){
 		//free(message);
 	}
 	endwin();
-	shutdown(*args->sockfd, SHUT_WR);
+	//shutdown(*args->sockfd, SHUT_WR);
 	return 0;
 }
 
