@@ -138,7 +138,7 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	int c;
+	int c = 0;
 	char message[2];
 	int err;
 	signal(SIGINT, sig_chld);
@@ -146,7 +146,7 @@ void *writeTo(void *parm){
 	cbreak();
 	while(keepRunning){
 		//readFromCL(message);
-		c = getch();
+		while((c = getch()) == 0){}
 		//if(c <= 0){
 		//	continue; 
 		//}
