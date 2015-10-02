@@ -17,7 +17,7 @@ static volatile int keepRunning = 1;
 
 struct ThreadVariables{
 	int *sockfd;
-}
+};
 
 void sig_chld(int sig){
 	if(sig == SIGINT){
@@ -27,7 +27,7 @@ void sig_chld(int sig){
 	signal(sig, sig_chld);
 }
 
-char *getline(FILE *f)
+char* readLine(FILE *f)
 {
     size_t size = 0;
     size_t len  = 0;
@@ -79,7 +79,7 @@ void display(char *str){
 void readFromCL(char *message){
 	int i;
 
-	message = getlin(stdin);
+	message = readLine(stdin);
 	
 	if(message == NULL){
 		perror("Could not read message");
@@ -162,7 +162,7 @@ void server(int sockfd){
 	}
 	
 	threadVariables->sockfd = &clientSockfd;
-	
+	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
 	
@@ -180,6 +180,10 @@ void client(int sockfd, char* loc){
 	struct hostent *resolv;
 	struct in_addr *addr;
 	struct sockaddr_in server_addr;
+	
+	pthread_t readThread, writeThread;
+	pthread_attr_t attr;
+	struct ThreadVariables threadVariables;
 	
 	int serverSockfd, close_err;
 	
@@ -200,7 +204,7 @@ void client(int sockfd, char* loc){
 	}
 	
 	threadVariables->sockfd = &serverSockfd;
-	
+	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
 	
