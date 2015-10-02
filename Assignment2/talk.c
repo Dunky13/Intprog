@@ -147,7 +147,7 @@ void *writeTo(void *parm){
 	cbreak();
 	while(keepRunning){
 		//readFromCL(message);
-		while((c = getch()) == 0){}
+		while((c = getch()) <= 0){}
 		//if(c <= 0){
 		//	continue; 
 		//}
