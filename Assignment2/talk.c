@@ -30,14 +30,14 @@ void sig_chld(int sig){
 void empty_buffer(char *buf){
   int i;
 
-  for(i=0;i<BUFFER_SIZE-1;i++){
+  for(i=0;i<MESSAGE_BUFFER-1;i++){
     buf[i] = 0;
   }
 }
 void get_message(char *message){
   int i;
 
-  fgets(message, BUFFER_SIZE-1, stdin);
+  fgets(message, MESSAGE_BUFFER-1, stdin);
 
   if(message == NULL){
     perror("Error reading input:\n");
@@ -45,7 +45,7 @@ void get_message(char *message){
   }
 
   /*remove linefeed*/
-  for(i=0;i<BUFFER_SIZE;i++){
+  for(i=0;i<MESSAGE_BUFFER;i++){
     if(message[i] == 10){
       message[i] = 0;
     }
