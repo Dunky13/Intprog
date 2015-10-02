@@ -131,7 +131,7 @@ void *readFrom(void *parm){
 			keepRunning = 0;
 		}
 		//printf("Rreading smsthing %d - %d\n", message[0], message[1]);
-		//display(message);
+		display(message);
 		//free(message);
 	}
 	return 0;
@@ -156,7 +156,7 @@ void *writeTo(void *parm){
 		if(message[0] == 3){
 			keepRunning = 0;
 		}
-		printf("Writing smsthing %d - %d\n", message[0], message[1]);
+		//printf("Writing smsthing %d - %d\n", message[0], message[1]);
 		//display(message);
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
