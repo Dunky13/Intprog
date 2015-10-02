@@ -136,13 +136,15 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
+	char c;
 	char message[2];
 	int err;
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
 	while(keepRunning){
 		//readFromCL(message);
-		message[0] = fgetc(stdin);
+		scanf(" %c",&c);
+		message[0] = c;
 		if(message[0] == 3){
 			keepRunning = 0;
 		}
