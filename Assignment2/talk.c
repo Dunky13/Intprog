@@ -88,7 +88,7 @@ void readFromCL(char *message){
 
 void *readFrom(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	printf("%d - %d\n", *args->sockfd, *(args->sockfd));
+	
 	int err;
 	char *message = NULL;
 	while(keepRunning){
@@ -108,7 +108,6 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	printf("%d - %d\n", *args->sockfd, *(args->sockfd));
 	char *message = NULL;
 	int err;
 	signal(SIGINT, sig_chld);
@@ -163,6 +162,7 @@ void server(int sockfd){
 		exit(1);
 	}
 	display("Client connected");
+	printf("%d - %d\n", sockfd, clientSockfd);
 	threadVariables.sockfd = &clientSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
@@ -206,7 +206,7 @@ void client(int sockfd, char* loc){
 	}
 	
 	display("Connected to server");
-	
+	printf("%d - %d\n", sockfd, serverSockfd);
 	threadVariables.sockfd = &serverSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
