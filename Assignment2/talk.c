@@ -131,6 +131,9 @@ void *readFrom(void *parm){
 			keepRunning = 0;
 			break;
 		}
+		if(message[0] == 10){
+			display("\r");
+		}
 		//printf("Rreading smsthing %d - %d\n", message[0], message[1]);
 		display(message);
 		//free(message);
@@ -146,7 +149,7 @@ void *writeTo(void *parm){
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
 	initscr();
-	//cbreak();
+	cbreak();
 	while(keepRunning){
 		while((c = getch()) <= 0){}
 		message[0] = (char) c;
@@ -154,6 +157,11 @@ void *writeTo(void *parm){
 			keepRunning = 0;
 			break;
 		}
+		else if(message[0] == 13){
+			message[0] = 10;
+			display("\n");
+		}
+		
 		//printf("Writing smsthing %d - %d\n", message[0], message[1]);
 		//display(message);
 		err = writen(*args->sockfd, message, 2);
