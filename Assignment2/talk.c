@@ -147,9 +147,9 @@ void *writeTo(void *parm){
 	while(keepRunning){
 		//readFromCL(message);
 		c = getch();
-		if(c <= 0){
-			continue; 
-		}
+		//if(c <= 0){
+		//	continue; 
+		//}
 		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
