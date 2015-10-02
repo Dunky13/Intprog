@@ -10,6 +10,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include <curses.h>
 
 #define PORT 5555
 #define MESSAGE_BUFFER 32
@@ -142,8 +143,10 @@ void *writeTo(void *parm){
 	message[1] = 0;
 	while(keepRunning){
 		//readFromCL(message);
-		message[0] = getchar();
-		
+		message[0] = fgetc(stdin);
+		if(message[0] == 3){
+			keepRunning = 0;
+		}
 		//display(message);
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
