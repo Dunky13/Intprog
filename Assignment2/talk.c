@@ -114,12 +114,12 @@ void *writeTo(void *parm){
 	while(keepRunning){
 		readFromCL(message);
 		display(message);
-		err = writen(*args->sockfd, message, strlen(message));
-		if(err < 0){
-			perror("Error writing message");
-			exit(1);
-		}
-		free(message);
+		//err = writen(*args->sockfd, message, strlen(message));
+		//if(err < 0){
+		//	perror("Error writing message");
+		//	exit(1);
+		//}
+		//free(message);
 	}
 
 	shutdown(*args->sockfd, SHUT_WR);
