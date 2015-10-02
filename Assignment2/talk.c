@@ -12,7 +12,7 @@
 #include <pthread.h>
 
 #define PORT 5555
-#define MESSAGE_BUFFER 2
+#define MESSAGE_BUFFER 512
 
 static volatile int keepRunning = 1;
 
@@ -51,25 +51,6 @@ void get_message(char *message){
     }
   }	  	
 }
-char* readLine(FILE *f)
-{
-    size_t size = 0;
-    size_t len  = 0;
-    size_t last = 0;
-    char *buf = NULL;
-
-    do {
-        size += MESSAGE_BUFFER; /* BUFSIZ is defined as "the optimal read size for this platform" */
-        buf = realloc(buf, size); /* realloc(NULL,n) is the same as malloc(n) */            
-        /* Actually do the read. Note that fgets puts a terminal '\0' on the
-           end of the string, so we make sure we overwrite this */
-        if (buf == NULL) return NULL;
-        fgets(buf + last, size, f);
-        len = strlen(buf);
-        last = len - 1;
-    } while (!feof(f) && buf[last] != '\n');
-    return buf;
-}
 
 ssize_t writen(int fd, const void *vptr, size_t n)
 {
@@ -100,25 +81,14 @@ void display(char *str){
 	}
 }
 
-void readFromCL(char *message){
-	//message = readLine(stdin);
-	empty_buffer(message);
-	get_message(message);
-	if(message == NULL){
-		perror("Could not read message");
-		exit(1);
-	}
-}
-
-
 void *readFrom(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
 	
 	int err;
-	char message[MESSAGE_BUFFER];
+	char message[2];
 	while(keepRunning){
-		empty_buffer(message);
-		err = read(*args->sockfd, message, MESSAGE_BUFFER);
+		message[0] = 0;
+		err = read(*args->sockfd, message, 2);
 		if(err < 0){
 			perror("Could not read");
 			exit(1);
@@ -127,25 +97,31 @@ void *readFrom(void *parm){
 			keepRunning = 0;
 		}
 		display(message);
-		//free(message);
 	}
 	return 0;
 }
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	char message[MESSAGE_BUFFER];
+	char message[2];
 	int err;
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
-		readFromCL(message);
-		//display(message);
+		message[0] = 0;
+		fgets(message, 1, stdin);
+
+		if(message == NULL){
+			perror("Error reading input:\n");
+			exit(1);
+		}
+
+		message[1] = 0;		
+		
 		err = writen(*args->sockfd, message, strlen(message));
 		if(err < 0){
 			perror("Error writing message");
 			exit(1);
 		}
-		//free(message);
 	}
 
 	shutdown(*args->sockfd, SHUT_WR);
