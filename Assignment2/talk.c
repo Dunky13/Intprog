@@ -10,7 +10,6 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <pthread.h>
-#include <curses.h>
 
 #define PORT 5555
 #define MESSAGE_BUFFER 32
