@@ -12,7 +12,7 @@
 #include <pthread.h>
 
 #define PORT 5555
-#define MESSAGE_BUFFER 512
+#define MESSAGE_BUFFER 2
 
 static volatile int keepRunning = 1;
 
