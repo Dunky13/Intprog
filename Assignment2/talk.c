@@ -8,7 +8,8 @@
 #include <netdb.h>
 #include <string.h>
 #include <signal.h>
-#include<sys/wait.h>
+#include <sys/wait.h>
+#include <pthread.h>
 
 #define PORT 5555
 #define MESSAGE_BUFFER 512
@@ -54,7 +55,7 @@ ssize_t writen(int fd, const void *vptr, size_t n)
 	ptr = vptr;
 	nleft = n;
 	while (nleft > 0) {
-		if (((nwritten = write(fd, ptr, nleft)) <= 0 ) {
+		if ((nwritten = write(fd, ptr, nleft)) <= 0 ) {
 			if (errno == EINTR)
 				nwritten = 0; /* and call write() again */
 			else
@@ -160,7 +161,7 @@ void server(int sockfd){
 		exit(1);
 	}
 	
-	threadVariables->sockfd = &clientSockfd;
+	threadVariables.sockfd = &clientSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
@@ -202,7 +203,7 @@ void client(int sockfd, char* loc){
 		exit(1);
 	}
 	
-	threadVariables->sockfd = &serverSockfd;
+	threadVariables.sockfd = &serverSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
