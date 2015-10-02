@@ -160,7 +160,7 @@ void server(int sockfd){
 		perror("Could not accept from client");
 		exit(1);
 	}
-	
+	display("Client connected");
 	threadVariables.sockfd = &clientSockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
@@ -202,6 +202,8 @@ void client(int sockfd, char* loc){
 		perror("Could not connect");
 		exit(1);
 	}
+	
+	display("Connected to server");
 	
 	threadVariables.sockfd = &serverSockfd;
 	pthread_attr_init(&attr);
