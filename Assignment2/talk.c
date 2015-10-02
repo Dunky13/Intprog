@@ -26,7 +26,31 @@ void sig_chld(int sig){
 	}
 	signal(sig, sig_chld);
 }
+/*Fills the buffer with zeroes*/
+void empty_buffer(char *buf){
+  int i;
 
+  for(i=0;i<BUFFER_SIZE-1;i++){
+    buf[i] = 0;
+  }
+}
+void get_message(char *message){
+  int i;
+
+  fgets(message, BUFFER_SIZE-1, stdin);
+
+  if(message == NULL){
+    perror("Error reading input:\n");
+    exit(1);
+  }
+
+  /*remove linefeed*/
+  for(i=0;i<BUFFER_SIZE;i++){
+    if(message[i] == 10){
+      message[i] = 0;
+    }
+  }	  	
+}
 char* readLine(FILE *f)
 {
     size_t size = 0;
@@ -77,8 +101,9 @@ void display(char *str){
 }
 
 void readFromCL(char *message){
-	message = readLine(stdin);
-	
+	//message = readLine(stdin);
+	empty_buffer(message);
+	get_message(message);
 	if(message == NULL){
 		perror("Could not read message");
 		exit(1);
@@ -108,7 +133,7 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	char *message = NULL;
+	char message[MESSAGE_BUFFER];
 	int err;
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
