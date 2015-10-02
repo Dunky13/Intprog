@@ -21,7 +21,6 @@ struct ThreadVariables{
 
 void sig_chld(int sig){
 	if(sig == SIGINT){
-		//Handle close
 		keepRunning = 0;
 	}
 	signal(sig, sig_chld);
@@ -89,7 +88,7 @@ void readFromCL(char *message){
 
 
 void *readFrom(void *parm){
-	struct threadArguments *args = (struct ThreadVariables *)parm;
+	struct ThreadVariables *args = (struct ThreadVariables *)parm;
 	int err;
 	char *message;
 	while(keepRunning){
@@ -107,9 +106,9 @@ void *readFrom(void *parm){
 }
 
 void *writeTo(void *parm){
-	struct threadArguments *args = (struct ThreadVariables *)parm;
+	struct ThreadVariables *args = (struct ThreadVariables *)parm;
 	char *message;
-	int err
+	int err;
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
 		readFromCL(message);
