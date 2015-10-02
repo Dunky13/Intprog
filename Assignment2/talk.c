@@ -130,7 +130,8 @@ void *readFrom(void *parm){
 		if(err == 0){
 			keepRunning = 0;
 		}
-		display(&message[0]);
+		printf("Rreading smsthing %c\n", message[0]);
+		//display(message);
 		//free(message);
 	}
 	return 0;
