@@ -11,6 +11,41 @@
 #include<sys/wait.h>
 
 #define PORT 5555
+#define MESSAGE_BUFFER 512
+
+static volatile int keepRunning = 1;
+
+struct ThreadVariables{
+	int *sockfd;
+}
+
+void sig_chld(int sig){
+	if(sig == SIGINT){
+		//Handle close
+		keepRunning = 0;
+	}
+	signal(sig, sig_chld);
+}
+
+char *getline(FILE *f)
+{
+    size_t size = 0;
+    size_t len  = 0;
+    size_t last = 0;
+    char *buf = NULL;
+
+    do {
+        size += MESSAGE_BUFFER; /* BUFSIZ is defined as "the optimal read size for this platform" */
+        buf = realloc(buf, size); /* realloc(NULL,n) is the same as malloc(n) */            
+        /* Actually do the read. Note that fgets puts a terminal '\0' on the
+           end of the string, so we make sure we overwrite this */
+        if (buf == NULL) return NULL;
+        fgets(buf + last, size, f);
+        len = strlen(buf);
+        last = len - 1;
+    } while (!feof(f) && buf[last] != '\n');
+    return buf;
+}
 
 ssize_t writen(int fd, const void *vptr, size_t n)
 {
@@ -32,13 +67,73 @@ ssize_t writen(int fd, const void *vptr, size_t n)
 	return n;
 }
 
+void display(char *str){
+	char *tmp;
+	for (tmp=str;*tmp;tmp++){
+		
+		write(1,tmp,1);
+		usleep(100);
+	}
+}
+
+void readFromCL(char *message){
+	int i;
+
+	message = getlin(stdin);
+	
+	if(message == NULL){
+		perror("Could not read message");
+		exit(1);
+	}
+}
+
+
+void *readFrom(void *parm){
+	struct threadArguments *args = (struct ThreadVariables *)parm;
+	int err;
+	char *message;
+	while(keepRunning){
+		err = read(*(args->sockfd), message, MESSAGE_BUFFER);
+		if(err < 0){
+			perror("Could not read");
+			exit(1);
+		}
+		if(err == 0){
+			keepRunning = 0;
+		}
+		display(message);
+		free(message);
+	}
+}
+
+void *writeTo(void *parm){
+	struct threadArguments *args = (struct ThreadVariables *)parm;
+	char *message;
+	int err
+	signal(SIGINT, sig_chld);
+	while(keepRunning){
+		readFromCL(message);
+		
+		err = writen(*(args->sockfd), message, strlen(message));
+		if(err < 0){
+			perror("Error writing message");
+			exit(1);
+		}
+		free(message);
+	}
+
+	shutdown(*(args->sockfd), SHUT_WR);
+}
 
 void server(int sockfd){
 	int bind_err, listen_err, close_err, clientSockfd;
 
 	struct sockaddr_in server_addr, client_addr;
-	
 	socklen_t server_addrlen, client_addrlen;
+	
+	pthread_t readThread, writeThread;
+	pthread_attr_t attr;
+	struct ThreadVariables threadVariables;
 
 	
 	server_addr.sin_family = AF_INET;
@@ -66,9 +161,13 @@ void server(int sockfd){
 		exit(1);
 	}
 	
+	threadVariables->sockfd = &clientSockfd;
 	
-	readFrom(clientSockfd);
-	writeTo(clientSockfd);
+	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
+	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
+	
+	pthread_join(readThread, NULL);
+	pthread_join(writeThread, NULL);
 	
 	close_err = close(sockfd);
 	if(close_err < 0){
@@ -82,7 +181,7 @@ void client(int sockfd, char* loc){
 	struct in_addr *addr;
 	struct sockaddr_in server_addr;
 	
-	int conn_err, close_err;
+	int serverSockfd, close_err;
 	
 	resolv = gethostbyname(loc);
 	if(resolv == NULL){
@@ -94,11 +193,19 @@ void client(int sockfd, char* loc){
 	server_addr.sin_family       = AF_INET;
 	server_addr.sin_port         = htons(PORT);
 	server_addr.sin_addr.s_addr  = inet_addr(inet_ntoa(*addr));
-	conn_err = connect(sockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
-	if(conn_err < 0){
+	serverSockfd = connect(sockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
+	if(serverSockfd < 0){
 		perror("Could not connect");
 		exit(1);
 	}
+	
+	threadVariables->sockfd = &serverSockfd;
+	
+	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
+	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
+	
+	pthread_join(readThread, NULL);
+	pthread_join(writeThread, NULL);
 	
 	close_err = close(sockfd);
 	if(close_err < 0){
