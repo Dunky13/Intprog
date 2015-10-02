@@ -4,6 +4,9 @@ JC = javac
 
 all: serv1 client talk
 
+talk: talk.o
+	$(CC) -o talk talk.o -lpthread
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
 
