@@ -159,7 +159,7 @@ void *writeTo(void *parm){
 		}
 		else if(message[0] == 13){
 			message[0] = 10;
-			display("\n");
+			display("\n\r");
 		}
 		
 		//printf("Writing smsthing %d - %d\n", message[0], message[1]);
