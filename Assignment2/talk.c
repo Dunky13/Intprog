@@ -11,6 +11,8 @@
 #include <sys/wait.h>
 #include <pthread.h>
 
+#include <curses.h>
+
 #define PORT 5555
 #define MESSAGE_BUFFER 32
 
@@ -143,8 +145,8 @@ void *writeTo(void *parm){
 	message[1] = 0;
 	while(keepRunning){
 		//readFromCL(message);
-		scanf(" %c",&c);
-		message[0] = c;
+		
+		message[0] = getch();
 		if(message[0] == 3){
 			keepRunning = 0;
 		}
