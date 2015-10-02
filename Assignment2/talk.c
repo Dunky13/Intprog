@@ -199,15 +199,15 @@ void client(int sockfd, char* loc){
 	server_addr.sin_family       = AF_INET;
 	server_addr.sin_port         = htons(PORT);
 	server_addr.sin_addr.s_addr  = inet_addr(inet_ntoa(*addr));
-	conn_err = connect(serverSockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
+	conn_err = connect(sockfd, (struct sockaddr *) &server_addr, (socklen_t) sizeof(struct sockaddr_in));
 	if(conn_err < 0){
 		perror("Could not connect");
 		exit(1);
 	}
 	
 	display("Connected to server");
-	printf("Server Sock: %d - Client Sock: %d\n", serverSockfd, sockfd);
-	threadVariables.sockfd = &serverSockfd;
+	printf("Server Sock: %d - Client Sock: %d\n", sockfd, sockfd);
+	threadVariables.sockfd = &sockfd;
 	pthread_attr_init(&attr);
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
