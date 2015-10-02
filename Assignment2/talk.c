@@ -11,7 +11,7 @@
 #include <sys/wait.h>
 #include <pthread.h>
 
-#include <curses.h>
+#include <ncurses.h>
 
 #define PORT 5555
 #define MESSAGE_BUFFER 32
@@ -138,15 +138,15 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	char c;
+	int c;
 	char message[2];
 	int err;
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
 	while(keepRunning){
 		//readFromCL(message);
-		
-		message[0] = getch();
+		c = getch();
+		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
 		}
