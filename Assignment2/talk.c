@@ -77,8 +77,6 @@ void display(char *str){
 }
 
 void readFromCL(char *message){
-	int i;
-
 	message = readLine(stdin);
 	
 	if(message == NULL){
@@ -91,7 +89,7 @@ void readFromCL(char *message){
 void *readFrom(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
 	int err;
-	char *message;
+	char *message = NULL;
 	while(keepRunning){
 		err = read(*(args->sockfd), message, MESSAGE_BUFFER);
 		if(err < 0){
@@ -109,7 +107,7 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	char *message;
+	char *message = NULL;
 	int err;
 	signal(SIGINT, sig_chld);
 	while(keepRunning){
