@@ -82,7 +82,7 @@ void *readFrom(void *parm){
 			display("\r");
 		}
 		wprintw(args->readWindow, &message[0]);
-		refresh();
+		// refresh();
 		//display(message);
 	}
 	return 0;
@@ -131,20 +131,21 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 
 void startThreads(struct ThreadVariables threadVariables){
 	int height;
+	WINDOW *initWindow;
 	pthread_t readThread, writeThread;
 	pthread_attr_t attr;
 	
 	pthread_attr_init(&attr);
 	
 	//Start NCurses
-	initscr(); //After this COLS & LINES is initialized
+	initWindow = initscr(); //After this COLS & LINES is initialized
 	cbreak();
 	
 	
 	height = LINES / 2;
 	
-	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
-	threadVariables.readWindow = create_newwin(height,COLS,height,0);
+	threadVariables.writeWindow = initWindow;//create_newwin(height, COLS, 0,0);
+	threadVariables.readWindow = initWindow;//create_newwin(height,COLS,height,0);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
