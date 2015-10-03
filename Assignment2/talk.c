@@ -157,7 +157,7 @@ void *writeTo(void *parm){
 			keepRunning = 0;
 			break;
 		}
-		else if(message[0] == 13){
+		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
 			display("\n\r");
 		}
