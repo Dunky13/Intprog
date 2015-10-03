@@ -120,14 +120,6 @@ void *writeTo(void *parm){
 	return 0;
 }
 
-WINDOW *create_newwin(int height, int width, int starty, int startx)
-{	WINDOW *local_win;
-
-	
-
-	return local_win;
-}
-
 void startThreads(struct ThreadVariables threadVariables){
 	int height;
 	WINDOW *readWindow, *writeWindow;
