@@ -108,10 +108,7 @@ void *writeTo(void *parm){
 		}
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
-			//display("\n\r");
-			wprintw(args->writeWindow, "\n\r");
-			//wrefresh(args->writeWindow);
-			//wclrtoeol(args->readWindow);
+			display("\n\r");
 		}
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
