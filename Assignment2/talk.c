@@ -82,7 +82,7 @@ void *readFrom(void *parm){
 			display("\r");
 		}
 		wprintw(args->readWindow, &message[0]);
-		refresh();
+		wrefresh(args->readWindow);
 		//display(message);
 	}
 	return 0;
@@ -144,8 +144,8 @@ void startThreads(struct ThreadVariables threadVariables){
 	
 	height = LINES / 2;
 	
-	threadVariables.writeWindow = initWindow;//create_newwin(height, COLS, 0,0);
-	threadVariables.readWindow = initWindow;//create_newwin(height,COLS,height,0);
+	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
+	threadVariables.readWindow = create_newwin(height,COLS,height,0);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
