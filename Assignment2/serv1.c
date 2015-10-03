@@ -90,9 +90,9 @@ int main(int argc, char **argv){
 		return -1;
 	}
 
+	/* Loop to serve all requests */
 	addrlen = sizeof(struct sockaddr_in);
 
-	/* Loop to serve all requests */
 	while(1){
 		if((new_socket = accept(socketfd, (struct sockaddr *) &receive_struct, &addrlen)) < 0){
 			perror("socket");

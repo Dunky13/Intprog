@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/sem.h>
 
 #define PORT 4444
 #define BACKLOG 5
@@ -37,20 +40,28 @@ ssize_t writen(int fd, const void *vptr, size_t n){
 	return n;
 }
 
-void sig_chld(int) { //NOG NIET GOED
+/*void sig_chld(int error) { //NOG NIET GOED
 	while(waitpid(0, NULL, WNOHANG) > 0){
 
 	}
 
 	signal(SIGCHLD,sig_chld);
-}
+}*/
 
-void treat_request(int fd, uint32_t *counter){
+void treat_request(int fd, uint32_t *counter, int counter_sem, struct sembuf *up, struct sembuf *down){
 	uint32_t send_counter = 0;
 
-	//increase counter in shared memory
+	/* Obtain lock on shared memory */
+    semop(counter_sem, down, 1);
+
+	/* increase counter in shared memory */
 	(*counter)++;
 	send_counter = htonl(*counter);
+
+	/* Free lock */	
+	semop(counter_sem, up, 1);
+
+	/* Send */
 	writen(fd, &send_counter, sizeof(uint32_t));
 }
 
@@ -61,14 +72,24 @@ int main(int argc, char **argv){
     }
 
 	struct sockaddr_in receive_struct;
-    uint32_t counter;
-    int socketfd, new_socket, socket_option;
+    uint32_t *shm_counter;
+    int shmid, counter_sem, socketfd, new_socket, socket_option;
     socklen_t addrlen;
     void *buf;
 
-    signal(SIGCHLD, sig_chld);
+    struct sembuf up	= {0,  1, 0};
+	struct sembuf down	= {0, -1, 0};
 
-    counter = 0;
+    //signal(SIGCHLD, sig_chld);
+
+    /* Initialize shared counter and semaphore for counter */
+    shmid = shmget(IPC_PRIVATE, sizeof(uint32_t), 0600);
+    shm_counter = (uint32_t *) shmat(shmid, 0, 0);
+    *shm_counter = 0;
+    counter_sem = semget(IPC_PRIVATE, 1, 0600);
+    semop(counter_sem, &up, 1);
+
+    /* Allocate buffer */
     buf = malloc(sizeof(uint32_t));
 
     /* Fill in structure */
@@ -101,9 +122,9 @@ int main(int argc, char **argv){
 		return -1;
 	}
 
+	/* Loop to serve all requests */
 	addrlen = sizeof(struct sockaddr_in);
 
-	/* Loop to serve all requests */
 	while(1){
 		if((new_socket = accept(socketfd, (struct sockaddr *) &receive_struct, &addrlen)) < 0){
 			perror("socket");
@@ -111,7 +132,7 @@ int main(int argc, char **argv){
 		}
 
 		if(fork() == 0){
-			treat_request(new_socket, &counter);
+			treat_request(new_socket, shm_counter, counter_sem, &up, &down);
 		}
 
 		if(close(new_socket) < 0){
@@ -121,6 +142,8 @@ int main(int argc, char **argv){
 	}
 
 	free(buf);
+	shmdt((void *) shm_counter);
+	/*shmctl(shmid, IPC_RMID, 0); and semctl(my_sem, 0, IPC_RMID); need to be called at server, but it will never reach these statements */
 
 	if(close(socketfd) < 0){
 		perror("Close socket");

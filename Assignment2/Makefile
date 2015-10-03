@@ -2,7 +2,7 @@ CC 	= gcc
 CFLAGS 	= -g -Wall 
 JC = javac
 
-all: serv1 client talk
+all: serv1 serv2 serv3 client talk
 
 talk: talk.o
 	$(CC) -o talk talk.o -lpthread -lncurses

@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper}
+
+\usepackage{graphicx}
+%\usepackage[parfill]{parskip}
+\usepackage{bbm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{hyperref}
+
+\title{Assignment 2 Internet Programming}
+\author{Marc Went (2507013) and Ferry Avis (1945653)}
+
+\begin{document}
+\maketitle
+
+\section{A Content-Preserving Server}
+
+The first assignment was straightforward to implement, following the structure outline in the slides of the lectures. All implementation details worth mentioning are discussed in the questions.
+
+\subsection{Question A}
+
+We expect no problems at running the server part of the assignment on a standard laptop and running the client part on a Sun SPARCstation 10. This question most likely expects us to discuss the difference in endianness of the processor architectures. The SPARCstation uses a different processor architecture, that represents numbers in a big-endian manner, and the laptop most likely uses little-endian. Before sending the numeric message, the (numeric) message is converted to use network byte order, i.e. big-endian. Right after receiving a message, the system call \texttt{ntohl} makes sure the number is converted to the endianness of the system. Additionally, the IP address in the structure returned by \texttt{gethostbyname} is in network byte order and special care has been taken to convert the port number too. Therefore, no difficulties should appear on this part.
+
+\subsection{Question B}
+
+We expect that the on-demand forking server would perform the worst, as forking takes quite some time compared to directly incrementing a number and writing the request, that immediately returns as sending the message is handled further by the operating system.
+
+In most cases, a pre-forked server should be faster than an iterative server. However, we cannot say how heavy acquiring the mutexes on accept and the shared counter is. It could be that this is way heavier than incrementing the counter and sending the message directly, as is done by the iterative server.
+
+\subsection{Question C}
+
+For the forked and pre-forked servers, the counter is implemented in shared memory. Race conditions on the counter are avoided by using a semaphore as a mutex.
+
+The semaphore is created before the forking is done. As suggested by the slides, the semaphore is created by using the \texttt{semget} system call. On \url{http://stackoverflow.com/questions/6847973/do-forked-child-processes-use-the-same-semaphore} it is explained that a semaphore created by \texttt{semget} is shared between all processes. This is because \texttt{semget} gives a System V semaphore instead of a POSIX one. To make this work with POSIX semaphores, a special value needs to be set in and the mutex needs to be placed in shared memory. Otherwise, each process has its own, independent semaphore and the program would be flawed. Fortunately, we do not need to bother.
+
+As an alternative to semaphores, it is probably possible to do some very artificial communication between a child, the parent and the other children by using signals or pipes to make sure the counter is eventually incremented by one for each process, but this is very cumbersome and it could be that the counter returns the same value for different requests and skips some values.
+
+\subsection{Question D}
+
+An additional mutex is applied on the accept call in the pre-forked server, as this improves performance on BSD based systems and makes the server runable on System V types of Unix. As both semaphores are shared between processes, this works.
+
+\end{document}
