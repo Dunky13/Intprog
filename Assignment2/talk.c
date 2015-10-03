@@ -81,7 +81,7 @@ void *readFrom(void *parm){
 		if(message[0] == 10){
 			display("\r");
 		}
-		wprintw(args->readWindow, message);
+		wprintw(args->readWindow, &message[0]);
 		//display(message);
 	}
 	return 0;
@@ -107,7 +107,6 @@ void *writeTo(void *parm){
 			message[0] = 10;
 			display("\n\r");
 		}
-		wprintw(args->readWindow, message);
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
 			perror("Error writing message");
