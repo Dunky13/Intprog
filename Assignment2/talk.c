@@ -80,7 +80,7 @@ void *readFrom(void *parm){
 		}
 		if(message[0] == 10){
 			wprintw(args->readWindow, "\r");
-			wrefresh(args->readWindow);
+			//wrefresh(args->readWindow);
 			wclrtoeol(args->readWindow);
 		}
 		wprintw(args->readWindow, &message[0]);
@@ -110,7 +110,7 @@ void *writeTo(void *parm){
 			message[0] = 10;
 			//display("\n\r");
 			wprintw(args->writeWindow, "\n\r");
-			wrefresh(args->writeWindow);
+			//wrefresh(args->writeWindow);
 		}
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
