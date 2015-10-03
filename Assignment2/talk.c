@@ -118,6 +118,18 @@ void *writeTo(void *parm){
 	return 0;
 }
 
+WINDOW *create_newwin(int height, int width, int starty, int startx)
+{	WINDOW *local_win;
+
+	local_win = newwin(height, width, starty, startx);
+	box(local_win, 0 , 0);		/* 0, 0 gives default characters 
+					 * for the vertical and horizontal
+					 * lines			*/
+	wrefresh(local_win);		/* Show that box 		*/
+
+	return local_win;
+}
+
 void startThreads(struct ThreadVariables threadVariables){
 	int height;
 	pthread_t readThread, writeThread;
@@ -132,8 +144,8 @@ void startThreads(struct ThreadVariables threadVariables){
 	
 	height = LINES / 2;
 	
-	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
-	threadVariables.readWindow = create_newwin(height-1,COLS,height+1,0);
+	threadVariables->writeWindow = create_newwin(height, COLS, 0,0);
+	threadVariables->readWindow = create_newwin(height-1,COLS,height+1,0);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
@@ -145,26 +157,12 @@ void startThreads(struct ThreadVariables threadVariables){
 	endwin();
 }
 
-WINDOW *create_newwin(int height, int width, int starty, int startx)
-{	WINDOW *local_win;
-
-	local_win = newwin(height, width, starty, startx);
-	box(local_win, 0 , 0);		/* 0, 0 gives default characters 
-					 * for the vertical and horizontal
-					 * lines			*/
-	wrefresh(local_win);		/* Show that box 		*/
-
-	return local_win;
-}
-
 void server(int sockfd){
 	int bind_err, listen_err, close_err, clientSockfd;
 
 	struct sockaddr_in server_addr, client_addr;
 	socklen_t server_addrlen, client_addrlen;
 	
-	pthread_t readThread, writeThread;
-	pthread_attr_t attr;
 	struct ThreadVariables threadVariables;
 
 	
