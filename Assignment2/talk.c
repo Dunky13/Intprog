@@ -147,8 +147,8 @@ void startThreads(struct ThreadVariables threadVariables){
 	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
 	threadVariables.readWindow = create_newwin(height,COLS,height,0);
 	
-	scrollok(threadVariables.writeWindow, true);
-	scrollok(threadVariables.readWindow, true);
+	scrollok(threadVariables->writeWindow, true);
+	scrollok(threadVariables->readWindow, true);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
