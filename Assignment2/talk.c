@@ -109,7 +109,7 @@ void *writeTo(void *parm){
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
 			//display("\n\r");
-			wprintw(args->writeWindow, "\r");
+			wprintw(args->writeWindow, "\n");
 			//wrefresh(args->writeWindow);
 			wclrtoeol(args->readWindow);
 		}
