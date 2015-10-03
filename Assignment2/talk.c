@@ -80,6 +80,7 @@ void *readFrom(void *parm){
 		}
 		if(message[0] == 10){
 			display("\r");
+			wclrtoeol(args->readWindow);
 		}
 		wprintw(args->readWindow, &message[0]);
 		wrefresh(args->readWindow);
@@ -131,14 +132,13 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 
 void startThreads(struct ThreadVariables threadVariables){
 	int height;
-	WINDOW *initWindow;
-	pthread_t readThread, writeThread;
+ 	pthread_t readThread, writeThread;
 	pthread_attr_t attr;
 	
 	pthread_attr_init(&attr);
 	
 	//Start NCurses
-	initWindow = initscr(); //After this COLS & LINES is initialized
+	initscr(); //After this COLS & LINES is initialized
 	cbreak();
 	
 	
@@ -146,6 +146,9 @@ void startThreads(struct ThreadVariables threadVariables){
 	
 	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
 	threadVariables.readWindow = create_newwin(height,COLS,height,0);
+	
+	scrollok(threadVariables.writeWindow, true);
+	scrollok(threadVariables.readWindow, true);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
