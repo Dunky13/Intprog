@@ -28,50 +28,6 @@ void sig_chld(int sig){
 	}
 	signal(sig, sig_chld);
 }
-/*Fills the buffer with zeroes*/
-void empty_buffer(char *buf){
-  int i;
-
-  for(i=0;i<MESSAGE_BUFFER-1;i++){
-    buf[i] = 0;
-  }
-}
-void get_message(char *message){
-  int i;
-
-  fgets(message, MESSAGE_BUFFER-1, stdin);
-
-  if(message == NULL){
-    perror("Error reading input:\n");
-    exit(1);
-  }
-
-  /*remove linefeed*/
-  for(i=0;i<MESSAGE_BUFFER;i++){
-    if(message[i] == 10){
-      message[i] = 0;
-    }
-  }	  	
-}
-char* readLine(FILE *f)
-{
-    size_t size = 0;
-    size_t len  = 0;
-    size_t last = 0;
-    char *buf = NULL;
-
-    do {
-        size += MESSAGE_BUFFER; /* BUFSIZ is defined as "the optimal read size for this platform" */
-        buf = realloc(buf, size); /* realloc(NULL,n) is the same as malloc(n) */            
-        /* Actually do the read. Note that fgets puts a terminal '\0' on the
-           end of the string, so we make sure we overwrite this */
-        if (buf == NULL) return NULL;
-        fgets(buf + last, size, f);
-        len = strlen(buf);
-        last = len - 1;
-    } while (!feof(f) && buf[last] != '\n');
-    return buf;
-}
 
 ssize_t writen(int fd, const void *vptr, size_t n)
 {
@@ -102,17 +58,6 @@ void display(char *str){
 	}
 }
 
-void readFromCL(char *message){
-	//message = readLine(stdin);
-	empty_buffer(message);
-	get_message(message);
-	if(message == NULL){
-		perror("Could not read message");
-		exit(1);
-	}
-}
-
-
 void *readFrom(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
 	
@@ -121,7 +66,7 @@ void *readFrom(void *parm){
 	while(keepRunning){
 		message[0] = 0;
 		message[1] = 0;
-		//empty_buffer(message);
+
 		err = read(*args->sockfd, message, 2);
 		if(err < 0){
 			perror("Could not read");
@@ -134,9 +79,7 @@ void *readFrom(void *parm){
 		if(message[0] == 10){
 			display("\r");
 		}
-		//printf("Rreading smsthing %d - %d\n", message[0], message[1]);
 		display(message);
-		//free(message);
 	}
 	return 0;
 }
@@ -151,7 +94,9 @@ void *writeTo(void *parm){
 	initscr();
 	cbreak();
 	while(keepRunning){
-		while((c = getch()) <= 0){}
+		if((c = getch()) == ERR){
+			continue;
+		}
 		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
@@ -162,17 +107,14 @@ void *writeTo(void *parm){
 			display("\n\r");
 		}
 		
-		//printf("Writing smsthing %d - %d\n", message[0], message[1]);
-		//display(message);
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
 			perror("Error writing message");
 			exit(1);
 		}
-		//free(message);
 	}
 	endwin();
-	//shutdown(*args->sockfd, SHUT_RDWR);
+	shutdown(*args->sockfd, SHUT_RDWR);
 	return 0;
 }
 
