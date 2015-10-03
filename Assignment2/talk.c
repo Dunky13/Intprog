@@ -92,7 +92,7 @@ void *readFrom(void *parm){
 
 void *writeTo(void *parm){
 	struct ThreadVariables *args = (struct ThreadVariables *)parm;
-	int c = 0, x,y;
+	int c = 0;
 	char message[2];
 	int err;
 	signal(SIGINT, sig_chld);
@@ -108,8 +108,10 @@ void *writeTo(void *parm){
 		}
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
-			getyx(args->writeWindow, y,x);
-			wmove(args->writeWindow, y+1,x);
+			//display("\n\r");
+			wprintw(args->writeWindow, "\r");
+			//wrefresh(args->writeWindow);
+			//wclrtoeol(args->readWindow);
 		}
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
