@@ -127,7 +127,7 @@ void *readFrom(void *parm){
 			perror("Could not read");
 			exit(1);
 		}
-		if(err == 0){
+		if(err == 0 || message[0] == 3){
 			keepRunning = 0;
 			break;
 		}
@@ -155,7 +155,7 @@ void *writeTo(void *parm){
 		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
-			break;
+			//break;
 		}
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
