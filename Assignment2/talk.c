@@ -132,6 +132,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 
 void startThreads(struct ThreadVariables threadVariables){
 	int height;
+	WINDOW *readWindow, *writeWindow;
  	pthread_t readThread, writeThread;
 	pthread_attr_t attr;
 	
@@ -144,11 +145,14 @@ void startThreads(struct ThreadVariables threadVariables){
 	
 	height = LINES / 2;
 	
-	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
-	threadVariables.readWindow = create_newwin(height,COLS,height,0);
+	writeWindow = create_newwin(height, COLS, 0,0);
+	readWindow = create_newwin(height,COLS,height,0);
 	
-	scrollok(threadVariables->writeWindow, true);
-	scrollok(threadVariables->readWindow, true);
+	scrollok(writeWindow, true);
+	scrollok(readWindow, true);
+	
+	threadVariables->writeWindow = writeWindow;
+	threadVariables->readWindow = readWindow;
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
