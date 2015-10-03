@@ -82,6 +82,7 @@ void *readFrom(void *parm){
 			display("\r");
 		}
 		wprintw(args->readWindow, &message[0]);
+		refresh();
 		//display(message);
 	}
 	return 0;
