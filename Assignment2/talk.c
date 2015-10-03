@@ -122,10 +122,7 @@ void *writeTo(void *parm){
 WINDOW *create_newwin(int height, int width, int starty, int startx)
 {	WINDOW *local_win;
 
-	local_win = newwin(height, width, starty, startx);
-	wborder(local_win, ' ', ' ', ' ', '-', ' ', ' ', ' ', ' ');
 	
-	wrefresh(local_win);		/* Show that box 		*/
 
 	return local_win;
 }
@@ -145,8 +142,12 @@ void startThreads(struct ThreadVariables threadVariables){
 	
 	height = LINES / 2;
 	
-	writeWindow = create_newwin(height, COLS, 0,0);
-	readWindow = create_newwin(height,COLS,height,0);
+	
+	writeWindow = newwin(height, COLS, 0,0);
+	wborder(writeWindow, ' ', ' ', ' ', '-', ' ', ' ', '-', '-');
+	wrefresh(writeWindow);
+	readWindow = newwin(height, COLS, height,0);
+	wrefresh(readWindow);
 	
 	scrollok(writeWindow, true);
 	scrollok(readWindow, true);
