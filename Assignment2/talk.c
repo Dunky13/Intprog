@@ -111,7 +111,7 @@ void *writeTo(void *parm){
 			//display("\n\r");
 			wprintw(args->writeWindow, "\n");
 			//wrefresh(args->writeWindow);
-			wclrtoeol(args->readWindow);
+			//wclrtoeol(args->readWindow);
 		}
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
