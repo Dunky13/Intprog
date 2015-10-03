@@ -122,9 +122,8 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 {	WINDOW *local_win;
 
 	local_win = newwin(height, width, starty, startx);
-	box(local_win, 0 , 0);		/* 0, 0 gives default characters 
-					 * for the vertical and horizontal
-					 * lines			*/
+	wborder(local_win, '', '', '', '-', '', '', '', '');
+	
 	wrefresh(local_win);		/* Show that box 		*/
 
 	return local_win;
@@ -145,7 +144,7 @@ void startThreads(struct ThreadVariables threadVariables){
 	height = LINES / 2;
 	
 	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
-	threadVariables.readWindow = create_newwin(height-1,COLS,height+1,0);
+	threadVariables.readWindow = create_newwin(height,COLS,height,0);
 	
 	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
 	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
