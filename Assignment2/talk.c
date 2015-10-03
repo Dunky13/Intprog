@@ -79,7 +79,8 @@ void *readFrom(void *parm){
 			break;
 		}
 		if(message[0] == 10){
-			display("\r");
+			wprintw(args->readWindow, "\r");
+			wrefresh(args->readWindow);
 			wclrtoeol(args->readWindow);
 		}
 		wprintw(args->readWindow, &message[0]);
@@ -107,7 +108,9 @@ void *writeTo(void *parm){
 		}
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
-			display("\n\r");
+			//display("\n\r");
+			wprintw(args->writeWindow, "\n\r");
+			wrefresh(args->writeWindow);
 		}
 		err = writen(*args->sockfd, message, 2);
 		if(err < 0){
