@@ -20,6 +20,8 @@ static volatile int keepRunning = 1;
 
 struct ThreadVariables{
 	int *sockfd;
+	WINDOW *readWindow;
+	WINDOW *writeWindow;
 };
 
 void sig_chld(int sig){
@@ -79,7 +81,8 @@ void *readFrom(void *parm){
 		if(message[0] == 10){
 			display("\r");
 		}
-		display(message);
+		wprintw(args->readWindow, message);
+		//display(message);
 	}
 	return 0;
 }
@@ -91,10 +94,8 @@ void *writeTo(void *parm){
 	int err;
 	signal(SIGINT, sig_chld);
 	message[1] = 0;
-	initscr();
-	cbreak();
 	while(keepRunning){
-		if((c = getch()) == ERR){
+		if((c = wgetch(args->writeWindow)) == ERR){
 			continue;
 		}
 		message[0] = (char) c;
@@ -113,9 +114,47 @@ void *writeTo(void *parm){
 			exit(1);
 		}
 	}
-	endwin();
 	shutdown(*args->sockfd, SHUT_RDWR);
 	return 0;
+}
+
+void startThreads(struct ThreadVariables threadVariables){
+	int height;
+	pthread_t readThread, writeThread;
+	pthread_attr_t attr;
+	
+	pthread_attr_init(&attr);
+	
+	//Start NCurses
+	initscr(); //After this COLS & LINES is initialized
+	cbreak();
+	
+	
+	height = LINES / 2;
+	
+	threadVariables.writeWindow = create_newwin(height, COLS, 0,0);
+	threadVariables.readWindow = create_newwin(height-1,COLS,height+1,0);
+	
+	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
+	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
+	
+	pthread_join(readThread, NULL);
+	pthread_join(writeThread, NULL);
+	
+	//End NCurses
+	endwin();
+}
+
+WINDOW *create_newwin(int height, int width, int starty, int startx)
+{	WINDOW *local_win;
+
+	local_win = newwin(height, width, starty, startx);
+	box(local_win, 0 , 0);		/* 0, 0 gives default characters 
+					 * for the vertical and horizontal
+					 * lines			*/
+	wrefresh(local_win);		/* Show that box 		*/
+
+	return local_win;
 }
 
 void server(int sockfd){
@@ -153,14 +192,8 @@ void server(int sockfd){
 		perror("Could not accept from client");
 		exit(1);
 	}
-	display("Client connected");
 	threadVariables.sockfd = &clientSockfd;
-	pthread_attr_init(&attr);
-	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
-	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
-	
-	pthread_join(readThread, NULL);
-	pthread_join(writeThread, NULL);
+	startThreads(threadVariables);
 	
 	close_err = close(sockfd);
 	if(close_err < 0){
@@ -174,8 +207,7 @@ void client(int sockfd, char* loc){
 	struct in_addr *addr;
 	struct sockaddr_in server_addr;
 	
-	pthread_t readThread, writeThread;
-	pthread_attr_t attr;
+	
 	struct ThreadVariables threadVariables;
 	
 	int conn_err, close_err;
@@ -196,14 +228,8 @@ void client(int sockfd, char* loc){
 		exit(1);
 	}
 	
-	display("Connected to server");
 	threadVariables.sockfd = &sockfd;
-	pthread_attr_init(&attr);
-	pthread_create(&readThread, &attr, readFrom, (void *)&threadVariables);
-	pthread_create(&writeThread, &attr, writeTo, (void *)&threadVariables);
-	
-	pthread_join(readThread, NULL);
-	pthread_join(writeThread, NULL);
+	startThreads(threadVariables);
 	
 	close_err = close(sockfd);
 	if(close_err < 0){
