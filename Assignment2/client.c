@@ -2,7 +2,7 @@
  * client.c
  * Belonging to the second assignment of Internet Programming at Vrije Universiteit, Amsterdam
  * Marc Went and Ferry Avis
- * September 2015
+ * September and October 2015
  */
 
 #define PORT 4444

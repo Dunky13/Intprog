@@ -1,3 +1,10 @@
+/*
+ * talk.c
+ * Belonging to the second assignment of Internet Programming at Vrije Universiteit, Amsterdam
+ * Marc Went and Ferry Avis
+ * September and October 2015
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -31,8 +38,7 @@ void sig_chld(int sig){
 	signal(sig, sig_chld);
 }
 
-ssize_t writen(int fd, const void *vptr, size_t n)
-{
+ssize_t writen(int fd, const void *vptr, size_t n){
 	size_t nleft;
 	ssize_t nwritten;
 	const char *ptr;

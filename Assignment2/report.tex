@@ -28,7 +28,7 @@ We expect no problems at running the server part of the assignment on a standard
 
 \subsection{Question B}
 
-We expect that the on-demand forking server would perform the worst, as forking takes quite some time compared to directly incrementing a number and writing the request, that immediately returns as sending the message is handled further by the operating system.
+We expect that the on-demand forking server performs the worst, as forking takes quite some time compared to directly incrementing a number and writing the request. The latter immediately returns, as sending the message is handled further by the operating system.
 
 In most cases, a pre-forked server should be faster than an iterative server. However, we cannot say how heavy acquiring the mutexes on accept and the shared counter is. It could be that this is way heavier than incrementing the counter and sending the message directly, as is done by the iterative server.
 
@@ -42,20 +42,20 @@ As an alternative to semaphores, it is probably possible to do some very artific
 
 \subsection{Question D}
 
-An additional mutex is applied on the accept call in the pre-forked server, as this improves performance on BSD based systems and makes the server runable on System V types of Unix. As both semaphores are shared between processes, this works.
+An additional mutex is applied on the accept call in the pre-forked server, since this improves performance on BSD based systems and makes the server runable on System V types of Unix. As both semaphores are shared between processes, this works.
 
 \section{A Talk Program}
 \subsection{Question D}
-We think the iterative implementation is best suitable for this application. Since the server and client both have to close after the CTRL+C. The server does not need to wait for more connections. So one-process-per-child and prefork are not necessary and iterative is sufficient for this task.
+We think the iterative implementation is best suitable for this application, since the server and client both have to close after the CTRL+C. The server does not need to wait for more connections. So one-process-per-child and prefork are not necessary and iterative is sufficient for this task.
 \subsection{Question E}
 \subsubsection{Case a}
-Yes this is possible without any modification of the system
+Yes, running the client and server on the same machine is possible without any modification of the system.
 \subsubsection{Case b}
-This is not possible in the code as is. The reason is that two servers cannot bind to the same port. The code could change to try the default port and if the server cannot bind, then increment the port number and try again until successful.
+Running two server instances on the same machine is not possible in the code as is. The reason is that two servers cannot bind to the same port. The code could change to try the default port and if the server cannot bind, then increment the port number and try again until successful. However, client must know the port number before connecting.
 \subsection{Question F}
-We did implement a multi-threaded approach Because it allows to read from keyboard separately from the network, where one thread can block with the read function to read from the network and the other thread to read (non-)blocking from the keyboard.
+We did implement a multi-threaded approach, because it allows to read from keyboard separately from the network. One thread can block with the \texttt{read} function to read from the network and the other thread to read (non-)blocking from the keyboard.
 \subsubsection{Case a}
-One way we found out is to use the (w)getch function from the ncurses library. This is a non-blocking operation. StackOverflow suggested fctnl as a non-blocking reading function. But this would need some more lines of codes opposed to the (blocking) read function.
+One way we found out is to use the \texttt{(w)getch} function from the ncurses library. This is a non-blocking operation. On StackOverflow it was suggested to use \texttt{fctnl} as a non-blocking reading function, but this would need more lines of codes than the (blocking) read function.
 \subsubsection{Case b}
 We used this case in our implementation. Per program we created two threads, one to read from the network and one thread to read from the keyboard.
 \end{document}

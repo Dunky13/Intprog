@@ -2,7 +2,7 @@ CC 	= gcc
 CFLAGS 	= -g -Wall 
 JC = javac
 
-all: serv1 serv2 serv3 client talk
+build: serv1 serv2 serv3 client talk
 
 talk: talk.o
 	$(CC) -o talk talk.o -lpthread -lncurses
@@ -11,5 +11,4 @@ talk: talk.o
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o *.class client serv1 talk core* *~
-
+	rm -f *.o *.class client serv1 serv2 serv3 talk core* *~

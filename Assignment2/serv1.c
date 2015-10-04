@@ -1,3 +1,10 @@
+/*
+ * serv1.c
+ * Belonging to the second assignment of Internet Programming at Vrije Universiteit, Amsterdam
+ * Marc Went and Ferry Avis
+ * September and October 2015
+ */
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <stdio.h>
