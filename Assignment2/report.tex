@@ -45,8 +45,11 @@ As an alternative to semaphores, it is probably possible to do some very artific
 An additional mutex is applied on the accept call in the pre-forked server, since this improves performance on BSD based systems and makes the server runable on System V types of Unix. As both semaphores are shared between processes, this works.
 
 \section{A Talk Program}
+
+To make the program work in Ubuntu 14.04, the package \texttt{libncurses5-dev} needs to be installed.
+
 \subsection{Question D}
-We think the iterative implementation is best suitable for this application, since the server and client both have to close after the CTRL+C. The server does not need to wait for more connections. So one-process-per-child and prefork are not necessary and iterative is sufficient for this task.
+We think the iterative implementation is best suitable for this application, since the server and client both have to close after the CTRL+C. The server does not need to wait for more connections. Additionally, our iterative server proved to be very responsive. Note we only tested chatting with another user user the same machine. One-process-per-child and prefork are not necessary; iterative is sufficient for this task.
 \subsection{Question E}
 \subsubsection{Case a}
 Yes, running the client and server on the same machine is possible without any modification of the system.
