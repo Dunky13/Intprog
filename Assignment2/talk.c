@@ -85,13 +85,10 @@ void *readFrom(void *parm){
 			break;
 		}
 		if(message[0] == 10){
-			//wprintw(args->readWindow, "\r");
-			//wrefresh(args->readWindow);
 			wclrtoeol(args->readWindow);
 		}
 		wprintw(args->readWindow, &message[0]);
 		wrefresh(args->readWindow);
-		//display(message);
 	}
 	return 0;
 }
@@ -110,7 +107,6 @@ void *writeTo(void *parm){
 		message[0] = (char) c;
 		if(message[0] == 3){
 			keepRunning = 0;
-			//break;
 		}
 		else if(message[0] == 10 || message[0] == 13){
 			message[0] = 10;
