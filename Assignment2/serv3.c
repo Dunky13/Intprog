@@ -18,10 +18,17 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 #define PORT 4444
 #define BACKLOG 5
 #define NB_PROC 10
+
+void sig_chld(int signal_number) {
+	while (waitpid(0, NULL, WNOHANG) > 0) {}
+	signal(SIGCHLD, sig_chld);
+}
 
 //Slide 37
 ssize_t writen(int fd, const void *vptr, size_t n){
@@ -107,7 +114,7 @@ int main(int argc, char **argv){
     struct sembuf up	= {0,  1, 0};
 	struct sembuf down	= {0, -1, 0};
 
-    //signal(SIGCHLD, sig_chld);
+    signal(SIGCHLD, sig_chld);
 
     /* Initialize shared counter and semaphore for counter */
     shmid = shmget(IPC_PRIVATE, sizeof(uint32_t), 0600);

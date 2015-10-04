@@ -18,9 +18,16 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 #define PORT 4444
 #define BACKLOG 5
+
+void sig_chld(int signal_number) {
+	while (waitpid(0, NULL, WNOHANG) > 0) {}
+	signal(SIGCHLD, sig_chld);
+}
 
 //Slide 37
 ssize_t writen(int fd, const void *vptr, size_t n){
