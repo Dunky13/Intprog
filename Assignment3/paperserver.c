@@ -173,7 +173,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	}
 
 	curr_info = curr->paper_info;
-	out->paper = curr_info->paper;
+	*out->paper = *curr_info->paper;
 
 
 	return out;
