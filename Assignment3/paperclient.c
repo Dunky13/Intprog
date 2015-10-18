@@ -31,9 +31,8 @@ int parseInt(char* argv)
 	}
 }
 
-char* readFile(char* file_path, long* size)
+long readFile(char* file_path, char* buffer)
 {
-	char* buffer = 0;
 	long length;
 	FILE* f = fopen (file_path, "rb");
 
@@ -41,7 +40,6 @@ char* readFile(char* file_path, long* size)
 	{
 		fseek (f, 0, SEEK_END);
 		length = ftell (f);
-		printf("Length: %ld", length);
 		fseek (f, 0, SEEK_SET);
 		buffer = (char *)malloc (length+1);
 		if (buffer)
@@ -50,8 +48,7 @@ char* readFile(char* file_path, long* size)
 		}
 		fclose (f);
 	}
-	size = &length;
-	return buffer;
+	return length;
 }
 int getAllArticles(CLIENT *cl)
 {
@@ -139,18 +136,19 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
 	paper_information 	*in;
 	int_out 	*out;
-	long 		*fileSize = (long *) malloc(sizeof(long));
-	char 		*buffer;
+	long 		fileSize;
+	char 		*buffer = 0;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 	in->author 	= (author);
 	in->title 	= (title);
-	buffer		= readFile(file_path, fileSize);
+
+	fileSize		= readFile(file_path, buffer);
 
 	printf("%d - %d\n", strlen(buffer), fileSize);
 
 	in->paper.paper_val = buffer;
-	in->paper.paper_len = *fileSize;
+	in->paper.paper_len = fileSize;
 
 	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
