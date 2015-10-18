@@ -158,7 +158,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out = (paper_content_out*)"";
+		out = (paper_content_out*) malloc(sizeof(char) * (1));
 		return out;
 	}
 
