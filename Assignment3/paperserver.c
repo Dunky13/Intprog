@@ -241,10 +241,6 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 		perror("Error allocating memory");
 		exit(1);
 	}
-	out->author = "\0";
-	out->title = "\0";
-	out->paper.paper_data_len =  0;
-	out->paper.paper_data_val =  malloc(sizeof(char));
 
 	curr_out = out;
 	//curr_out->prev 				= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
@@ -271,6 +267,14 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 			curr_out->next			= NULL;
 			curr 					= NULL;
 		}
+	}
+	if(out->paper_info == NULL){
+		out->id 				= -1;
+		out->paper_info 		= (struct paper_information*) malloc(sizeof(struct paper_information));
+		out->paper_info->author = "\0";
+		out->paper_info->title 	= "\0";
+		out->paper_info->paper.paper_data_len =  0;
+		out->paper_info->paper.paper_data_val =  malloc(sizeof(char));
 	}
 	return out;
 }
