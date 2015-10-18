@@ -30,7 +30,10 @@ void freePreviousListOut(struct paper_list_out* out)
 	struct paper_list_out* tmp;
 	while(out != NULL)
 	{
-		freePreviousInfoOut(out->paper_info);
+		if(out->paper_info != NULL)
+		{
+			freePreviousInfoOut(out->paper_info);
+		}
 		tmp = out->next;
 		free(out);
 		out = tmp;
