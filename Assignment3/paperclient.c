@@ -73,9 +73,12 @@ int getAllArticles(CLIENT *cl)
 	}
 	do
 	{
-		if(out->paper_info == NULL)
+		if(out->id < 0 || out->paper_info == NULL ||
+			!(strlen(out->paper_info->author) == 0
+				&& strlen(out->paper_info->title) == 0)
+			)
 		{
-			break;
+			continue;
 		}
 		printf("%d\t%s\t%s\n", out->id, (out->paper_info)->author, (out->paper_info)->title);
 	} while((out = out->next) != NULL);
