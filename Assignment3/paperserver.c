@@ -221,6 +221,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
+			out->author = (char *) malloc(sizeof(char));
+			out->title 	=  (char *) malloc(sizeof(char));
 			return out;
 		}
 	}
