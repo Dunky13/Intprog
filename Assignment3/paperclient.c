@@ -5,6 +5,11 @@
 
 #include "rpcfunc.h"
 
+struct fileParams{
+	char* buffer;
+	long fileSize;
+};
+
 CLIENT* createClient(char* host){
 	CLIENT *cl;
 	cl = clnt_create(host, RPC_FUNCTIONS, RPC_FUNC_VERS, "tcp");
@@ -31,9 +36,11 @@ int parseInt(char* argv)
 	}
 }
 
-long readFile(char* file_path, char* buffer)
+struct fileParams readFile(char* file_path)
 {
+	char* buffer;
 	long length;
+	struct fileParams out = (struct fileParams*) malloc(sizeof(struct fileParams));
 	FILE* f = fopen (file_path, "rb");
 
 	if (f)
@@ -48,7 +55,9 @@ long readFile(char* file_path, char* buffer)
 		}
 		fclose (f);
 	}
-	return length;
+	out.length = length;
+	out->buffer = buffer;
+	return out;
 }
 int getAllArticles(CLIENT *cl)
 {
@@ -136,20 +145,16 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
 	paper_information 	*in;
 	int_out 	*out;
-	long 		fileSize;
-	char 		*buffer = NULL;
+	struct fileParams file;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 	in->author 	= (author);
 	in->title 	= (title);
 
-	fileSize		= readFile(file_path, buffer);
+	file		= readFile(file_path);
 
-	printf("%s\n\n\n", buffer);
-
-	in->paper.paper_val = (char*) malloc(fileSize * sizeof(char));
-	memcpy((in->paper).paper_val, buffer, fileSize);
-	in->paper.paper_len = fileSize;
+	in->paper.paper_val = file->buffer;
+	in->paper.paper_len = file.length;
 
 	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
