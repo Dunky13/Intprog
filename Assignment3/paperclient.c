@@ -142,8 +142,8 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	char 		*buffer;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
-	in->author 	= strdup(author);
-	in->title 	= strdup(title);
+	in->author 	= (author);
+	in->title 	= (title);
 	buffer		= readFile(file_path, fileSize);
 
 	in->paper.paper_val = buffer;
