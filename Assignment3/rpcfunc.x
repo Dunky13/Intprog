@@ -1,7 +1,7 @@
 struct paper_information{
 	string author<>;
 	string title<>;
-	opaque paper<>;
+	paper_data paper;
 };
 
 struct paper_list_out
@@ -11,7 +11,7 @@ struct paper_list_out
 	int id;
 	struct paper_information* paper_info;
 };
-
+typedef opaque paper_data<>;
 typedef int int_in;
 typedef int int_out;
 typedef int list_in;
