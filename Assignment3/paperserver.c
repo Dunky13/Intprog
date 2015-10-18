@@ -200,9 +200,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		freePreviousInfoOut(out);
-		out->author = (string) malloc(sizeof(char));
-		out->title 	=  malloc(sizeof(char));
+		out->author = (char *) malloc(sizeof(char));
+		out->title 	=  (char *) malloc(sizeof(char));
 		printf("%d - %s; %d - %s\n", (int)strlen(out->author), out->author, (int)strlen(out->title), out->title);
 		out->paper.paper_val =  malloc(sizeof(char));
 		return out;
