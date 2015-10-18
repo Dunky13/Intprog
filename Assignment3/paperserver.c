@@ -199,6 +199,8 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
+		out->author = malloc(sizeof(char));
+		out->title = malloc(sizeof(char));
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
