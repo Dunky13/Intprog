@@ -91,14 +91,15 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	forward = true;//curr == head ? false : true;
 
 	while(!isPaper(curr, id)){
-		curr = curr->next//forward ? curr->next : curr->prev;
+		curr = curr->next;//forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
 			return &out;
 		}
 	}
 
-	if(curr == head && curr == tail){
+	if(curr == head && curr == tail)
+	{
 		head 		= NULL;
 		tail 		= NULL;
 	}
