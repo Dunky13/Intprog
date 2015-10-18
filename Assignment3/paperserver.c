@@ -153,8 +153,8 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	out->title 	=  (char *) malloc(sizeof(char));
 	if(!hasPapers())
 	{
-		out->paper.paper_val = malloc(sizeof(char));
-		out->paper.paper_len = 0;
+		out->paper->paper_val = malloc(sizeof(char));
+		out->paper->paper_len = 0;
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -165,15 +165,15 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
-			out->paper.paper_val = malloc(sizeof(char));
-			out->paper.paper_len = 0;
+			out->paper->paper_val = malloc(sizeof(char));
+			out->paper->paper_len = 0;
 			return out;
 		}
 	}
 	out->paper = malloc(sizeof(paper_data));
-	out->paper.paper_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
+	out->paper->paper_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
 	memcpy(&(out->paper.paper_val), &(curr->paper_info->paper.paper_val), curr->paper_info->paper.paper_len);
-	out->paper.paper_len = curr->paper_info->paper.paper_len;
+	out->paper->paper_len = curr->paper_info->paper.paper_len;
 
 	return out;
 }
