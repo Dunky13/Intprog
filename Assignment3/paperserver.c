@@ -308,6 +308,17 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 		newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 		(newHead->paper_info)->author 	= strdup(in->author);
 		(newHead->paper_info)->title	= strdup(in->title);
+
+		if(head != NULL){
+			newHead->prev = head;
+			head->next = newHead;
+		}
+
+		head = newHead;
+		if(tail == NULL)
+		{
+			tail = newHead;
+		}
 	}
 
 	(newHead->paper_info)->paper.paper_data_val = (char *)malloc(in->paper.paper_data_len * sizeof(char));
@@ -316,18 +327,5 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 		in->paper.paper_data_len
 	);
 	(newHead->paper_info)->paper.paper_data_len = in->paper.paper_data_len;
-
-
-
-	if(head != NULL){
-		newHead->prev = head;
-		head->next = newHead;
-	}
-
-	head = newHead;
-	if(tail == NULL)
-	{
-		tail = head;
-	}
 	return (int_out*) &newHead->id;
 }
