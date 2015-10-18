@@ -130,7 +130,7 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	return &out;
 }
 
-struct paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
+paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static paper_data* out;
 
