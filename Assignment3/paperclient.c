@@ -57,13 +57,17 @@ int getAllArticles(CLIENT *cl)
 
 	out = list_paper_1(&in, cl);
 
-	if (out==NULL)
+	if (out == NULL)
 	{
 		printf("Error: %s\n",clnt_sperror(cl,"Get All Articles Error"));
 		return 1;
 	}
 	do
 	{
+		if(out->paper_info == NULL)
+		{
+			break;
+		}
 		printf("%d\t%s\t%s\n", out->id, (out->paper_info)->author, (out->paper_info)->title);
 	} while((out = out->next) != NULL);
 	return 0;
@@ -244,7 +248,7 @@ int main(int argc, char** argv)
 		}
 		return output;
 	}
-
-	printf("WTF happened? %d args provided", argc);
+	printUsage();
+	//printf("WTF happened? %d args provided", argc);
 	return -1;
 }
