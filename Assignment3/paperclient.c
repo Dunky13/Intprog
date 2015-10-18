@@ -74,8 +74,7 @@ int getAllArticles(CLIENT *cl)
 	do
 	{
 		if(out->id < 0 || out->paper_info == NULL ||
-			!(strlen(out->paper_info->author) == 0
-				&& strlen(out->paper_info->title) == 0)
+			(strlen(out->paper_info->author) == 0 && strlen(out->paper_info->title) == 0)
 			)
 		{
 			continue;
