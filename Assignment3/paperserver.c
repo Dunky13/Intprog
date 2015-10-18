@@ -121,7 +121,6 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	}
 	free(curr->paper_info);
 	free(curr);
-	//freePreviousListOut(curr);
 	return &out;
 }
 
@@ -242,6 +241,10 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 		perror("Error allocating memory");
 		exit(1);
 	}
+	out->author = "\0";
+	out->title = "\0";
+	out->paper.paper_data_len =  0;
+	out->paper.paper_data_val =  malloc(sizeof(char));
 
 	curr_out = out;
 	//curr_out->prev 				= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
