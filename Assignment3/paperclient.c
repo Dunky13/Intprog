@@ -15,7 +15,7 @@ CLIENT* createClient(char* host){
 	return cl;
 }
 
-int parseInt(char* arg)
+int parseInt(char* argv)
 {
 	int id;
 	char* end;
@@ -34,7 +34,7 @@ char* readFile(char* file_path)
 {
 	char* buffer = 0;
 	long length;
-	FILE* f = fopen (filename, "rb");
+	FILE* f = fopen (file_path, "rb");
 
 	if (f)
 	{
@@ -59,13 +59,13 @@ int getAllArticles(CLIENT *cl)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,argv[1]));
+		printf("Error: %s\n",clnt_sperror(cl,"Get All Articles Error"));
 		return 1;
 	}
 	do
 	{
-		printf("%d\t%s\t%s\n", out->id, (out->paper_info)->author, (out->paper_info)->title)
-	} while((out = out->next) != NULL)
+		printf("%d\t%s\t%s\n", out->id, (out->paper_info)->author, (out->paper_info)->title);
+	} while((out = out->next) != NULL);
 	return 0;
 }
 
@@ -80,10 +80,10 @@ int getArticleInformation(CLIENT *cl, int article_id)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,argv[1]));
+		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
 		return 1;
 	}
-	printf("%s\t%s\n", (*out)->author, (*out)->title);
+	printf("%s\t%s\n", out->author, out->title);
 	return 0;
 }
 
@@ -98,7 +98,7 @@ int getArticle(CLIENT *cl, int article_id)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,argv[1]));
+		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
 	printf("%s\n", *out);
@@ -108,7 +108,7 @@ int getArticle(CLIENT *cl, int article_id)
 int removeArticle(CLIENT *cl, int article_id)
 {
 	int_in in;
-	paper_info_out *out;
+	int_out *out;
 
 	in = (int_in) article_id;
 
@@ -116,7 +116,7 @@ int removeArticle(CLIENT *cl, int article_id)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,argv[1]));
+		printf("Error: %s\n",clnt_sperror(cl,"Remove Article Error"));
 		return 1;
 	}
 	return 0;
@@ -135,7 +135,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,argv[1]));
+		printf("Error: %s\n",clnt_sperror(cl,"Add Article Error"));
 		return 1;
 	}
 	printf("%d\n", *out);
@@ -242,6 +242,7 @@ int main(int argc, char** argv)
 			output = printUsage();
 			break;
 		}
+		return output;
 	}
 
 	printf("WTF happened? %d args provided", argc);
