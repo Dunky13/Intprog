@@ -135,14 +135,17 @@ int removeArticle(CLIENT *cl, int article_id)
 
 int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
-	add_paper_in 	in;
+	add_paper_in 	*in;
 	int_out 		*out;
 
-	in.author 		= author;
-	in.title 		= title;
-	in.paper 		= readFile(file_path);
+	in 				= (struct add_paper_in*) malloc(sizeof(struct add_paper_in));
+	in->author 		= strdup(author);
+	in->title 		= strdup(title);
+	in->paper 		= readFile(file_path);
 
-	out = add_paper_1(&in, cl);
+	printf("Article: %s - %s\n", in->author, in->title);
+
+	out = add_paper_1(in, cl);
 
 	if (out==NULL)
 	{
