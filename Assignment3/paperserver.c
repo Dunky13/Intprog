@@ -270,7 +270,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	}
 
 	curr_out = out;
-	curr_out->prev 				= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
+	//curr_out->prev 				= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 	while(curr != NULL){
 		curr_out->next 			= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 		curr_out->paper_info	= (struct paper_information*) malloc(sizeof(struct paper_information));
@@ -287,7 +287,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 		curr_out->paper_info->paper.paper_data_val = malloc(sizeof(char));
 
 		if(curr->next != NULL){
-			curr_out->next->prev 	= curr_out;
+			//curr_out->next->prev 	= curr_out;
 			curr_out 				= curr_out->next;
 			curr 					= curr->next;
 		}
@@ -297,8 +297,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 			curr 					= NULL;
 		}
 	}
-	free(out->prev);
-	out->prev = NULL;
+	//free(out->prev);
+	//out->prev = NULL;
 	return out;
 }
 
