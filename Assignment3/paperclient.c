@@ -169,11 +169,15 @@ int main(int argc, char** argv)
 	int output;
 
 
-	if(argc > 2)
+	if(argc == 1){
+		return printUsage();
+	}
+	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
+	else if(argc > 2)
 	{
 		cl = createClient(argv[1]);
 	}
-	while((c = getopt(argc, argv, "afhilr:")) != -1)
+	while((c = getopt(argc, argv, "a:f:i:r:hl")) != -1)
 	{
 		switch (c) {
 			case 'a':
@@ -251,7 +255,6 @@ int main(int argc, char** argv)
 		}
 		return output;
 	}
-	printUsage();
-	//printf("WTF happened? %d args provided", argc);
+	printf("WTF happened? %d args provided", argc);
 	return -1;
 }
