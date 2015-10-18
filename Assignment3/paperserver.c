@@ -193,6 +193,9 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(out != NULL)
 	{
+		free(out->author);
+		free(out->title);
+		free(out->paper.paper_data_val);
 		free(out);
 	}
 	out = (paper_information*) malloc(sizeof(struct paper_information));
@@ -202,11 +205,12 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 		exit(1);
 	}
 
+	out->paper.paper_data_len =  0;
+	out->paper.paper_data_val =  malloc(sizeof(char));
 	if(!hasPapers())
 	{
 		out->author = (char *) malloc(sizeof(char));
 		out->title 	=  (char *) malloc(sizeof(char));
-		out->paper.paper_data_val =  malloc(sizeof(char));
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -279,7 +283,6 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
 	struct paper_list_out* newHead;
-	int i;
 
 	newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 	newHead->id 					= head == NULL ? 0 : head->id + 1;
