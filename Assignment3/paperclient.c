@@ -55,7 +55,7 @@ struct fileParams *readFile(char* file_path)
 		}
 		fclose (f);
 	}
-	out.length = length;
+	out->length = length;
 	out->buffer = buffer;
 	return out;
 }
