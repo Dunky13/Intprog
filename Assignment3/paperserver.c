@@ -298,7 +298,7 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
 	struct paper_list_out* newHead;
 
-	if((newHead = paperExists(in) == NULL){
+	if((newHead = paperExists(in)) == NULL){
 		newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 		newHead->id 					= head == NULL ? 0 : head->id + 1;
 		newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
