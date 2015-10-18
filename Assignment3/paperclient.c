@@ -52,7 +52,7 @@ char* readFile(char* file_path)
 }
 int getAllArticles(CLIENT *cl)
 {
-	list_in in;
+	list_in in = 0;
 	struct paper_list_out *out;
 
 	out = list_paper_1(&in, cl);
