@@ -172,16 +172,16 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 			return out;
 		}
 	}
-	tmpPaperInfo = curr->paper_info->paper;
-	printf("Found the paper: %u\n", tmpPaperInfo.paper_len);
+	paper = curr->paper_info->paper;
+	printf("Found the paper: %u\n", paper.paper_len);
 	out->paper.paper_len = 0;
-	out->paper.paper_val = malloc(tmpPaperInfo.paper_len * sizeof(char));
+	out->paper.paper_val = malloc(paper.paper_len * sizeof(char));
 	memcpy(&(out->paper.paper_val),
 		&(curr->paper_info->paper.paper_val),
-		tmpPaperInfo.paper_len
+		paper.paper_len
 	);
 
-	out->paper.paper_len = tmpPaperInfo.paper_len;
+	out->paper.paper_len = paper.paper_len;
 	printf("It sould be copied: %u", out->paper.paper_len);
 	return out;
 }
