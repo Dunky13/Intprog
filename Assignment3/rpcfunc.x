@@ -18,7 +18,7 @@ struct add_paper_in
 };
 
 typedef int int_in;
-typedef string paper_content_out;
+typedef string paper_content_out<>;
 typedef int int_out;
 typedef int list_in;
 
