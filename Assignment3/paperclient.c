@@ -36,7 +36,7 @@ int parseInt(char* argv)
 	}
 }
 
-struct fileParams readFile(char* file_path)
+struct fileParams *readFile(char* file_path)
 {
 	char* buffer;
 	long length;
