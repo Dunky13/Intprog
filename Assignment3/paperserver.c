@@ -180,7 +180,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	paper->paper_out_len = curr->paper_info->paper.paper_len;
 
-	memcpy(&(out->paper.paper_val), paper->paper_out_val, paper->paper_out_len);
+	memcpy((&out->paper)->paper_val, paper->paper_out_val, paper->paper_out_len);
 	//out->paper.paper_val = paper->paper_out_val;
 	out->paper.paper_len = paper->paper_out_len;
 	return out;
