@@ -3,30 +3,31 @@
 
 #include "rpcfunc.h"
 
-struct papers
-{
-	struct papers *next;
-	struct papers *prev;
-	int id;
-
-	char* author;
-	char* title;
-	char* paper;
-};
-struct papers* head;
-struct papers* tail;
+// struct papers
+// {
+// 	struct papers *next;
+// 	struct papers *prev;
+// 	int id;
+//
+// 	char* author;
+// 	char* title;
+// 	char* paper;
+// };
+struct paper_list_out* head;
+struct paper_list_out* tail;
 typedef enum { false, true } bool;
 //  [0,........,x]
 // [tail,.....,head]
 
-void freePreviousInfoOut(struct paper_out* out)
+void freePreviousInfoOut(struct paper_information* out)
 {
 	if(out == NULL) //Nothing to free if it is NULL
 	{
 		return;
 	}
-	free(out->author);
-	free(out->title);
+	free((out->author));
+	free((out->title));
+	if((out->paper.paper_val) != NULL) 	free(out->paper.paper_val);
 	free(out);
 }
 void freePreviousListOut(struct paper_list_out* out)
@@ -42,7 +43,7 @@ void freePreviousListOut(struct paper_list_out* out)
 	}
 }
 
-void remove_paper(struct papers* curr)
+void remove_paper(struct paper_list_out* curr)
 {
 	if(curr->next != NULL && curr->prev != NULL)
 	{
@@ -56,17 +57,14 @@ void remove_paper(struct papers* curr)
 	else if(curr->next == NULL && curr->prev != NULL){
 		curr->prev->next = NULL;
 	}
-	free(curr->author);
-	free(curr->title);
-	free(curr->paper);
-	free(curr);
+	freePreviousListOut(curr);
 }
-bool isPaper(struct papers* curr, int id)
+bool isPaper(struct paper_list_out* curr, int id)
 {
 	return curr->id == id;
 }
 
-struct papers* closer(int id, struct papers* a, struct papers* b)
+struct paper_list_out* closer(int id, struct paper_list_out* a, struct paper_list_out* b)
 {
 	int toA = a == NULL ? INT_MAX : abs(a->id - id);
 	int toB = b == NULL ? INT_MAX : abs(b->id - id);
@@ -81,8 +79,8 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static int_out out = 1;
 	int id = (int) *in;
-	struct papers* curr;
-	struct papers* tmp;
+	struct paper_list_out* curr;
+	struct paper_list_out* tmp;
 
 	bool forward;
 
@@ -143,12 +141,12 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	return &out;
 }
 
-paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
+struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
-	static paper_content_out* out;
+	static paper_information* out;
 
 	int id = (int) *in;
-	struct papers* curr;
+	struct paper_list_out* curr;
 	bool forward;
 
 	if(out != NULL)
@@ -158,7 +156,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out = (paper_content_out*) malloc(sizeof(char) * (1));
+		out = (struct paper_information*) malloc(sizeof(struct paper_information));
 		return out;
 	}
 
@@ -174,23 +172,26 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out = (paper_content_out*) curr->paper;
-
+	// out = (paper_content_out *) malloc(sizeof(paper_content_out));
+	// out->paper_content_out_len = curr->paper_info->paper.paper_len;
+	// out->paper_content_out_val = malloc(out->paper_content_out_len * sizeof(char));
+	// memcpy(out->paper_content_out_val, curr->paper_info->paper.paper_val, out->paper_content_out_len);
+	out = curr->paper_info;
 	return out;
 }
 
 
-paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
+paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 {
-	static paper_out* out;
+	static paper_information* out;
 
 	int id = (int) *in;
-	struct papers* curr;
+	struct paper_list_out* curr;
 	bool forward;
 
 	free(out);
 
-	out = malloc(sizeof(struct paper_out));
+	out = (paper_information*) malloc(sizeof(struct paper_information));
 	if(out == NULL)
 	{
 		perror("Error allocating memory");
@@ -199,8 +200,9 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out->author = "";
-		out->title = "";
+		out->author = (char *) malloc(sizeof(char));
+		out->title 	=  (char *) malloc(sizeof(char));
+		out->paper.paper_val =  malloc(sizeof(char));
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -215,8 +217,8 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out->author = strdup(curr->author);
-	out->title 	= strdup(curr->title);
+	out->author = strdup(curr->paper_info->author);
+	out->title 	= strdup(curr->paper_info->title);
 
 	return out;
 }
@@ -225,7 +227,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 {
 	static paper_list_out* out;
 	struct paper_list_out* curr_out;
-	struct papers* curr;
+	struct paper_list_out* curr;
 
 	curr = tail;
 
@@ -244,7 +246,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 
 		curr_out->id = curr->id;
 
-		curr_out->paper_info	= (struct paper_out*) malloc(sizeof(struct paper_out));
+		curr_out->paper_info	= (struct paper_information*) malloc(sizeof(struct paper_information));
 		curr_out->next 			= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 		if(curr_out->next == NULL || curr_out->paper_info == NULL)
 		{
@@ -252,8 +254,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 			exit(1);
 		}
 
-		curr_out->paper_info->author 	= strdup(curr->author);
-		curr_out->paper_info->title 	= strdup(curr->title);
+		curr_out->paper_info->author 	= strdup(curr->paper_info->author);
+		curr_out->paper_info->title 	= strdup(curr->paper_info->title);
 
 		curr_out 	= curr_out->next;
 		curr 		= curr->next;
@@ -262,19 +264,16 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	return out;
 }
 
-int_out *add_paper_1_svc(add_paper_in *in, struct svc_req *req)
+int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
-	static int_out out;
+	struct paper_list_out* newHead;
 
-	struct papers* newHead;
-
-	newHead 		= (struct papers*) malloc(sizeof(struct papers));
-	newHead->id 	= head == NULL ? 0 : head->id + 1;
-	newHead->author = strdup(in->author);
-	newHead->title	= strdup(in->title);
-	newHead->paper	= in->paper;
-
-	printf("Added Article: %s - %s, %d \n", in->author, in->title, (int)strlen(in->paper));
+	newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
+	newHead->id 					= head == NULL ? 0 : head->id + 1;
+	newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
+	(newHead->paper_info)->author 	= strdup(in->author);
+	(newHead->paper_info)->title	= strdup(in->title);
+	(newHead->paper_info)->paper	= in->paper;
 
 	if(head != NULL){
 		newHead->prev = head;
@@ -286,6 +285,5 @@ int_out *add_paper_1_svc(add_paper_in *in, struct svc_req *req)
 	{
 		tail = head;
 	}
-	out = (int_out) newHead->id;
-	return &out;
+	return (int_out*) &newHead->id;
 }
