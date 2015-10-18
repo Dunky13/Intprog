@@ -13,7 +13,6 @@ struct paper_list_out
 };
 
 typedef int int_in;
-typedef opaque paper_content_out<>;
 typedef int int_out;
 typedef int list_in;
 
