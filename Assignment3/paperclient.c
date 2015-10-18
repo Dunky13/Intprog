@@ -146,7 +146,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	in->title 	= (title);
 	buffer		= readFile(file_path, fileSize);
 
-	printf("%d - %d\n", strlen(buffer), *fileSize);
+	printf("%d - %d\n", strlen(buffer), fileSize);
 
 	in->paper.paper_val = buffer;
 	in->paper.paper_len = *fileSize;
