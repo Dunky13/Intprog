@@ -42,10 +42,10 @@ char* readFile(char* file_path, long* size)
 		fseek (f, 0, SEEK_END);
 		length = ftell (f);
 		fseek (f, 0, SEEK_SET);
-		buffer = malloc (length);
+		buffer = (char *)malloc (length+1);
 		if (buffer)
 		{
-			fread (buffer, 1, length, f);
+			fread (buffer, length + 1, 1, f);
 		}
 		fclose (f);
 	}
@@ -145,6 +145,8 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	in->author 	= (author);
 	in->title 	= (title);
 	buffer		= readFile(file_path, fileSize);
+
+	printf("%d - %d\n", strlen(buffer), *fileSize);
 
 	in->paper.paper_val = buffer;
 	in->paper.paper_len = *fileSize;
