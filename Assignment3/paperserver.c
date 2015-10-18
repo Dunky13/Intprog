@@ -212,6 +212,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	struct paper_list_out* curr;
 	bool forward;
 
+	int loop = 0;
+
 	if(out != NULL)
 	{
 		free(out->paper.paper_data_val);
@@ -236,6 +238,7 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	forward = curr == head ? false : true;
 
 	while(!isPaper(curr, id)){
+		printf("Looped %d", loop++);
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
