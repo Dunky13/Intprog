@@ -243,6 +243,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	}
 
 	if(curr == NULL){
+		out->next				= NULL;
+		out->prev				= NULL;
 		out->id 				= -1;
 		out->paper_info 		= (struct paper_information*) malloc(sizeof(struct paper_information));
 		out->paper_info->author = "\0";
