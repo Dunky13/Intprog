@@ -120,6 +120,8 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 		curr->next->prev = tmp->prev;
 		curr->prev->next = tmp->next;
 	}
+	free(curr->paper_info->author);
+	free(curr->paper_info->title);
 	free(curr->paper_info);
 	free(curr);
 	return &out;
