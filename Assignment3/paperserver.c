@@ -136,9 +136,8 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	int id = (int) *in;
 	struct paper_list_out* curr;
+	struct paper_information *curr_info;
 	bool forward;
-	u_int tmpValue = 0;
-	paper_out *paper;
 
 	if(out != NULL)
 	{
@@ -172,17 +171,11 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 			return out;
 		}
 	}
-	paper = malloc(sizeof(paper_out));
-	paper->paper_out_len = 0;
 
-	paper->paper_out_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
-	memcpy(paper->paper_out_val, &(curr->paper_info->paper.paper_val), curr->paper_info->paper.paper_len);
+	curr_info = curr->paper_info;
+	out->paper = curr_info->paper;
 
-	paper->paper_out_len = curr->paper_info->paper.paper_len;
 
-	memcpy((&out->paper)->paper_val, paper->paper_out_val, paper->paper_out_len);
-	//out->paper.paper_val = paper->paper_out_val;
-	out->paper.paper_len = paper->paper_out_len;
 	return out;
 }
 
