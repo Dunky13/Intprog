@@ -289,7 +289,7 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 	(newHead->paper_info)->paper	= in->paper;
 
 	for(i = 0; i < 10; i ++){
-		printf("%d ", (newHead->paper_info)->paper.paper_data_val[i]);
+		printf("%d ", in->paper.paper_data_val[i]);
 	}
 
 	if(head != NULL){
