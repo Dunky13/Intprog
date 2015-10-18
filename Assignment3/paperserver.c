@@ -260,6 +260,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 
 	curr = tail;
 
+	return tail;
+/*
 	freePreviousListOut(out);
 
 	out = (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
@@ -300,6 +302,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	//free(out->prev);
 	//out->prev = NULL;
 	return out;
+	*/
 }
 
 int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
