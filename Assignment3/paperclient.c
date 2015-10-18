@@ -210,6 +210,7 @@ int main(int argc, char** argv)
 			}
 			else
 			{
+				printf("Hmm2: %s\n", optarg);
 				id = parseInt(optarg);
 				if(id < 0)
 				{
