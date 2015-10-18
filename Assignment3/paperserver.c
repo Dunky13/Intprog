@@ -73,8 +73,8 @@ struct paper_list_out* paperExists(struct paper_information *in){
 	{
 		return NULL;
 	}
-	while(strcmp(curr->paper_info->author, in->author) != 0 &&
-		strcmp(curr->paper_info->title, in->title) != 0)
+	while(!(strcmp(curr->paper_info->author, in->author) == 0 &&
+		strcmp(curr->paper_info->title, in->title) == 0))
 	{
 		if(curr->next == NULL)
 		{
