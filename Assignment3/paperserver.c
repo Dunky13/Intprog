@@ -177,7 +177,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		&(curr->paper_info->paper.paper_val),
 		curr->paper_info->paper.paper_len
 	);
-	out->paper->paper_len = curr->paper_info->paper.paper_len;
+	(&out->paper)->paper_len = curr->paper_info->paper.paper_len;
 	printf("It sould be copied: %ld", out->paper.paper_len);
 	return out;
 }
