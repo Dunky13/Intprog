@@ -191,7 +191,7 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	freePreviousInfoOut(out);
 
-	out = malloc(sizeof(struct paper_information));
+	out = (paper_information*) malloc(sizeof(struct paper_information));
 	if(out == NULL)
 	{
 		perror("Error allocating memory");
@@ -201,7 +201,7 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	if(!hasPapers())
 	{
 		freePreviousInfoOut(out);
-		out->author = malloc(sizeof(char));
+		out->author = (string) malloc(sizeof(char));
 		out->title 	=  malloc(sizeof(char));
 		printf("%d - %s; %d - %s\n", (int)strlen(out->author), out->author, (int)strlen(out->title), out->title);
 		out->paper.paper_val =  malloc(sizeof(char));
