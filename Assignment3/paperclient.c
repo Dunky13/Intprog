@@ -192,7 +192,7 @@ int main(int argc, char** argv)
 			}
 			else if(access(argv[optind + 2 ], R_OK) == -1){
 				output = printUsage();
-				printf("Could not access file %s\n", argv[optind + 2 ]);
+				printf("Could not access file %d - %s - %s %s\n", optind, argv[optind], argv[optind + 1], argv[optind + 2]);
 			}
 			else
 			{
