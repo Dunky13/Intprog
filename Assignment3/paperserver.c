@@ -64,7 +64,7 @@ void remove_paper(struct papers* curr)
 bool isPaper(struct papers* curr, int id)
 {
 	return curr->id == id;
-}
+} 
 
 struct papers* closer(int id, struct papers* a, struct papers* b)
 {
