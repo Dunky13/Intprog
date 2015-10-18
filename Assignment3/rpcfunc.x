@@ -1,3 +1,8 @@
+typedef opaque paper_data<>;
+typedef int int_in;
+typedef int int_out;
+typedef int list_in;.
+
 struct paper_information{
 	string author<>;
 	string title<>;
@@ -11,10 +16,7 @@ struct paper_list_out
 	int id;
 	struct paper_information* paper_info;
 };
-typedef opaque paper_data<>;
-typedef int int_in;
-typedef int int_out;
-typedef int list_in;
+
 
 program RPC_FUNCTIONS
 {
