@@ -27,6 +27,7 @@ void freePreviousListOut(struct paper_list_out* out)
 	while(out != NULL)
 	{
 		free(out->paper_info);
+		out->paper_info = NULL;
 		tmp = out->next;
 		free(out);
 		out = tmp;
@@ -234,7 +235,6 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	curr = tail;
 
 	freePreviousListOut(out);
-
 	out = (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 	if(out == NULL)
 	{
