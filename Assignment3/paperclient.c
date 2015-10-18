@@ -124,7 +124,7 @@ int getArticle(CLIENT *cl, int article_id)
 		{
 			printf("%c", out->paper_data_val[i]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 	return 0;
 }
