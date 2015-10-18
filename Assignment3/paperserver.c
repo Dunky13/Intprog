@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
- 
+
 #include "rpcfunc.h"
 
 struct papers
@@ -174,6 +174,14 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 	bool forward;
 
 	freePreviousInfoOut(out);
+
+	out = malloc(sizeof(struct paper_out));
+	if(out == NULL)
+	{
+		perror("Error allocating memory");
+		exit(1);
+	}
+	
 	if(!hasPapers())
 	{
 		return out;
@@ -190,12 +198,6 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out = malloc(sizeof(struct paper_out));
-	if(out == NULL)
-	{
-		perror("Error allocating memory");
-		exit(1);
-	}
 	out->author = strdup(curr->author);
 	out->title 	= strdup(curr->title);
 
