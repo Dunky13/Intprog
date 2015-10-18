@@ -143,9 +143,9 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	return &out;
 }
 
-paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
+struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
-	static paper_content_out* out;
+	static struct paper_information* out;
 
 	int id = (int) *in;
 	struct paper_list_out* curr;
@@ -158,7 +158,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out = (paper_content_out*) malloc(sizeof(char) * (1));
+		out = (struct paper_information*) malloc(sizeof(struct paper_information));
 		return out;
 	}
 
@@ -174,7 +174,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out = (paper_content_out*) curr->paper;
+	out = (paper_information*) curr->paper_info;
 
 	return out;
 }
