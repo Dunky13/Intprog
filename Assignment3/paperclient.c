@@ -153,7 +153,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	file		= readFile(file_path);
 
-	in->paper.paper_val = file->buffer;
+	in->paper.paper_val = file.buffer;
 	in->paper.paper_len = file.length;
 
 	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
