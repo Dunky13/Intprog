@@ -163,9 +163,9 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	in->paper.paper_data_len = file->length;
 
 
-	for(i = 0; i < 10; i++)
+	for(i = 0; i < in->paper.paper_data_len; i++)
 	{
-		printf("%d ", in->paper.paper_data_val[i]);
+		printf("%c", in->paper.paper_data_val[i]);
 	}
 	printf("\n");
 	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
