@@ -88,7 +88,8 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		return &(out = -1);
+		out = -1;
+		return &out;
 	}
 
 	curr = closer(id, head, tail); //Not necessarily best option:
