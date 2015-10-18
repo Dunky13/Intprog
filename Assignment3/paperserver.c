@@ -88,7 +88,7 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		return (out = -1);
+		return out;
 	}
 
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -157,7 +157,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out = malloc(sizeof(struct paper_content_out));
+		out = "";
 		return out;
 	}
 
