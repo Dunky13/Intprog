@@ -33,22 +33,6 @@ void freePreviousListOut(struct paper_list_out* out)
 	}
 }
 
-void remove_paper(struct paper_list_out* curr)
-{
-	if(curr->next != NULL && curr->prev != NULL)
-	{
-		curr->prev->next = curr->next;
-		curr->next->prev = curr->prev;
-	}
-	else if(curr->next != NULL && curr->prev == NULL)
-	{
-		curr->next->prev = NULL;
-	}
-	else if(curr->next == NULL && curr->prev != NULL){
-		curr->prev->next = NULL;
-	}
-	freePreviousListOut(curr);
-}
 bool isPaper(struct paper_list_out* curr, int id)
 {
 	return curr->id == id;
@@ -100,54 +84,40 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 		return &out;
 	}
 
-	curr = closer(id, head, tail); //Not necessarily best option:
+	curr = tail;
+	//curr = closer(id, head, tail); //Not necessarily best option:
 	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
 
-	forward = curr == head ? false : true;
+	forward = true;//curr == head ? false : true;
 
 	while(!isPaper(curr, id)){
-		curr = forward ? curr->next : curr->prev;
+		curr = curr->next//forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
 			return &out;
 		}
 	}
 
-	if(curr == head)
+	if(curr == head && curr == tail){
+		head 		= NULL;
+		tail 		= NULL;
+	}
+	else if(curr == head)
 	{
-		if(head->next != NULL) //SHOULDN'T Happen
-		{
-			tmp = head->next;
-			tmp->prev = head->prev;
-		}
-		else if(head->prev != NULL)
-		{
-			tmp = head->prev;
-			tmp->next = NULL;
-		}
-		remove_paper(head);
-		head = tmp;
+		head 		= curr->prev;
+		head->next 	= NULL;
 	}
 	else if(curr == tail)
 	{
-		if(tail->prev != NULL) //SHOULDN'T Happen
-		{
-			tmp = tail->prev;
-			tmp->next = tail->next;
-		}
-		else if(tail->next != NULL)
-		{
-			tmp = tail->next;
-			tmp->prev = NULL;
-		}
-		remove_paper(tail);
-		tail = tmp;
+		tail 		= curr->next;
+		tail->prev 	= NULL;
 	}
 	else
 	{
-		remove_paper(curr);
+		curr->next->prev = curr->prev;
+		curr->prev->next = curr->next;
 	}
-
+	freePreviousListOut(curr);
 	return &out;
 }
 
