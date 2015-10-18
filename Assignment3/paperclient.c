@@ -122,7 +122,7 @@ int getArticle(CLIENT *cl, int article_id)
 	{
 		for(i = 0; i < 7; i++)
 		{
-			printf("%c", out->paper_data_val[i]);
+			printf("%d", out->paper_data_val[i]);
 		}
 		printf("\n");
 	}
