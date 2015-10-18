@@ -188,7 +188,7 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 	struct papers* curr;
 	bool forward;
 
-	freePreviousInfoOut(out);
+	free(out);
 
 	out = malloc(sizeof(struct paper_out));
 	if(out == NULL)
