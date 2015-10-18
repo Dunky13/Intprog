@@ -12,10 +12,10 @@ struct papers
 	char* author;
 	char* title;
 	char* paper;
-}
+};
 struct papers* head;
 struct papers* tail;
-
+typedef enum { false, true } bool;
 //  [0,........,x]
 // [tail,.....,head]
 
@@ -70,7 +70,7 @@ struct papers* closer(int id, struct papers* a, struct papers* b)
 int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static int_out out = 1;
-	int id = (int) in;
+	int id = (int) *in;
 	struct papers* curr;
 	struct papers* tmp;
 
@@ -131,7 +131,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static paper_content_out* out;
 
-	int id = (int) in;
+	int id = (int) *in;
 	struct papers* curr;
 	bool forward;
 
