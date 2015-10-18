@@ -109,7 +109,7 @@ int getArticle(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
-	if(strlen(out) > 0)
+	if(strlen((char*)out) > 0)
 	{
 		printf("%s", *out);
 	}
