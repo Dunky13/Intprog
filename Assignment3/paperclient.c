@@ -78,7 +78,7 @@ int getAllArticles(CLIENT *cl)
 int getArticleInformation(CLIENT *cl, int article_id)
 {
 	int_in in;
-	paper_out *out;
+	paper_information *out;
 
 	in = (int_in) article_id;
 
@@ -136,12 +136,12 @@ int removeArticle(CLIENT *cl, int article_id)
 
 int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
-	paper_out 	*in;
+	paper_information 	*in;
 	int_out 	*out;
 	long 		*fileSize;
 	char 		*buffer;
 
-	in 			= (struct paper_out*) malloc(sizeof(struct paper_out));
+	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 	in->author 	= strdup(author);
 	in->title 	= strdup(title);
 	buffer		= readFile(file_path, fileSize);
