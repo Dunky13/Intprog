@@ -17,6 +17,7 @@ CLIENT* createClient(char* host){
 
 int parseInt(char* argv)
 {
+	printf("Hmm: %s\n", argv);
 	int id;
 	char* end;
 	id = strtol(argv, &end, 10);
