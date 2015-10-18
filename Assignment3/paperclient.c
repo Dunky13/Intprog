@@ -120,9 +120,9 @@ int getArticle(CLIENT *cl, int article_id)
 	}
 	if(out->paper_data_len > 0)
 	{
-		for(i = 0; i < 7; i++)
+		for(i = 0; i < 10; i++)
 		{
-			printf("%d", out->paper_data_val[i]);
+			printf("%d ", out->paper_data_val[i]);
 		}
 		printf("\n");
 	}
