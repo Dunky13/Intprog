@@ -10,7 +10,7 @@ CLIENT* createClient(char* host){
 	if(cl == NULL)
 	{
 		perror("Error creating RPC Client");
-		return 1;
+		exit(1);
 	}
 	return cl;
 }
@@ -19,7 +19,7 @@ int parseInt(char* argv)
 {
 	int id;
 	char* end;
-	id = strtol(argv[3], &end, 10);
+	id = strtol(argv, &end, 10);
 	if(!*end)
 	{
 		return id;
