@@ -27,7 +27,7 @@ void freePreviousInfoOut(struct paper_information* out)
 	}
 	free(out->author);
 	free(out->title);
-	if(out->paper != NULL)
+	if((&out)->paper != NULL)
 	{
 		free(out->paper.paper_val);
 	}
