@@ -124,7 +124,6 @@ int getArticle(CLIENT *cl, int article_id)
 		{
 			printf("%c", out->paper_data_val[i]);
 		}
-		//printf("\n");
 	}
 	return 0;
 }
@@ -151,7 +150,6 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	paper_information 	*in;
 	int_out 	*out;
 	struct fileParams *file;
-	int i;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 	in->author 	= (author);
@@ -161,18 +159,6 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	in->paper.paper_data_val = file->buffer;
 	in->paper.paper_data_len = file->length;
-
-
-	for(i = 0; i < 10; i++)
-	{
-		printf("%d ", in->paper.paper_data_val[i]);
-	}
-	for(i = 0; i < 10; i++)
-	{
-		printf("%d ", in->paper.paper_data_val[in->paper.paper_data_len - i]);
-	}
-	//printf("\n");
-	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
 	out = add_paper_1(in, cl);
 
