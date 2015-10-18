@@ -145,7 +145,7 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 
 struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
-	static struct paper_information* out;
+	static paper_information* out;
 
 	int id = (int) *in;
 	struct paper_list_out* curr;
@@ -174,8 +174,11 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out = (paper_information*) curr->paper_info;
-
+	// out = (paper_content_out *) malloc(sizeof(paper_content_out));
+	// out->paper_content_out_len = curr->paper_info->paper.paper_len;
+	// out->paper_content_out_val = malloc(out->paper_content_out_len * sizeof(char));
+	// memcpy(out->paper_content_out_val, curr->paper_info->paper.paper_val, out->paper_content_out_len);
+	out = curr->paper_info;
 	return out;
 }
 
