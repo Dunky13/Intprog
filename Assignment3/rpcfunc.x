@@ -1,7 +1,7 @@
 struct paper_information{
-	string author<>;
-	string title<>;
-	opaque paper<>;
+	string *author<>;
+	string *title<>;
+	opaque *paper<>;
 };
 
 struct paper_list_out
