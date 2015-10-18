@@ -138,7 +138,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	struct paper_list_out* curr;
 	bool forward;
 	u_int tmpValue = 0;
-	struct paper_information tmpPaperInfo;
+	struct paper_information paper;
 
 	if(out != NULL)
 	{
