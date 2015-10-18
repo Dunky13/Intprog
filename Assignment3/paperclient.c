@@ -1,316 +1,289 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <getopt.h>
+#include <unistd.h>
 
 #include "rpcfunc.h"
 
-// struct papers
-// {
-// 	struct papers *next;
-// 	struct papers *prev;
-// 	int id;
-//
-// 	char* author;
-// 	char* title;
-// 	char* paper;
-// };
-struct paper_list_out* head;
-struct paper_list_out* tail;
-typedef enum { false, true } bool;
-//  [0,........,x]
-// [tail,.....,head]
+struct fileParams{
+	char* buffer;
+	long length;
+};
 
+CLIENT* createClient(char* host){
+	CLIENT *cl;
+	cl = clnt_create(host, RPC_FUNCTIONS, RPC_FUNC_VERS, "tcp");
+	if(cl == NULL)
+	{
+		perror("Error creating RPC Client");
+		exit(1);
+	}
+	return cl;
+}
 
-void freePreviousListOut(struct paper_list_out* out)
+int parseInt(char* argv)
 {
-	struct paper_list_out* tmp;
-	while(out != NULL)
+	int id;
+	char* end;
+	id = strtol(argv, &end, 10);
+	if(!*end)
 	{
-		free(out->paper_info);
-		out->paper_info = NULL;
-		tmp = out->next;
-		free(out);
-		out = tmp;
-	}
-}
-
-bool isPaper(struct paper_list_out* curr, int id)
-{
-	return curr->id == id;
-}
-
-struct paper_list_out* closer(int id, struct paper_list_out* a, struct paper_list_out* b)
-{
-	int toA = a == NULL ? INT_MAX : abs(a->id - id);
-	int toB = b == NULL ? INT_MAX : abs(b->id - id);
-	return toA < toB ? a : b;
-}
-
-bool hasPapers(){
-	return head != NULL || tail != NULL;
-}
-
-struct paper_list_out* paperExists(struct paper_information *in){
-	struct paper_list_out* curr;
-	curr = tail;
-
-	if(curr == NULL || curr->paper_info == NULL)
-	{
-		return NULL;
-	}
-	while(!(strcmp(curr->paper_info->author, in->author) == 0 &&
-		strcmp(curr->paper_info->title, in->title) == 0))
-	{
-		if(curr->next == NULL)
-		{
-			return NULL;
-		}
-		curr = curr->next;
-	}
-	return curr;
-}
-
-int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
-{
-	static int_out out = 1;
-	int id = (int) *in;
-	struct paper_list_out* curr;
-	struct paper_list_out* tmp;
-
-	bool forward;
-
-	if(!hasPapers())
-	{
-		out = -1;
-		return &out;
-	}
-
-	curr = tail;
-	//curr = closer(id, head, tail); //Not necessarily best option:
-	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
-
-	forward = true;//curr == head ? false : true;
-
-	while(!isPaper(curr, id)){
-		curr = curr->next;//forward ? curr->next : curr->prev;
-		if(curr == NULL)
-		{
-			return &out;
-		}
-	}
-
-	if(curr == head && curr == tail)
-	{
-		head 		= NULL;
-		tail 		= NULL;
-	}
-	else if(curr == head)
-	{
-		head 		= curr->prev;
-		head->next 	= NULL;
-	}
-	else if(curr == tail)
-	{
-		tail 		= curr->next;
-		tail->prev 	= NULL;
+		return id;
 	}
 	else
 	{
-		tmp = curr;
-		curr->next->prev = tmp->prev;
-		curr->prev->next = tmp->next;
+		return -1;
 	}
-	free(curr->paper_info);
-	free(curr);
-	return &out;
 }
 
-paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
+struct fileParams *readFile(char* file_path)
 {
-	static paper_data* out;
+	char* buffer;
+	long length;
+	struct fileParams *out = (struct fileParams*) malloc(sizeof(struct fileParams));
+	FILE* f = fopen (file_path, "rb");
 
-	int id = (int) *in;
-	struct paper_list_out* curr;
-	bool forward;
+	if (f)
+	{
+		fseek (f, 0, SEEK_END);
+		length = ftell (f);
+		fseek (f, 0, SEEK_SET);
+		buffer = (char *)malloc (length+1);
+		if (buffer)
+		{
+			fread (buffer, length + 1, 1, f);
+		}
+		fclose (f);
+	}
+	out->length = length;
+	out->buffer = buffer;
+	return out;
+}
+int getAllArticles(CLIENT *cl)
+{
+	list_in in = 0;
+	struct paper_list_out *out;
+
+	out = list_paper_1(&in, cl);
+
+	if (out == NULL)
+	{
+		printf("Error: %s\n",clnt_sperror(cl,"Get All Articles Error"));
+		return 1;
+	}
+	do
+	{
+		if(out->id < 0 || out->paper_info == NULL ||
+			!(strlen(out->paper_info->author) == 0
+				&& strlen(out->paper_info->title) == 0)
+			)
+		{
+			continue;
+		}
+		printf("%d\t%s\t%s\n", out->id, (out->paper_info)->author, (out->paper_info)->title);
+	} while((out = out->next) != NULL);
+	return 0;
+}
+
+int getArticleInformation(CLIENT *cl, int article_id)
+{
+	int_in in;
+	paper_information *out;
+
+	in = (int_in) article_id;
+
+	out = info_paper_1(&in, cl);
+
+	if (out==NULL)
+	{
+		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
+		return 1;
+	}
+	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
+	{
+		printf("%s\t%s\n", out->author, out->title);
+	}
+	return 0;
+}
+
+int getArticle(CLIENT *cl, int article_id)
+{
+	int_in in;
+	paper_data *out;
 	int i;
 
-	if(out != NULL)
-	{
-		free(out);
-	}
+	in = (int_in) article_id;
 
-	out = (paper_data*) malloc(sizeof(paper_data));
-	if(out == NULL)
-	{
-		perror("Error allocating memory");
-		exit(1);
-	}
-	if(!hasPapers())
-	{
-		out->paper_data_val = malloc(sizeof(char));
-		out->paper_data_len = 0;
-		return out;
-	}
-	curr = closer(id, head, tail); //Not necessarily best option:
-	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
-	forward = curr == head ? false : true;
+	out = fetch_paper_1(&in, cl);
 
-	while(!isPaper(curr, id)){
-		curr = forward ? curr->next : curr->prev;
-		if(curr == NULL)
+	if (out==NULL)
+	{
+		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
+		return 1;
+	}
+	if(out->paper_data_len > 0)
+	{
+		for(i = 0; i < out->paper_data_len; i++)
 		{
-			out->paper_data_val = malloc(sizeof(char));
-			out->paper_data_len = 0;
-			return out;
+			printf("%c", out->paper_data_val[i]);
 		}
 	}
-
-	out->paper_data_val = malloc(curr->paper_info->paper.paper_data_len * sizeof(char));
-	memcpy(out->paper_data_val, (&curr->paper_info->paper)->paper_data_val, curr->paper_info->paper.paper_data_len);
-	out->paper_data_len = curr->paper_info->paper.paper_data_len;
-
-
-	for(i = 0; i < 10; i ++){
-		printf("%d ", out->paper_data_val[i]);
-	}
-
-	return out;
+	return 0;
 }
 
-
-paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
+int removeArticle(CLIENT *cl, int article_id)
 {
-	static paper_information* out;
+	int_in in;
+	int_out *out;
 
-	int id = (int) *in;
-	struct paper_list_out* curr;
-	bool forward;
+	in = (int_in) article_id;
 
-	int loop = 0;
+	out = remove_paper_1(&in, cl);
 
-	if(out != NULL)
+	if (out==NULL)
 	{
-		free(out->paper.paper_data_val);
-		free(out);
+		printf("Error: %s\n",clnt_sperror(cl,"Remove Article Error"));
+		return 1;
 	}
-	out = (paper_information*) malloc(sizeof(struct paper_information));
-	if(out == NULL)
-	{
-		perror("Error allocating memory");
-		exit(1);
-	}
-	out->author = "\0";
-	out->title = "\0";
-	out->paper.paper_data_len =  0;
-	out->paper.paper_data_val =  malloc(sizeof(char));
-	if(!hasPapers())
-	{
-		return out;
-	}
-	curr = closer(id, head, tail); //Not necessarily best option:
-	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
-	forward = curr == head ? false : true;
-
-	while(!isPaper(curr, id)){
-		printf("Looped %d", loop++);
-		curr = forward ? curr->next : curr->prev;
-		if(curr == NULL)
-		{
-			return out;
-		}
-	}
-
-	out->author = strdup(curr->paper_info->author);
-	out->title 	= strdup(curr->paper_info->title);
-
-	return out;
+	return 0;
 }
 
-paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
+int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
-	static paper_list_out* out;
-	struct paper_list_out* curr_out;
-	struct paper_list_out* curr;
+	paper_information 	*in;
+	int_out 	*out;
+	struct fileParams *file;
 
-	curr = tail;
+	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
+	in->author 	= (author);
+	in->title 	= (title);
 
-	freePreviousListOut(out);
-	out = (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
-	if(out == NULL)
+	file		= readFile(file_path);
+
+	in->paper.paper_data_val = file->buffer;
+	in->paper.paper_data_len = file->length;
+
+	out = add_paper_1(in, cl);
+
+	if (out==NULL)
 	{
-		perror("Error allocating memory");
-		exit(1);
+		printf("Error: %s\n",clnt_sperror(cl,"Add Article Error"));
+		return 1;
 	}
-
-	if(curr == NULL){
-		out->next				= NULL;
-		out->prev				= NULL;
-		out->id 				= -1;
-		out->paper_info 		= (struct paper_information*) malloc(sizeof(struct paper_information));
-		out->paper_info->author = "\0";
-		out->paper_info->title 	= "\0";
-		out->paper_info->paper.paper_data_len =  0;
-		out->paper_info->paper.paper_data_val =  malloc(sizeof(char));
-		return out;
-	}
-
-	curr_out = out;
-	//curr_out->prev 				= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
-	while(curr != NULL){
-		curr_out->paper_info	= (struct paper_information*) malloc(sizeof(struct paper_information));
-		if(curr_out->paper_info == NULL)
-		{
-			perror("Error allocating memory");
-			exit(1);
-		}
-
-		curr_out->id 					= curr->id;
-		curr_out->paper_info->author 	= strdup(curr->paper_info->author);
-		curr_out->paper_info->title 	= strdup(curr->paper_info->title);
-		curr_out->paper_info->paper.paper_data_len = 0;
-		curr_out->paper_info->paper.paper_data_val = malloc(sizeof(char));
-		curr_out->prev 					= NULL;
-		if(curr->next != NULL){
-			curr_out->next 			= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
-			curr_out 				= curr_out->next;
-			curr 					= curr->next;
-		}
-		else{
-			curr_out->next			= NULL;
-			curr 					= NULL;
-		}
-	}
-	return out;
+	printf("%d\n", *out);
+	return 0;
 }
 
-int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
+int printUsage()
 {
-	struct paper_list_out* newHead;
+	printf("Usage:\n");
+	printf("\tHelp: paperclient -h\n");											//2 args
+	printf("\tList articles: paperclient <host> -l\n");							//3 args
+	printf("\tArticle Information: paperclient <host> -i <ID>\n");				//4 args
+	printf("\tFetch article: paperclient <host> -f <ID>\n");					//4 args
+	printf("\tRemove article: paperclient <host> -r <ID>\n");					//4 args
+	printf("\tAdd Paper: paperclient <host> -a <Author> <Title> <File Path>\n");//5 args
+	return 1;
+}
 
-	if((newHead = paperExists(in)) == NULL){
-		newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
-		newHead->id 					= head == NULL ? 0 : head->id + 1;
-		newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
-		(newHead->paper_info)->author 	= strdup(in->author);
-		(newHead->paper_info)->title	= strdup(in->title);
+int main(int argc, char** argv)
+{
+	CLIENT *cl;
+	int id;
 
-		if(head != NULL){
-			newHead->prev = head;
-			head->next = newHead;
-		}
+	int c;
+	int output;
 
-		head = newHead;
-		if(tail == NULL)
-		{
-			tail = newHead;
-		}
+
+	if(argc == 1){
+		return printUsage();
 	}
-
-	(newHead->paper_info)->paper.paper_data_val = (char *)malloc(in->paper.paper_data_len * sizeof(char));
-	memcpy((newHead->paper_info)->paper.paper_data_val,
-		in->paper.paper_data_val,
-		in->paper.paper_data_len
-	);
-	(newHead->paper_info)->paper.paper_data_len = in->paper.paper_data_len;
-	return (int_out*) &newHead->id;
+	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
+	else if(argc > 2)
+	{
+		cl = createClient(argv[1]);
+	}
+	while((c = getopt(argc, argv, "a:f:i:r:hl")) != -1)
+	{
+		switch (c) {
+			case 'a':
+			if(argc != 6)
+			{
+				output = printUsage();
+			}
+			else if(access(argv[optind + 1 ], R_OK) == -1){
+				output = printUsage();
+				printf("Could not access file %d - %s - %s %s\n", optind, optarg, argv[optind], argv[optind + 1]);
+			}
+			else
+			{
+				output = addArticle(cl, optarg, argv[optind], argv[optind + 1]);
+			}
+			break;
+			case 'f':
+			if(argc != 4)
+			{
+				output = printUsage();
+			}
+			else
+			{
+				id = parseInt(optarg);
+				if(id < 0)
+				{
+					output = 1;
+				}
+				else
+				{
+					output = getArticle(cl, id);
+				}
+			}
+			break;
+			case 'i':
+			if(argc != 4)
+			{
+				output = printUsage();
+			}
+			else
+			{
+				id = parseInt(optarg);
+				if(id < 0)
+				{
+					output = 1;
+				}
+				else
+				{
+					output = getArticleInformation(cl, id);
+				}
+			}
+			break;
+			case 'l':
+			output = getAllArticles(cl);
+			break;
+			case 'r':
+			if(argc != 4)
+			{
+				output = printUsage();
+			}
+			else
+			{
+				id = parseInt(optarg);
+				if(id < 0)
+				{
+					output = 1;
+				}
+				else
+				{
+					output = removeArticle(cl, id);
+				}
+			}
+			break;
+			case 'h':
+			default:
+			output = printUsage();
+			break;
+		}
+		return output;
+	}
+	printf("WTF happened? %d args provided", argc);
+	return -1;
 }
