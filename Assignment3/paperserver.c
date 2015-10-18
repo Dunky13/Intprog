@@ -267,10 +267,10 @@ int_out *add_paper_1_svc(add_paper_in *in, struct svc_req *req)
 	struct papers* newHead;
 
 	newHead 		= (struct papers*) malloc(sizeof(struct papers));
+	newHead->id 	= head == NULL ? 0 : head->id + 1;
 	newHead->author = strdup(in->author);
 	newHead->title	= strdup(in->title);
 	newHead->paper	= in->paper;
-	newHead->id 	= head->id + 1;
 
 	if(head != NULL){
 		newHead->prev = head;
