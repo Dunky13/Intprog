@@ -138,7 +138,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
 	paper_information 	*in;
 	int_out 	*out;
-	long 		*fileSize;
+	long 		*fileSize = (long *) malloc(sizeof(long));
 	char 		*buffer;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
