@@ -272,6 +272,8 @@ int_out *add_paper_1_svc(add_paper_in *in, struct svc_req *req)
 	newHead->title	= strdup(in->title);
 	newHead->paper	= in->paper;
 
+	printf("Added Article: %s - %s \n", newHead->author, newHead->title);
+
 	if(head != NULL){
 		newHead->prev = head;
 		head->next = newHead;
