@@ -176,7 +176,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	paperInfo->paper_out_len = 0;
 
 	paperInfo->paper_out_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
-	memcpy(paperInfo->paper_out_val, curr->paper_info->paper.paper_val, curr->paper_info->paper.paper_len);
+	memcpy(paperInfo->paper_out_val, &(curr->paper_info->paper.paper_val), curr->paper_info->paper.paper_len);
 	paperInfo->paper_out_len = curr->paper_info->paper.paper_len;
 	//
 	// paper = curr->paper_info->paper;
