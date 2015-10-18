@@ -25,8 +25,8 @@ void freePreviousInfoOut(struct paper_information* out)
 	{
 		return;
 	}
-	free(&(out->author));
-	free(&(out->title));
+	free((out->author));
+	free((out->title));
 	if((out->paper.paper_val) != NULL) 	free(out->paper.paper_val);
 	free(out);
 }
@@ -201,8 +201,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	if(!hasPapers())
 	{
 		out->author = malloc(sizeof(char));
-		printf("%d - %s\n", (int)strlen(out->author), out->author);
 		out->title 	=  malloc(sizeof(char));
+		printf("%d - %s; %d - %s\n", (int)strlen(out->author), out->author, (int)strlen(out->title), out->title);
 		out->paper.paper_val =  malloc(sizeof(char));
 		return out;
 	}
