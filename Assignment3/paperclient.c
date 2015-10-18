@@ -99,7 +99,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int getArticle(CLIENT *cl, int article_id)
 {
 	int_in in;
-	paper_content_out *out;
+	struct paper_information *out;
 
 	in = (int_in) article_id;
 
@@ -110,9 +110,9 @@ int getArticle(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
-	if(strlen(out) > 0)
+	if(out->paper->paper_len > 0)
 	{
-		printf("%s", *out);
+		printf("%s", *(out->paper->paper_val));
 	}
 	return 0;
 }
