@@ -89,7 +89,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
 		return 1;
 	}
-	if(!(out->author == NULL && out->title == NULL))
+	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
 	{
 		printf("%s\t%s\n", out->author, out->title);
 	}
