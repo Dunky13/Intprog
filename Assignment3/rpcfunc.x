@@ -15,6 +15,7 @@ struct paper_list_out
 typedef int int_in;
 typedef int int_out;
 typedef int list_in;
+typedef opaque paper_out<>;
 
 program RPC_FUNCTIONS
 {
