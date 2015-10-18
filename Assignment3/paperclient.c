@@ -106,7 +106,8 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int getArticle(CLIENT *cl, int article_id)
 {
 	int_in in;
-	struct paper_information *out;
+	struct paper_data *out;
+	int i;
 
 	in = (int_in) article_id;
 
@@ -117,9 +118,13 @@ int getArticle(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
-	if(out->paper->paper_len > 0)
+	if(out->paper_data_len > 0)
 	{
-		printf("%s", out->paper->paper_val);
+		for(i = 0; i < out->paper_data_len; i++)
+		{
+			printf("%c", out->paper_data_val[i]);
+		}
+		printf("\n");
 	}
 	return 0;
 }
@@ -153,8 +158,8 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	file		= readFile(file_path);
 
-	in->paper->paper_val = file->buffer;
-	in->paper->paper_len = file->length;
+	in->paper.paper_val = file->buffer;
+	in->paper.paper_len = file->length;
 
 	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
