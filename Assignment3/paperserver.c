@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "rpcfunc.h"
 
@@ -62,6 +63,22 @@ struct paper_list_out* closer(int id, struct paper_list_out* a, struct paper_lis
 
 bool hasPapers(){
 	return head != NULL || tail != NULL;
+}
+
+struct paper_list_out* paperExists(struct paper_information *in){
+	struct paper_list_out* curr;
+	curr = tail;
+
+	while(strcmp(curr->paper_info->author, in->author) != 0 &&
+		strcmp(curr->paper_info->title, in->title) != 0)
+	{
+		if(curr->next == NULL)
+		{
+			return NULL;
+		}
+		curr = curr->next;
+	}
+	return curr;
 }
 
 int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
@@ -281,13 +298,13 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
 	struct paper_list_out* newHead;
 
-	newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
-	newHead->id 					= head == NULL ? 0 : head->id + 1;
-	newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
-	(newHead->paper_info)->author 	= strdup(in->author);
-	(newHead->paper_info)->title	= strdup(in->title);
-
-	//(newHead->paper_info)->paper	= in->paper;
+	if((newHead = paperExists(in) == NULL){
+		newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
+		newHead->id 					= head == NULL ? 0 : head->id + 1;
+		newHead->paper_info 			= (struct paper_information*) malloc(sizeof(struct paper_information));
+		(newHead->paper_info)->author 	= strdup(in->author);
+		(newHead->paper_info)->title	= strdup(in->title);
+	}
 
 	(newHead->paper_info)->paper.paper_data_val = (char *)malloc(in->paper.paper_data_len * sizeof(char));
 	memcpy((newHead->paper_info)->paper.paper_data_val,
