@@ -10,7 +10,6 @@ struct paper_list_out
 	paper_out* paper_info;
 };
 
-struct list_in{};
 struct add_paper_in
 {
 	char* author;
@@ -21,6 +20,7 @@ struct add_paper_in
 typedef int int_in;
 typedef char* paper_content_out;
 typedef int int_out;
+typedef int list_in;
 
 program RPC_FUNCTIONS
 {
