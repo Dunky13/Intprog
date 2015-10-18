@@ -40,7 +40,7 @@ struct fileParams readFile(char* file_path)
 {
 	char* buffer;
 	long length;
-	struct fileParams out = (struct fileParams*) malloc(sizeof(struct fileParams));
+	struct fileParams *out = (struct fileParams*) malloc(sizeof(struct fileParams));
 	FILE* f = fopen (file_path, "rb");
 
 	if (f)
