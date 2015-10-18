@@ -137,7 +137,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	paper_information 	*in;
 	int_out 	*out;
 	long 		fileSize;
-	char 		*buffer = 0;
+	char 		*buffer = NULL;
 
 	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
 	in->author 	= (author);
@@ -145,7 +145,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	fileSize		= readFile(file_path, buffer);
 
-	printf("%ld\n", fileSize);
+	printf("%s\n\n\n", buffer);
 
 	in->paper.paper_val = (char*) malloc(fileSize * sizeof(char));
 	memcpy((in->paper).paper_val, buffer, fileSize);
