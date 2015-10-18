@@ -293,6 +293,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 		}
 		else{
 			free(curr_out->next);
+			curr_out->next			= NULL;
 			curr 					= NULL;
 		}
 	}
