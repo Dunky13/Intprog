@@ -171,7 +171,7 @@ paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	}
 
 	out->paper_data_val = malloc(curr->paper_info->paper.paper_data_len * sizeof(char));
-	memcpy(out->paper_data_val, curr->paper_info->paper->paper_data_val, curr->paper_info->paper.paper_data_len);
+	memcpy(out->paper_data_val, (&curr->paper_info->paper)->paper_data_val, curr->paper_info->paper.paper_data_len);
 	out->paper_data_len = curr->paper_info->paper.paper_data_len;
 
 
@@ -279,6 +279,7 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
 	struct paper_list_out* newHead;
+	int i;
 
 	newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 	newHead->id 					= head == NULL ? 0 : head->id + 1;
@@ -288,7 +289,7 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 	(newHead->paper_info)->paper	= in->paper;
 
 	for(i = 0; i < 10; i ++){
-		printf("%d ", (newHead->paper_info)->paper->paper_data_val[i]);
+		printf("%d ", (newHead->paper_info)->paper.paper_data_val[i]);
 	}
 
 	if(head != NULL){
