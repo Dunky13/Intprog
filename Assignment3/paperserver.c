@@ -143,9 +143,15 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		free(out);
 	}
 
+	out = (paper_information*) malloc(sizeof(struct paper_information));
+	if(out == NULL)
+	{
+		perror("Error allocating memory");
+		exit(1);
+	}
+
 	if(!hasPapers())
 	{
-		out = (paper_information*) malloc(sizeof(struct paper_information));
 		out->author = (char *) malloc(sizeof(char));
 		out->title 	=  (char *) malloc(sizeof(char));
 		out->paper.paper_val =  malloc(sizeof(char));
@@ -159,10 +165,14 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
+			out->author = (char *) malloc(sizeof(char));
+			out->title 	=  (char *) malloc(sizeof(char));
+			out->paper.paper_val =  malloc(sizeof(char));
 			return out;
 		}
 	}
 
+	printf("Found the paper: %s\n", curr->paper_info->author);
 	// out = (paper_content_out *) malloc(sizeof(paper_content_out));
 	// out->paper_content_out_len = curr->paper_info->paper.paper_len;
 	// out->paper_content_out_val = malloc(out->paper_content_out_len * sizeof(char));
