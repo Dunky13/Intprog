@@ -297,7 +297,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 			curr 					= NULL;
 		}
 	}
-
+	free(out->prev);
+	out->prev = NULL;
 	return out;
 }
 
