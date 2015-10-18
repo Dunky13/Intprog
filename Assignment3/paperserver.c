@@ -149,7 +149,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out = (paper_content_out) curr->paper;
+	out = (paper_content_out*) curr->paper;
 
 	return &out;
 }
@@ -159,7 +159,7 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static paper_out* out;
 
-	int id = (int) in;
+	int id = (int) *in;
 	struct papers* curr;
 	bool forward;
 
@@ -173,7 +173,7 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
-			return &out;
+			return out;
 		}
 	}
 
@@ -194,7 +194,6 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 	static paper_list_out* out;
 	struct paper_list_out* curr_out;
 	struct papers* curr;
-	bool forward;
 
 	curr = tail;
 
