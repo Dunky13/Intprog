@@ -130,9 +130,9 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	return &out;
 }
 
-struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
+struct paper *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
-	static paper_information* out;
+	static paper* out;
 
 	int id = (int) *in;
 	struct paper_list_out* curr;
@@ -143,18 +143,16 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		free(out);
 	}
 
-	out = (paper_information*) malloc(sizeof(struct paper_information));
+	out = (paper*) malloc(sizeof(paper));
 	if(out == NULL)
 	{
 		perror("Error allocating memory");
 		exit(1);
 	}
-	out->author = "";//(char *) malloc(sizeof(char));
-	out->title 	=  "";//(char *) malloc(sizeof(char));
 	if(!hasPapers())
 	{
-		out->paper.paper_val = malloc(sizeof(char));
-		out->paper.paper_len = 0;
+		out->paper_val = malloc(sizeof(char));
+		out->paper_len = 0;
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -165,15 +163,15 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
-			out->paper.paper_val = malloc(sizeof(char));
-			out->paper.paper_len = 0;
+			out->paper_val = malloc(sizeof(char));
+			out->paper_len = 0;
 			return out;
 		}
 	}
 
-	out->paper = curr->paper_info->paper;
-	memcpy(&(out->paper.paper_val), &(curr->paper_info->paper.paper_val), out->paper.paper_len);
-
+	out->paper_val =  = malloc(curr->paper_info->paper.paper_len * sizeof(char));
+	memcpy(out->paper_val, curr->paper_info->paper.paper_val, curr->paper_info->paper.paper_len);
+	out->paper_len = curr->paper_info->paper.paper_len;
 	return out;
 }
 
