@@ -200,8 +200,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out->author = "";//malloc(sizeof(char));
-		out->title 	=  "";//malloc(sizeof(char));
+		out->author = malloc(sizeof(char));
+		out->title 	=  malloc(sizeof(char));
 		out->paper.paper_val =  malloc(sizeof(char));
 		return out;
 	}
