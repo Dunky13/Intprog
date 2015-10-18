@@ -173,8 +173,8 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	printf("Found the paper: %ld\n", curr->paper_info->paper.paper_len);
 	out->paper.paper_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
-	memcpy(out->paper.paper_val,
-		curr->paper_info->paper.paper_val,
+	memcpy(&(out->paper.paper_val),
+		&(curr->paper_info->paper.paper_val),
 		curr->paper_info->paper.paper_len
 	);
 	out->paper.paper_len = curr->paper_info->paper.paper_len;
