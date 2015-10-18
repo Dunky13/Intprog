@@ -19,24 +19,13 @@ typedef enum { false, true } bool;
 //  [0,........,x]
 // [tail,.....,head]
 
-void freePreviousInfoOut(struct paper_information* out)
-{
-	if(out == NULL) //Nothing to free if it is NULL
-	{
-		return;
-	}
-	free((out->author));
-	free((out->title));
-	if((out->paper.paper_val) != NULL) 	free(out->paper.paper_val);
-	free(out);
-}
+
 void freePreviousListOut(struct paper_list_out* out)
 {
 	struct paper_list_out* tmp;
 	while(out != NULL)
 	{
-
-		freePreviousInfoOut(out->paper_info);
+		free(out->paper_info);
 		tmp = out->next;
 		free(out);
 		out = tmp;
@@ -156,10 +145,12 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out = (struct paper_information*) malloc(sizeof(struct paper_information));
+		out = (paper_information*) malloc(sizeof(struct paper_information));
+		out->author = (char *) malloc(sizeof(char));
+		out->title 	=  (char *) malloc(sizeof(char));
+		out->paper.paper_val =  malloc(sizeof(char));
 		return out;
 	}
-
 	curr = closer(id, head, tail); //Not necessarily best option:
 	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
 	forward = curr == head ? false : true;
@@ -189,8 +180,10 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	struct paper_list_out* curr;
 	bool forward;
 
-	free(out);
-
+	if(out != NULL)
+	{
+		free(out);
+	}
 	out = (paper_information*) malloc(sizeof(struct paper_information));
 	if(out == NULL)
 	{
