@@ -1,24 +1,24 @@
 struct paper_out{
 	char* author;
 	char* title;
-}
+};
 
 struct paper_list_out
 {
 	struct paper_list_out* next;
 	int id;
 	paper_out* paper_info;
-}
+};
 
 struct list_in
 {
-}
+};
 struct add_paper_in
 {
 	char* author;
 	char* title;
 	char* paper;
-}
+};
 
 typedef int int_in;
 typedef char* paper_content_out;
