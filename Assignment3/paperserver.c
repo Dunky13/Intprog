@@ -27,6 +27,10 @@ void freePreviousInfoOut(struct paper_information* out)
 	}
 	free(out->author);
 	free(out->title);
+	if(out->paper != NULL)
+	{
+		free(out->paper.paper_val);
+	}
 	free(out);
 }
 void freePreviousListOut(struct paper_list_out* out)
@@ -56,10 +60,7 @@ void remove_paper(struct paper_list_out* curr)
 	else if(curr->next == NULL && curr->prev != NULL){
 		curr->prev->next = NULL;
 	}
-	free(curr->author);
-	free(curr->title);
-	free(curr->paper);
-	free(curr);
+	freePreviousListOut(curr);
 }
 bool isPaper(struct paper_list_out* curr, int id)
 {
@@ -216,8 +217,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 		}
 	}
 
-	out->author = strdup(curr->author);
-	out->title 	= strdup(curr->title);
+	out->author = strdup(curr->paper_info->author);
+	out->title 	= strdup(curr->paper_info->title);
 
 	return out;
 }
@@ -253,8 +254,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 			exit(1);
 		}
 
-		curr_out->paper_info->author 	= strdup(curr->author);
-		curr_out->paper_info->title 	= strdup(curr->title);
+		curr_out->paper_info->author 	= strdup(curr->paper_info->author);
+		curr_out->paper_info->title 	= strdup(curr->paper_info->title);
 
 		curr_out 	= curr_out->next;
 		curr 		= curr->next;
@@ -284,5 +285,5 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 	{
 		tail = head;
 	}
-	return &((int_out) newHead->id);
+	return (int_out*) &newHead->id;
 }
