@@ -88,7 +88,10 @@ int getArticleInformation(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
 		return 1;
 	}
-	printf("%s\t%s\n", out->author, out->title);
+	if(!(out->author == NULL && out->title == NULL))
+	{
+		printf("%s\t%s\n", out->author, out->title);
+	}
 	return 0;
 }
 
@@ -106,7 +109,10 @@ int getArticle(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
-	printf("%s\n", *out);
+	if(strlen(out) > 0)
+	{
+		printf("%s", *out);
+	}
 	return 0;
 }
 
