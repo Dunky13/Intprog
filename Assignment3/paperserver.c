@@ -151,7 +151,7 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 
 	out = (paper_content_out*) curr->paper;
 
-	return &out;
+	return out;
 }
 
 
