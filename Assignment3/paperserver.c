@@ -203,6 +203,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
+		out->author = "";
+		out->title = "";
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
