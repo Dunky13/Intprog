@@ -190,13 +190,13 @@ int main(int argc, char** argv)
 			{
 				output = printUsage();
 			}
-			else if(access(argv[optind + 2 ], R_OK) == -1){
+			else if(access(argv[optind + 1 ], R_OK) == -1){
 				output = printUsage();
-				printf("Could not access file %d - %s - %s %s\n", optind, argv[optind], argv[optind + 1], argv[optind + 2]);
+				printf("Could not access file %d - %s - %s %s\n", optind, optarg, argv[optind], argv[optind + 1]);
 			}
 			else
 			{
-				output = addArticle(cl, argv[optind], argv[optind + 1], argv[optind + 2]);
+				output = addArticle(cl, optarg, argv[optind], argv[optind + 1]);
 			}
 			break;
 			case 'f':
