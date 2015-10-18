@@ -1,7 +1,7 @@
 typedef opaque paper_data<>;
 typedef int int_in;
 typedef int int_out;
-typedef int list_in;.
+typedef int list_in;
 
 struct paper_information{
 	string author<>;
