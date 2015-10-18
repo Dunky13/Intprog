@@ -25,12 +25,12 @@ void freePreviousInfoOut(struct paper_information* out)
 	{
 		return;
 	}
-	free(out->author);
 	free(out->title);
-	if(&(out->paper) != NULL)
+	if((out->paper) != NULL)
 	{
 		free(out->paper.paper_val);
 	}
+	free(out->author);
 	free(out);
 }
 void freePreviousListOut(struct paper_list_out* out)
@@ -203,8 +203,8 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(!hasPapers())
 	{
-		out->author = "x";
-		out->title = "x";
+		out->author = "";
+		out->title = "";
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
