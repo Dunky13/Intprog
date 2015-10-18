@@ -106,7 +106,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int getArticle(CLIENT *cl, int article_id)
 {
 	int_in in;
-	struct paper_data *out;
+	paper_data *out;
 	int i;
 
 	in = (int_in) article_id;
