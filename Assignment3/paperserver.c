@@ -200,7 +200,7 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	{
 		out->author = (char *) malloc(sizeof(char));
 		out->title 	=  (char *) malloc(sizeof(char));
-		out->paper.paper_val =  malloc(sizeof(char));
+		out->paper.paper_data_val =  malloc(sizeof(char));
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -254,8 +254,8 @@ paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 
 		curr_out->paper_info->author 	= strdup(curr->paper_info->author);
 		curr_out->paper_info->title 	= strdup(curr->paper_info->title);
-		curr_out->paper_info->paper.paper_len = 0;
-		curr_out->paper_info->paper.paper_val = malloc(sizeof(char));
+		curr_out->paper_info->paper.paper_data_len = 0;
+		curr_out->paper_info->paper.paper_data_val = malloc(sizeof(char));
 
 		if(curr->next != NULL){
 			curr_out->next->prev 	= curr_out;
