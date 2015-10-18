@@ -174,10 +174,7 @@ paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	memcpy(out->paper_data_val, &(curr->paper_info->paper.paper_data_val), curr->paper_info->paper.paper_data_len);
 	out->paper_data_len = curr->paper_info->paper.paper_data_len;
 
-	for(i = 0; i < 10; i ++){
-		printf("%d ", curr->paper_info->paper.paper_data_val[i]);
-	}
-	printf("\n");
+
 	for(i = 0; i < 10; i ++){
 		printf("%d ", out->paper_data_val[i]);
 	}
