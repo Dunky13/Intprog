@@ -112,7 +112,7 @@ int getArticle(CLIENT *cl, int article_id)
 	}
 	if(out->paper.paper_len > 0)
 	{
-		printf("%s", *(out->paper.paper_val));
+		printf("%s", out->paper.paper_val);
 	}
 	return 0;
 }
@@ -146,10 +146,10 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	in->title 	= strdup(title);
 	buffer		= readFile(file_path, fileSize);
 
-	in->paper->paper_val = buffer;
-	in->paper->paper_len = *fileSize;
+	in->paper.paper_val = buffer;
+	in->paper.paper_len = *fileSize;
 
-	printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
+	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
 	out = add_paper_1(in, cl);
 
