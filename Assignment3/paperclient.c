@@ -7,7 +7,7 @@
 
 struct fileParams{
 	char* buffer;
-	long fileSize;
+	long length;
 };
 
 CLIENT* createClient(char* host){
