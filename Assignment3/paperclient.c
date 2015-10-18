@@ -31,7 +31,7 @@ int parseInt(char* argv)
 	}
 }
 
-char* readFile(char* file_path, long* size)
+char* readFile(char* file_path)
 {
 	char* buffer = 0;
 	long length;
@@ -49,7 +49,6 @@ char* readFile(char* file_path, long* size)
 		}
 		fclose (f);
 	}
-	size = &length;
 	return buffer;
 }
 int getAllArticles(CLIENT *cl)
@@ -78,7 +77,7 @@ int getAllArticles(CLIENT *cl)
 int getArticleInformation(CLIENT *cl, int article_id)
 {
 	int_in in;
-	paper_information *out;
+	paper_out *out;
 
 	in = (int_in) article_id;
 
@@ -89,7 +88,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
 		return 1;
 	}
-	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
+	if(!(out->author == NULL && out->title == NULL))
 	{
 		printf("%s\t%s\n", out->author, out->title);
 	}
@@ -99,7 +98,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int getArticle(CLIENT *cl, int article_id)
 {
 	int_in in;
-	struct paper_information *out;
+	paper_content_out *out;
 
 	in = (int_in) article_id;
 
@@ -110,9 +109,9 @@ int getArticle(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Error"));
 		return 1;
 	}
-	if(out->paper.paper_len > 0)
+	if(strlen(out) > 0)
 	{
-		printf("%s", out->paper.paper_val);
+		printf("%s", *out);
 	}
 	return 0;
 }
@@ -136,20 +135,15 @@ int removeArticle(CLIENT *cl, int article_id)
 
 int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
-	paper_information 	*in;
-	int_out 	*out;
-	long 		*fileSize = (long *) malloc(sizeof(long));
-	char 		*buffer;
+	add_paper_in 	*in;
+	int_out 		*out;
 
-	in 			= (struct paper_information*) malloc(sizeof(struct paper_information));
-	in->author 	= strdup(author);
-	in->title 	= strdup(title);
-	buffer		= readFile(file_path, fileSize);
+	in 				= (struct add_paper_in*) malloc(sizeof(struct add_paper_in));
+	in->author 		= strdup(author);
+	in->title 		= strdup(title);
+	in->paper 		= readFile(file_path);
 
-	in->paper.paper_val = buffer;
-	in->paper.paper_len = *fileSize;
-
-	//printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
+	printf("Article: %s - %s, %d\n", in->author, in->title, (int)strlen(in->paper));
 
 	out = add_paper_1(in, cl);
 
