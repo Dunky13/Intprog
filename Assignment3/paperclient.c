@@ -186,9 +186,13 @@ int main(int argc, char** argv)
 	{
 		switch (c) {
 			case 'a':
-			if(argc != 6 || access(argv[optind + 2 ], R_OK) == -1)
+			if(argc != 6)
 			{
 				output = printUsage();
+			}
+			else if(access(argv[optind + 2 ], R_OK) == -1){
+				output = printUsage();
+				printf("Could not access file %s\n", argv[optind + 2 ]);
 			}
 			else
 			{
