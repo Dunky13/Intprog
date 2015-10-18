@@ -202,13 +202,12 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 		perror("Error allocating memory");
 		exit(1);
 	}
-
+	out->author = "\0";
+	out->title = "\0";
 	out->paper.paper_data_len =  0;
 	out->paper.paper_data_val =  malloc(sizeof(char));
 	if(!hasPapers())
 	{
-		out->author = (char *) malloc(sizeof(char));
-		out->title 	=  (char *) malloc(sizeof(char));
 		return out;
 	}
 	curr = closer(id, head, tail); //Not necessarily best option:
@@ -219,8 +218,6 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 		curr = forward ? curr->next : curr->prev;
 		if(curr == NULL)
 		{
-			out->author = (char *) malloc(sizeof(char));
-			out->title 	=  (char *) malloc(sizeof(char));
 			return out;
 		}
 	}
