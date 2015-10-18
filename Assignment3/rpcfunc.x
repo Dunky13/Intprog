@@ -12,9 +12,9 @@ struct paper_list_out
 
 struct add_paper_in
 {
-	char* author;
-	char* title;
-	char* paper;
+	string author<>;
+	string title<>;
+	string paper<>;
 };
 
 typedef int int_in;
