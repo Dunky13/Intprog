@@ -115,8 +115,9 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	}
 	else
 	{
-		curr->next->prev = curr->prev;
-		curr->prev->next = curr->next;
+		tmp = curr;
+		curr->next->prev = tmp->prev;
+		curr->prev->next = tmp->next;
 	}
 	freePreviousListOut(curr);
 	return &out;
