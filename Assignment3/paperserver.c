@@ -64,7 +64,7 @@ void remove_paper(struct papers* curr)
 bool isPaper(struct papers* curr, int id)
 {
 	return curr->id == id;
-} 
+}
 
 struct papers* closer(int id, struct papers* a, struct papers* b)
 {
@@ -85,6 +85,11 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	struct papers* tmp;
 
 	bool forward;
+
+	if(!hasPapers())
+	{
+		return (out = -1);
+	}
 
 	curr = closer(id, head, tail); //Not necessarily best option:
 	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
@@ -145,7 +150,16 @@ paper_content_out *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	struct papers* curr;
 	bool forward;
 
-	free(out);
+	if(out != NULL)
+	{
+		free(out);
+	}
+
+	if(!hasPapers())
+	{
+		out = malloc(sizeof(struct paper_content_out));
+		return out;
+	}
 
 	curr = closer(id, head, tail); //Not necessarily best option:
 	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
@@ -181,7 +195,7 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 		perror("Error allocating memory");
 		exit(1);
 	}
-	
+
 	if(!hasPapers())
 	{
 		return out;
