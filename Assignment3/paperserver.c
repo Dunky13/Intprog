@@ -21,6 +21,10 @@ typedef enum { false, true } bool;
 
 void freePreviousInfoOut(struct paper_out* out)
 {
+	if(out == NULL) //Nothing to free if it is NULL
+	{
+		return;
+	}
 	free(out->author);
 	free(out->title);
 	free(out);
@@ -30,10 +34,8 @@ void freePreviousListOut(struct paper_list_out* out)
 	struct paper_list_out* tmp;
 	while(out != NULL)
 	{
-		if(out->paper_info != NULL)
-		{
-			freePreviousInfoOut(out->paper_info);
-		}
+
+		freePreviousInfoOut(out->paper_info);
 		tmp = out->next;
 		free(out);
 		out = tmp;
