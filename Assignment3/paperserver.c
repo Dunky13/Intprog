@@ -138,7 +138,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	struct paper_list_out* curr;
 	bool forward;
 	u_int tmpValue = 0;
-	paper_out *paperInfo;
+	paper_out *paper;
 
 	if(out != NULL)
 	{
@@ -172,16 +172,16 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 			return out;
 		}
 	}
-	paperInfo = malloc(sizeof(paper_out));
-	paperInfo->paper_out_len = 0;
+	paper = malloc(sizeof(paper_out));
+	paper->paper_out_len = 0;
 
-	paperInfo->paper_out_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
-	memcpy(paperInfo->paper_out_val, &(curr->paper_info->paper.paper_val), curr->paper_info->paper.paper_len);
+	paper->paper_out_val = malloc(curr->paper_info->paper.paper_len * sizeof(char));
+	memcpy(paper->paper_out_val, &(curr->paper_info->paper.paper_val), curr->paper_info->paper.paper_len);
 
-	paperInfo->paper_out_len = curr->paper_info->paper.paper_len;
+	paper->paper_out_len = curr->paper_info->paper.paper_len;
 
 	//printf("It sould be copied: %u", paperInfo->paper_out_len);
-	out->paper = *paperInfo;
+	out->paper = *paper;
 	return out;
 }
 
