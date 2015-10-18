@@ -68,10 +68,15 @@ bool isPaper(struct papers* curr, int id)
 
 struct papers* closer(int id, struct papers* a, struct papers* b)
 {
-	int toA = abs(a->id - id);
-	int toB = abs(b->id - id);
+	int toA = a == NULL ? INT_MAX : abs(a->id - id);
+	int toB = b == NULL ? INT_MAX : abs(b->id - id);
 	return toA < toB ? a : b;
 }
+
+bool hasPapers(){
+	return head != NULL || tail != NULL;
+}
+
 int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static int_out out = 1;
@@ -169,7 +174,10 @@ paper_out *info_paper_1_svc(int_in *in, struct svc_req *req)
 	bool forward;
 
 	freePreviousInfoOut(out);
-
+	if(!hasPapers())
+	{
+		return out;
+	}
 	curr = closer(id, head, tail); //Not necessarily best option:
 	// [0,1,2,30,100] <= 30 is closer to 100 in this case. But worst O is O(n)
 	forward = curr == head ? false : true;
