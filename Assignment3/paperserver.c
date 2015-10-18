@@ -193,8 +193,6 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	if(out != NULL)
 	{
-		free(out->author);
-		free(out->title);
 		free(out->paper.paper_data_val);
 		free(out);
 	}
