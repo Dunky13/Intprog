@@ -41,6 +41,7 @@ char* readFile(char* file_path, long* size)
 	{
 		fseek (f, 0, SEEK_END);
 		length = ftell (f);
+		printf("Length: %ld", length);
 		fseek (f, 0, SEEK_SET);
 		buffer = (char *)malloc (length+1);
 		if (buffer)
