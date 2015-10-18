@@ -172,7 +172,7 @@ struct paper_information *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	}
 
 	out->paper = curr->paper_info->paper;
-
+	memcpy(&(out->paper.paper_val), &(curr->paper_info->paper.paper_val), out->paper.paper_len);
 
 	return out;
 }
