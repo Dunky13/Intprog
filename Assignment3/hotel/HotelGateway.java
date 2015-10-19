@@ -46,7 +46,7 @@ public class HotelGateway extends HotelDisplayLogic{
 			out.print("hotelgw>");
 			out.flush();
 
-		    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
+			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
 
 			input = in.readLine().split("\\s+", 3);
 
@@ -129,7 +129,7 @@ public class HotelGateway extends HotelDisplayLogic{
 			"List guests:\n" +
 			"	g\n" +
 			"	Lists the names of all registered guests.\n" +
-			"Quit:\n"
+			"Quit:\n" +
 			"	q\n" +
 			"	Quits the telnet session.\n";
 
