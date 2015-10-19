@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.InputStreamReader;
+import java.lang.StringBuffer;
 
 public class HotelGateway extends HotelDisplayLogic{
 	static final int PORT = 3333;
 
 	private ServerSocket serverSocket;
     private Socket clientSocket;  
-    private BufferedReader in;
     private boolean connectionOpened;
 
 	public HotelGateway(){
@@ -32,6 +32,7 @@ public class HotelGateway extends HotelDisplayLogic{
 	private void processRequest(){
 		String[] input = new String[1];
 		BufferedReader in;
+		String command;
 
 		try{
 			if(!connectionOpened){
@@ -46,19 +47,26 @@ public class HotelGateway extends HotelDisplayLogic{
 			out.print("hotelgw>");
 			out.flush();
 
-			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));			
+			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			command = in.readLine();
 
-			input = in.readLine().split("\\s+", 3);
+			if(command == null){	//remote has closed connection gracefully
+				closeConnection();
+				return;
+			}
+
+			input = command.split("\\s+", 3);
 
 			if(input[0].equals("")){
 				return;
 			}
+
+			parseAndProcessInput(input);
+
 		}
 		catch(IOException e){
 			e.printStackTrace();
 		}
-
-		parseAndProcessInput(input);
 	}
 
 	private void parseAndProcessInput(String[] input){
@@ -77,9 +85,15 @@ public class HotelGateway extends HotelDisplayLogic{
 					out.println("Booking requires a room type and a guest name");
 				}
 				else{
-					roomType = Integer.parseInt(input[1]);
-					guestName = input[2];
-					action = 2;
+    				try{
+						roomType = Integer.parseInt(input[1]);
+						guestName = input[2];
+						action = 2;
+					}
+					catch(NumberFormatException e){
+						out.println("Could not convert room type to integer");
+     					action = -1;
+    				}
 				}
 
 			break;
@@ -94,21 +108,24 @@ public class HotelGateway extends HotelDisplayLogic{
 			break;
 		}
 	
-		if(action == 4){
-			try{
-				//in.close();
-				out.flush();
-				out.close();
-				serverSocket.close();
-				clientSocket.close();
-				connectionOpened = false;
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}
+		if(action == 4){		//quit
+			closeConnection();
 		}
 		else if(action >= 0){
 		    performAction(action, roomType, guestName);
+		}
+	}
+
+	private void closeConnection(){
+		try{
+			out.flush();
+			out.close();
+			serverSocket.close();
+			clientSocket.close();
+			connectionOpened = false;
+		}
+		catch(IOException e){
+			e.printStackTrace();
 		}
 	}
 

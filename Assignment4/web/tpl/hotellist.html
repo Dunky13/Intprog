@@ -1,0 +1,14 @@
+{extends file='tpl/index.html'}
+
+{block name="content"}
+<table class="roomlist">
+<thead>
+    <tr><th>Room Type</th><th>Free Rooms</th></tr>
+</thead>
+<tbody>
+{foreach $results as $row}
+    <tr class="room"><td class="type">{$row.type}</td><td class="count">{$row.count}</td></tr>
+{/foreach}
+</tbody>
+</table>
+{/block}

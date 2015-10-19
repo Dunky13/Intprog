@@ -1,0 +1,17 @@
+{extends file='tpl/index.html'}
+
+{block name="content"}
+{if isset($error)}
+Got error: {$error}
+{/if}
+
+{if isset($response)}
+Received response from server: {$response}
+{/if}
+
+<form action="hotelbook.php" method="post">
+    <label for="name">Name</label> <input type="text" id="hame" name="name" />
+    <label for="type">Room Type</label> <input type="number" id="type" name="type" />
+    <input type="submit" value="Book room" />
+</form>
+{/block}

@@ -20,6 +20,18 @@
 
 \section{A hotel reservation server}
 
-The help message is implemented at client side, as server should not prescribe the user interface that must be used to provide the hotel reservation services to the users. In this way, different types or versions of clients can be supported. The client is responsible to provide an user interface to call the right methods at the server by RMI.  
+Each hotel type is represented by an instance of the class \texttt{HotelRoomType}. This class keeps track of the guest list and allows booking. In \texttt{HotelImpl.java} an array of \texttt{HotelRoomTypes} is maintained.
+
+Both the gateway and client need code for invoking the remote methods and printing the output. The methods to do this are shared by creating an abstract class called \texttt{HotelDisplayLogic}. The client and gateway classes both extends this class. In the \texttt{HotelDisplayLogic} class, output is printed to a \texttt{PrintWriter} object. For the client, output is redirected to the standard output, while the gateway prints it to the output stream of the socket.
+
+With this approach one problem was encountered. The prompt, printed by \texttt{out.print("hotelgw>");}, appeared after output of the remote method invocations, while the statement is logically executed before invoking the method. Calling \texttt{out.flush();} after printing the prompt solved the problem.
+
+The help message is implemented at client side, as server should not prescribe the user interface that must be used to provide the hotel reservation services to the users. In this way, different types or versions of clients can be supported, such as the gateway and client. Both are responsible to provide an user interface to call the right methods at the server by RMI, but provide different ways to do this.
+
+\section{Answers to questions}
+
+\subsection{Question C}
+
+The \texttt{HotelGateway} is an iterative server. This is bad for performance, but enough for this assignment. If one request starts processing, further requests are not served until the request is finished. Then, another one can be processed. Therefore, no synchronization primitives needed to be used to guarantee correctness.
 
 \end{document}
