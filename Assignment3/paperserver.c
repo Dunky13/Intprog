@@ -35,6 +35,10 @@ struct paper_list_out* closer(int id, struct paper_list_out* a, struct paper_lis
 	return toA < toB ? a : b;
 }
 
+bool hasPapers(){
+	return head != NULL || tail != NULL;
+}
+
 struct paper_list_out* findPaper(int id){
 	struct paper_list_out* curr;
 	bool forward;
@@ -56,10 +60,6 @@ struct paper_list_out* findPaper(int id){
 		}
 	}
 	return curr;
-}
-
-bool hasPapers(){
-	return head != NULL || tail != NULL;
 }
 
 struct paper_list_out* paperExists(struct paper_information *in){
