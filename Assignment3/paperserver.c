@@ -65,7 +65,8 @@ struct paper_list_out* paperExists(struct paper_information *in){
 	struct paper_list_out* curr;
 	curr = tail;
 
-	if(curr == NULL || curr->paper_info == NULL)
+	if(curr == NULL || curr->paper_info == NULL ||
+		curr->paper_info->title == NULL || curr->paper_info->title == NULL)
 	{
 		return NULL;
 	}
