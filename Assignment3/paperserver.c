@@ -42,7 +42,6 @@ bool hasPapers(){
 struct paper_list_out* findPaper(int id){
 	struct paper_list_out* curr;
 	bool forward;
-	int i;
 
 	if(!hasPapers())
 	{
@@ -173,9 +172,6 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 
 	int id = (int) *in;
 	struct paper_list_out* curr;
-	bool forward;
-
-	int loop = 0;
 
 	if(out != NULL)
 	{
