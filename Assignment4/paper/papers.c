@@ -30,7 +30,7 @@ int getAllArticles(CLIENT *cl)
 		printf("Error: %s\n",clnt_sperror(cl,"Get All Articles Error"));
 		return 1;
 	}
-	printf("[\n");
+	printf("[%s", out->next == NULL ? "" : "\n");
 	do
 	{
 		if(out->id < 0 || out->paper_info == NULL ||
