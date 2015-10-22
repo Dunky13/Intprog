@@ -12,7 +12,7 @@ CLIENT* createClient(){
 	cl = clnt_create(HOST, RPC_FUNCTIONS, RPC_FUNC_VERS, "tcp");
 	if(cl == NULL)
 	{
-		perror("Error creating RPC Client");
+		printf("{\"reason\": \"Error creating RPC Client\"}");
 		exit(1);
 	}
 	return cl;
