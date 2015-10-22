@@ -41,9 +41,9 @@ int getAllArticles(CLIENT *cl)
 		}
 		printf("\t{");
 		printf("\t\t\"id:\" %d,\n", out->id);
-		printf("\t\t\"title:\" %s,\n", out->title);
-		printf("\t\t\"author:\" %s\n", out->author);
-		printf("\t}%s", out->next == NULL ? "\n", ",\n");
+		printf("\t\t\"title:\" %s,\n", out->paper_info->title);
+		printf("\t\t\"author:\" %s\n", out->paper_info->author);
+		printf("\t}%s", out->next == NULL ? "\n" : ",\n");
 	} while((out = out->next) != NULL);
 	printf("]");
 	return 0;
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     {
         value = CGI_lookup_all(varlist, 0);
 
-        /* CGI_lookup_all(varlist, name) could also be used
+        // CGI_lookup_all(varlist, name) could also be used
 
         for (i = 0; value[i] != 0; i++) {
             printf("%s [%d] = %s\r\n", name, i, value[i]);
