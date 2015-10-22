@@ -1,9 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <ccgi.h>
-
-#include "../../paper/rpcfunc.h"
 
 int main(int argc, char **argv) {
     CGI_varlist *varlist;
