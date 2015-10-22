@@ -2,12 +2,19 @@ CC 	= gcc
 CCGI = -I ../ccgi
 CFLAGS 	= -g -Wall $(CCGI)
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+all: build papers paperinfo
+
 build: paperserver paperclient
 
 papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
 	ln -s $(ROOT_DIR)/papers.cgi ../web/cgi-bin/papers.cgi
 
+paperinfo: paperinfo.o rpcfunc_clnt.o rpcfunc_xdr.o 
+	$(CC) -o paperinfo.cgi paperinfo.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
+	ln -s $(ROOT_DIR)/paperinfo.cgi ../web/cgi-bin/paperinfo.cgi	
+	
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
 
@@ -19,6 +26,9 @@ rpcfunc_clnt.c rpcfunc.h rpcfunc_xdr.c rpcfunc_svc.c: rpcfunc.x
 
 papers.o: papers.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o papers.o papers.c
+	
+paperinfo.o: paperinfo.c rpcfunc.h
+	$(CC) $(CFLAGS) -c -o paperinfo.o paperinfo.c
 
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
@@ -39,4 +49,4 @@ paperserver.o: paperserver.c rpcfunc.h
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o *.cgi core* *~ paperserver paperclient
+	rm -f *.o *.cgi core* *~ paperserver paperclient ../web/cgi-bin/*.cgi
