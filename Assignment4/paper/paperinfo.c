@@ -61,10 +61,11 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int main(int argc, char **argv) {
 	CLIENT *cl;
 	const char* input;
-    fputs("Content-type: application/json\r\n\r\n", stdout);
-	
+    
     CGI_varlist *varlist;
     int value;
+	
+	fputs("Content-type: application/json\r\n\r\n", stdout);
 
     if ((varlist = CGI_get_all(0)) == 0) {
         printf("{\"reason\": \"No CGI data received\"}");
