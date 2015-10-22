@@ -27,12 +27,14 @@ CLIENT* createClient(){
 	cl = clnt_create(HOST, RPC_FUNCTIONS, RPC_FUNC_VERS, "tcp");
 	if(cl == NULL)
 	{
-		printf("{\"reason\": \"Error creating RPC Client\"}");
+		printReason("Error creating RPC Client");
 		exit(1);
 	}
 	return cl;
 }
-
+void printReason(char* reason){
+	printf("{\"reason\": \"%s\"}", reason);
+}
 int getArticleInformation(CLIENT *cl, int article_id)
 {
 	int_in in;
@@ -44,7 +46,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
+		printReason("Get Article Information Error");
 		return 1;
 	}
 	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
@@ -54,6 +56,10 @@ int getArticleInformation(CLIENT *cl, int article_id)
 		printf("\t\"title:\" %s,\n", out->title);
 		printf("\t\"author:\" %s\n", out->author);
 		printf("}");
+	}
+	else
+	{
+		printReason("No Article Found");
 	}
 	return 0;
 }
@@ -67,7 +73,7 @@ int main(int argc, char **argv) {
 	fputs("Content-type: application/json\r\n\r\n", stdout);
 
     if ((varlist = CGI_get_all(0)) == 0) {
-        printf("{\"reason\": \"No CGI data received\"}");
+        printReason("No CGI data received");
         return 0;
     }
 
@@ -75,7 +81,7 @@ int main(int argc, char **argv) {
 	value = parseInt(input);
     	
 	if(value < 0){
-		printf("{\"reason\": \"Not correct number received - %s\"}", input);
+		printReason("Not correct number received");
 		return 0;
 	}
 	
