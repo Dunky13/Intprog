@@ -12,11 +12,17 @@
 \usepackage{color}
 \usepackage{hyperref}
 
-\title{Assignment 2 Internet Programming}
+\title{Assignment 3 Internet Programming}
 \author{Marc Went (2507013) and Ferry Avis (1945653)}
 
 \begin{document}
 \maketitle
+\section{A paper storage server}
+The \texttt{rpcfunc.x} file contains the definition of the the functions the \texttt{paperserver.c} and \texttt{paperclient.c} need to implement. Opaque had to be typedef-ed so pointer references could be used, without the typedef this was not possible; when we tried it.
+
+The \texttt{paperserver.c} reuses the structures defined in \texttt{rpcfunc.x} so that when sending data over to the \texttt{paperclient.c} there is no need for converting structures. When sending the list of papers, a duplicate linkedlist is created where the papers are not stored, since the client does not need to receive all the papers at once.
+
+The \texttt{paperclient.c}'s readFile first looks at the end of the file to determine the length. Then allocates that length in memory, after which the file is read to memory. The length and the buffer are saved in the \textit{fileParams} struct so that the values can be passed properly into the opaque variable which is sent to the server. By doing so the pointers and values are set properly, without this some pointer problems arose with setting the opaque variables.
 
 \section{A hotel reservation server}
 
@@ -29,7 +35,10 @@ With this approach one problem was encountered. The prompt, printed by \texttt{o
 The help message is implemented at client side, as server should not prescribe the user interface that must be used to provide the hotel reservation services to the users. In this way, different types or versions of clients can be supported, such as the gateway and client. Both are responsible to provide an user interface to call the right methods at the server by RMI, but provide different ways to do this.
 
 \section{Answers to questions}
-
+\subsection{Question A}
+By creating a (doubly-)linked list you can send an arbitrary number of papers without knowing how many there will be.
+\subsection{Question B}
+The problem is that you have to send data of arbitrary length over the network. So knowing when the whole file has finished up-/down-loading is the tricky part. By using the SunRPC \textit{opaque} structure the problem is fixed, because not only the file-data is sent but also the file-data-length. Nor does it stop at the \textit{null}-character which the \textit{string} structure does.
 \subsection{Question C}
 
 The \texttt{HotelGateway} is an iterative server. This is bad for performance, but enough for this assignment. If one request starts processing, further requests are not served until the request is finished. Then, another one can be processed. Therefore, no synchronization primitives needed to be used to guarantee correctness.
