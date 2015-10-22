@@ -7,7 +7,7 @@
 
 #define HOST "localhost"
 
-int parseInt(char* argv)
+int parseInt(const char* argv)
 {
 	int id;
 	char* end;
