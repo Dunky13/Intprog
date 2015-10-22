@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.lang.StringBuffer;
 
 public class HotelClient extends HotelDisplayLogic{
+	private PrintWriter out;
+
 	private void makeHotelObject(String serverAddress){
 		try{
 		    hotelObject = (Hotel) Naming.lookup("rmi://" + serverAddress + "/HotelService");
@@ -24,6 +26,12 @@ public class HotelClient extends HotelDisplayLogic{
 		StringBuffer guestName = new StringBuffer();
 
 		out = new PrintWriter(System.out);
+
+		if(args.length < 2){
+			out.println("Invalid usage");
+			out.flush();
+			return;
+		}
 
 		/*Parse command line options*/
 		Getopt g = new Getopt("HotelClient", args, "lb:gh");
@@ -67,7 +75,7 @@ public class HotelClient extends HotelDisplayLogic{
 			out.println("See HotelClient or HotelClient -h for usage");
 		}
 		else{
-			performAction(action, roomType, guestName.toString());
+			performAction(out, action, roomType, guestName.toString());
 		}
 
 		/*Cleanup*/
@@ -112,7 +120,7 @@ public class HotelClient extends HotelDisplayLogic{
 		}
 	}
 
-	protected void printHelp(){
+	protected void printHelp(PrintWriter out){
 		String help = "This program can be used by the attendees of a conference to make room reservations. Reservation dates are fixed, so book with care.\n" +
 			"\n" +
 			"Usage\n" +

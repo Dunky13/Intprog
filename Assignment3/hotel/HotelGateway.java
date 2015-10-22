@@ -11,12 +11,8 @@ import java.lang.StringBuffer;
 public class HotelGateway extends HotelDisplayLogic{
 	static final int PORT = 3333;
 
-	private ServerSocket serverSocket;
-    private Socket clientSocket;  
-    private boolean connectionOpened;
-
 	public HotelGateway(){
-		connectionOpened = false;
+
 	}
 
 	private void makeHotelObject(String serverAddress){
@@ -24,70 +20,78 @@ public class HotelGateway extends HotelDisplayLogic{
 		    hotelObject = (Hotel) Naming.lookup("rmi://" + serverAddress + "/HotelService");
 		} 
 		catch (Exception e){
-			out.println("Received Exception:");
+			System.out.println("Received Exception:");
 			e.printStackTrace();
 		}
 	}
 
-	private void processRequest(){
-		String[] input = new String[1];
+	private void serveClient(Socket clientSocket){
+		PrintWriter out;
 		BufferedReader in;
-		String command;
+		String fullInput = "";
 
-		try{
-			if(!connectionOpened){
-				serverSocket = new ServerSocket(PORT);
-				clientSocket = serverSocket.accept();
-
-			    out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-			    connectionOpened = true;
-			}
-
-			out.print("hotelgw>");
-			out.flush();
-
+	    try{
+	    	out = new PrintWriter(clientSocket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			command = in.readLine();
-
-			if(command == null){	//remote has closed connection gracefully
-				closeConnection();
-				return;
-			}
-
-			input = command.split("\\s+", 3);
-
-			if(input[0].equals("")){
-				return;
-			}
-
-			parseAndProcessInput(input);
-
 		}
 		catch(IOException e){
 			e.printStackTrace();
+			return;
+		}
+
+		while(true){
+			out.print("hotelgw>");
+			out.flush();
+
+			try{
+				fullInput = in.readLine();
+			}
+			catch(IOException e){
+				e.printStackTrace();
+				closeConnection(out, clientSocket);
+				return;
+			}
+
+			if(fullInput == null){	//remote has closed connection gracefully
+				closeConnection(out, clientSocket);
+				return;
+			}
+
+			if(!parseAndProcessInput(out, fullInput)){	//returns false if quit
+				closeConnection(out, clientSocket);
+				return;
+			}
 		}
 	}
 
-	private void parseAndProcessInput(String[] input){
+	//returns false if connection should be closed, true otherwise
+	private boolean parseAndProcessInput(PrintWriter out, String fullInput){
 		int action = 0;
 		int roomType = 0;
 		String guestName = "";
-		char command = input[0].charAt(0);
+		String[] splittedInput = new String[1];
+
+		splittedInput = fullInput.split("\\s+", 3);
+
+		if(splittedInput[0].equals("")){
+			return true;
+		}
+
+		char command = splittedInput[0].charAt(0);
 
 		switch(command){
 			case 'l':
 				action = 1;
 			break;
 			case 'b':
-				if(input.length != 3){
+				if(splittedInput.length != 3){
 					action = -1;
 					out.println("Booking requires a room type and a guest name");
 				}
 				else{
     				try{
-						roomType = Integer.parseInt(input[1]);
-						guestName = input[2];
+						roomType = Integer.parseInt(splittedInput[1]);
+						guestName = splittedInput[2];
 						action = 2;
 					}
 					catch(NumberFormatException e){
@@ -109,27 +113,27 @@ public class HotelGateway extends HotelDisplayLogic{
 		}
 	
 		if(action == 4){		//quit
-			closeConnection();
+			return false;
 		}
 		else if(action >= 0){
-		    performAction(action, roomType, guestName);
+		    performAction(out, action, roomType, guestName);
 		}
+
+		return true;
 	}
 
-	private void closeConnection(){
+	private void closeConnection(PrintWriter out, Socket clientSocket){
 		try{
 			out.flush();
 			out.close();
-			serverSocket.close();
 			clientSocket.close();
-			connectionOpened = false;
 		}
 		catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	protected void printHelp(){
+	protected void printHelp(PrintWriter out){
 		String help = "This program can be used by the attendees of a conference to make room reservations. Reservation dates are fixed, so book with care.\n" +
 			"\n" +
 			"Usage\n" +
@@ -154,11 +158,24 @@ public class HotelGateway extends HotelDisplayLogic{
 	}
 
 	private void start(String serverAddress){
+		ServerSocket serverSocket;
+		Socket clientSocketgit;
 		makeHotelObject(serverAddress);
-		
-		while(true){
-			processRequest();
+	    
+	    try{
+			serverSocket = new ServerSocket(PORT);
+
+			while(true){
+				Socket clientSocket = serverSocket.accept();
+				serveClient(clientSocket);
+			}
 		}
+		catch(IOException e){
+			e.printStackTrace();
+			return;
+		}
+
+		//serverSocket.close();
 	}
 
 	public static void main(String[] args){

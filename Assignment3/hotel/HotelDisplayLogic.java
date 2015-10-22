@@ -2,23 +2,22 @@ import java.io.PrintWriter;
 
 abstract public class HotelDisplayLogic{
 	protected Hotel hotelObject;
-	protected PrintWriter out;
 
-	protected void performAction(int action, int roomType, String guestName){
+	protected void performAction(PrintWriter out, int action, int roomType, String guestName){
 		if(action == 0){
-			printHelp();
+			printHelp(out);
 			return;
 		}
 
 		try{
 			if(action == 1){
-				listAvailableRooms();
+				listAvailableRooms(out);
 			}
 			else if(action == 2){
-				bookRoom(roomType, guestName);
+				bookRoom(out, roomType, guestName);
 			}
 			else if(action == 3){
-				listGuests();
+				listGuests(out);
 			}
 		} 
 		catch (Exception e){
@@ -27,7 +26,7 @@ abstract public class HotelDisplayLogic{
 		}
 	}
 
-	protected void listAvailableRooms() throws java.rmi.RemoteException{
+	private void listAvailableRooms(PrintWriter out) throws java.rmi.RemoteException{
 		int[] availableRooms;
 		int i;
 
@@ -44,7 +43,7 @@ abstract public class HotelDisplayLogic{
 		out.println();
 	}
 
-	protected void bookRoom(int roomType, String guestName) throws java.rmi.RemoteException{
+	private void bookRoom(PrintWriter out, int roomType, String guestName) throws java.rmi.RemoteException{
 		if(hotelObject.bookRoom(roomType, guestName)){
 			out.println("ok");
 		}
@@ -53,7 +52,7 @@ abstract public class HotelDisplayLogic{
 		}
 	}
 
-	protected void listGuests() throws java.rmi.RemoteException{
+	private void listGuests(PrintWriter out) throws java.rmi.RemoteException{
 		int i;
 		String[] guestList = hotelObject.listGuests();
 		
@@ -62,5 +61,5 @@ abstract public class HotelDisplayLogic{
 		}
 	}
 
-	abstract protected void printHelp();
+	abstract protected void printHelp(PrintWriter out);
 }
