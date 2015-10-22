@@ -1,6 +1,6 @@
 CC 	= gcc
 CFLAGS 	= -g -Wall 
-
+CCGI = -I../ccgi -L../ccgi
 build: paperserver paperclient
 
 papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o 
@@ -16,7 +16,7 @@ rpcfunc_clnt.c rpcfunc.h rpcfunc_xdr.c rpcfunc_svc.c: rpcfunc.x
 	rpcgen rpcfunc.x
 
 papers.o: papers.c rpcfunc.h
-	$(CC) $(CFLAGS) -c -o papers.o papers.c	
+	$(CC) $(CFLAGS) $(CCGI) -c -o papers.o papers.c	
 
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
