@@ -4,7 +4,7 @@ CCGI = -I../ccgi -L../ccgi
 build: paperserver paperclient
 
 papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o 
-	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
+	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -lccgi
 
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
@@ -16,7 +16,7 @@ rpcfunc_clnt.c rpcfunc.h rpcfunc_xdr.c rpcfunc_svc.c: rpcfunc.x
 	rpcgen rpcfunc.x
 
 papers.o: papers.c rpcfunc.h
-	$(CC) $(CFLAGS) $(CCGI) -c -o papers.o papers.c	
+	$(CC) $(CFLAGS) $(CCGI) -c -o papers.o papers.c
 
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
