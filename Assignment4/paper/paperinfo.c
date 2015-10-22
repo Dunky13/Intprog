@@ -61,7 +61,6 @@ int getArticleInformation(CLIENT *cl, int article_id)
 int main(int argc, char **argv) {
 	CLIENT *cl;
 	const char* input;
-    
     CGI_varlist *varlist;
     int value;
 	
@@ -74,8 +73,7 @@ int main(int argc, char **argv) {
 
 	input = CGI_lookup(varlist, "id");
 	value = parseInt(input);
-    CGI_free_varlist(varlist);  //free variable list
-	
+    	
 	if(value < 0){
 		printf("{\"reason\": \"Not correct number received - %s\"}", input);
 		return 0;
@@ -84,6 +82,7 @@ int main(int argc, char **argv) {
 	cl = createClient();
 	value = getArticleInformation(cl, value);
 	clnt_destroy(cl);
+	CGI_free_varlist(varlist);
 	return value;
 	
 }
