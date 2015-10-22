@@ -5,7 +5,7 @@
 #include "rpcfunc.h"
 #include "ccgi.h"
 
-#define HOST localhost
+#define HOST "localhost"
 
 CLIENT* createClient(){
 	CLIENT *cl;
