@@ -53,13 +53,13 @@ int getAllArticles(CLIENT *cl)
 int main(int argc, char **argv) {
 	CLIENT *cl;
 	
+    fputs("Content-type: application/json\r\n\r\n", stdout);
 	/*
     CGI_varlist *varlist;
     const char *name;
     CGI_value  *value;
     int i;
 
-    fputs("Content-type: text/plain\r\n\r\n", stdout);
     if ((varlist = CGI_get_all(0)) == 0) {
         printf("No CGI data received\r\n");
         return 0;
