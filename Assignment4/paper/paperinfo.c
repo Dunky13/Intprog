@@ -7,6 +7,9 @@
 
 #define HOST "localhost"
 
+void printReason(char* reason){
+	printf("{\"reason\": \"%s\"}", reason);
+}
 int parseInt(const char* argv)
 {
 	int id;
@@ -31,9 +34,6 @@ CLIENT* createClient(){
 		exit(1);
 	}
 	return cl;
-}
-void printReason(char* reason){
-	printf("{\"reason\": \"%s\"}", reason);
 }
 int getArticleInformation(CLIENT *cl, int article_id)
 {
