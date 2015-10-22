@@ -13,7 +13,7 @@ class HotelRoomType{
 		return numberBookedRooms == capacity;
 	}
 
-	public boolean book(String guestName){
+	synchronized public boolean book(String guestName){
 		if(fullyBooked()){
 			return false;
 		}
