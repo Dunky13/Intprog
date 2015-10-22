@@ -34,8 +34,7 @@ public class HotelGateway{
 
 			while(true){
 				clientSocket = serverSocket.accept();
-
-				new Thread(new HotelGatewayThread(clientSocket, hotelObject)).start();
+				new Thread(new HotelGatewayThread(clientSocket, hotelObject)).start();		//handle the request in a dedicated thread (threaded server)
 			}
 		}
 		catch(IOException e){

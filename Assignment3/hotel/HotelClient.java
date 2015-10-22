@@ -83,6 +83,7 @@ public class HotelClient extends HotelDisplayLogic{
 		out.close();
 	}
 
+	//validate and obtain room number
 	private int getRoomType(Getopt g){
 		String arg = g.getOptarg();
 
@@ -96,6 +97,7 @@ public class HotelClient extends HotelDisplayLogic{
 		return Integer.parseInt(arg);
 	}
 
+	//validate and obtain guest name
 	private void getGuestName(String[] args, int start, StringBuffer guestName){
 		int i;
 		boolean first = true;

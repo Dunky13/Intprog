@@ -29,7 +29,7 @@ class HotelGatewayThread extends HotelDisplayLogic implements Runnable{
 
 		while(true){
 			out.print("hotelgw>");
-			out.flush();
+			out.flush();			//needs to be called for right order in output
 
 			try{
 				fullInput = in.readLine();

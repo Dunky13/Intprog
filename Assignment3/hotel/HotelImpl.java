@@ -36,12 +36,15 @@ public class HotelImpl extends java.rmi.server.UnicastRemoteObject implements Ho
 		int offset = 0;
 		int resultSize = 0; 
 
+		//compute length of result array
 		for(int i = 0; i < rooms.length; i++){
 			resultSize += rooms[i].getNumberBookedRooms();
 		}
 
+		//create result array
 		result = new String[resultSize];
 
+		//fill result array
 		for(int i = 0; i < rooms.length; i++){
 			System.arraycopy(rooms[i].getGuestNames(), 0, result, offset, rooms[i].getNumberBookedRooms());
 			offset += rooms[i].getNumberBookedRooms();
