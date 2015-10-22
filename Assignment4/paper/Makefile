@@ -5,6 +5,7 @@ build: paperserver paperclient
 
 papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
+	ln -s papers.cgi ../web/cgi-bin/papers.cgi
 
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
