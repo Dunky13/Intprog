@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <ccgi.h>
+#include "../../ccgi/ccgi.h"
 
 int main(int argc, char **argv) {
     CGI_varlist *varlist;
