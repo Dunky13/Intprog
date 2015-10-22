@@ -71,12 +71,12 @@ int main(int argc, char **argv) {
     int value;
 	
 	fputs("Content-type: application/json\r\n\r\n", stdout);
-/*
+
     if ((varlist = CGI_get_all(0)) == NULL || varlist == 0) {
         printReason("No CGI data received");
         return 0;
     }
-
+	/*
 	input = CGI_lookup(varlist, "id");
 	value = parseInt(input);
     CGI_free_varlist(varlist);	
