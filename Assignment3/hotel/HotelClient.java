@@ -123,20 +123,11 @@ public class HotelClient extends HotelDisplayLogic{
 	protected void printHelp(PrintWriter out){
 		String help = "This program can be used by the attendees of a conference to make room reservations. Reservation dates are fixed, so book with care.\n" +
 			"\n" +
-			"Usage\n" +
-			"\n" +
-			"Help:\n" +
-			"	$ java HotelClient or $ java HotelClient -h\n" +
-			" 	Displays this help message.\n" +
-			"List available rooms:\n" +
-			" 	$ java HotelClient <server address> -l\n" +
-			" 	Lists the number of rooms available in each price range.\n" +
-			"Book a room:\n" +
-			"	$ java HotelClient <server address> -b <type> 'Guest Name'\n" +
-			"	Books a room of the specified type (if available) on the given name.\n" +
-			"List guests:\n" +
-			"	$ java HotelClient <server address> -g\n" +
-			"	Lists the names of all registered guests.\n";
+			"Usage:\n" +
+			"	Help: java HotelClient or java HotelClient -h\n" +
+			"	List available rooms per type: java HotelClient <server address> -l\n" +
+			"	Book a room: java HotelClient <server address> -b <type> 'Guest Name'\n" +
+			"	List guests: java HotelClient <server address> -g\n";
 
 		out.printf("%s", help);		
 	}

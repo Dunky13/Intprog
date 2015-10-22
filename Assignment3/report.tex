@@ -48,4 +48,6 @@ In the threaded server, for each new TCP connection a new instance of a \texttt{
 
 \subsection{Question D}
 
+You would be able to send files over a text based protocol, but the length of the file should be send in advance. In C, for example, strings are terminated with a null character, but the null character can be a valid character in any binary file represented as text. By sending the length of the file we can read until the specified amount of bytes have been read, without relying on a terminating character.
+
 \end{document}

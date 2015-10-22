@@ -124,23 +124,12 @@ class HotelGatewayThread extends HotelDisplayLogic implements Runnable{
 	protected void printHelp(PrintWriter out){
 		String help = "This program can be used by the attendees of a conference to make room reservations. Reservation dates are fixed, so book with care.\n" +
 			"\n" +
-			"Usage\n" +
-			"\n" +
-			"Help:\n" +
-			"	h\n" +
-			" 	Displays this help message.\n" +
-			"List available rooms:\n" +
-			" 	l\n" +
-			" 	Lists the number of rooms available in each price range.\n" +
-			"Book a room:\n" +
-			"	b <type> Guest Name\n" +
-			"	Books a room of the specified type (if available) on the given name.\n" +
-			"List guests:\n" +
-			"	g\n" +
-			"	Lists the names of all registered guests.\n" +
-			"Quit:\n" +
-			"	q\n" +
-			"	Quits the telnet session.\n";
+			"Usage:\n" +
+			"	Help: h\n" +
+			"	List available rooms per type: l\n" +
+			"	Book a room: b <type> 'Guest Name'\n" +
+			"	List guests: g\n" +
+			"	Quit: q\n";
 
 		out.printf("%s", help);
 	}
