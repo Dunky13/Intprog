@@ -22,25 +22,30 @@ The \texttt{rpcfunc.x} file contains the definition of the the functions the \te
 
 The \texttt{paperserver.c} reuses the structures defined in \texttt{rpcfunc.x} so that when sending data over to the \texttt{paperclient.c} there is no need for converting structures. When sending the list of papers, a duplicate linkedlist is created where the papers are not stored, since the client does not need to receive all the papers at once.
 
-The \texttt{paperclient.c}'s readFile first looks at the end of the file to determine the length. Then allocates that length in memory, after which the file is read to memory. The length and the buffer are saved in the \textit{fileParams} struct so that the values can be passed properly into the opaque variable which is sent to the server. By doing so the pointers and values are set properly, without this some pointer problems arose with setting the opaque variables.
+The \texttt{paperclient.c}'s readFile first looks at the end of the file to determine the length. Then allocates that length in memory, after which the file is read to memory. The length and the buffer are saved in the \textit{fileParams} struct so that the values can be passed properly into the opaque variable which is sent to the server. By doing so the pointers and values are set properly, without this some pointer problems arose with setting the opaque varables.
 
 \section{A hotel reservation server}
 
-Each hotel type is represented by an instance of the class \texttt{HotelRoomType}. This class keeps track of the guest list and allows booking. In \texttt{HotelImpl.java} an array of \texttt{HotelRoomTypes} is maintained.
+Each hotel type is represented by an instance of the class \texttt{HotelRoomType}, that maintains the guest list for that type. In \texttt{HotelImpl.java} an array of \texttt{HotelRoomTypes} is defined.
 
-Both the gateway and client need code for invoking the remote methods and printing the output. The methods to do this are shared by creating an abstract class called \texttt{HotelDisplayLogic}. The client and gateway classes both extends this class. In the \texttt{HotelDisplayLogic} class, output is printed to a \texttt{PrintWriter} object. For the client, output is redirected to the standard output, while the gateway prints it to the output stream of the socket.
+Remote method invocations can run concurrently on the same object. Therefore, the booking process per \texttt{HotelRoomType} object is placed in a \texttt{synchronized} block. At reading the guest list, this block is not necessary. As no bookings can be canceled, the worst that can happen is that there is an extra booking between obtaining the current size of the guest list and placing the bookings in an array for returning the result. The extra booking would be missing in the result, but this has no severe consequences.
 
-With this approach one problem was encountered. The prompt, printed by \texttt{out.print("hotelgw>");}, appeared after output of the remote method invocations, while the statement is logically executed before invoking the method. Calling \texttt{out.flush();} after printing the prompt solved the problem.
+Both the gateway and client need code for invoking the remote methods and printing the output. The methods to do this are shared by using the abstract class \texttt{HotelDisplayLogic}. Output is printed to a \texttt{PrintWriter} object. For the client, output is redirected to the standard output, while the gateway prints it to the output stream of the socket. To make the prompt appear before any output of RMI's, \texttt{out.flush();} needed to be called.
 
 The help message is implemented at client side, as server should not prescribe the user interface that must be used to provide the hotel reservation services to the users. In this way, different types or versions of clients can be supported, such as the gateway and client. Both are responsible to provide an user interface to call the right methods at the server by RMI, but provide different ways to do this.
 
 \section{Answers to questions}
 \subsection{Question A}
-By creating a (doubly-)linked list you can send an arbitrary number of papers without knowing how many there will be.
+By creating a (doubly) linked list you can send an arbitrary number of papers without knowing how many there will be.
 \subsection{Question B}
-The problem is that you have to send data of arbitrary length over the network. So knowing when the whole file has finished up-/down-loading is the tricky part. By using the SunRPC \textit{opaque} structure the problem is fixed, because not only the file-data is sent but also the file-data-length. Nor does it stop at the \textit{null}-character which the \textit{string} structure does.
+The problem is that you have to send data of arbitrary length over the network. Knowing when the whole file has finished up- or downloading is the tricky part. By using the SunRPC \textit{opaque} structure the problem is fixed, because not only the file-data is sent, but also the file-data-length. It also doesn't stop at the \textit{null}-character which the \textit{string} structure does.
+
 \subsection{Question C}
 
-The \texttt{HotelGateway} is an iterative server. This is bad for performance, but enough for this assignment. If one request starts processing, further requests are not served until the request is finished. Then, another one can be processed. Therefore, no synchronization primitives needed to be used to guarantee correctness.
+The \texttt{HotelGateway} is a threaded server. Telnet sessions are long-living TCP connections and iterative server can only handle one connection at the time. If one user is connected to the server, another user would have to wait until the current user has closed the connection. This can take a long time.
+
+In the threaded server, for each new TCP connection a new instance of a \texttt{HotelGatewayThread} object is created and placed in a new thread. Now, requests can be handled simultaneously. As each request gets a dedicated object, there are no concurrency issues, other than those in the server.
+
+\subsection{Question D}
 
 \end{document}

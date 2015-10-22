@@ -1,0 +1,40 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper}
+
+\usepackage{graphicx}
+%\usepackage[parfill]{parskip}
+\usepackage{bbm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{hyperref}
+
+\title{Assignment 4 Internet Programming}
+\author{Marc Went (2507013) and Ferry Avis (1945653)}
+
+\begin{document}
+\maketitle
+\section{A paper storage server}
+
+The assignment description is very unclear if you didn't get any sleep.
+
+\section{A hotel reservation server}
+
+PHP's \texttt{socket_read} is normally a blocking call until the specified byte length has been received. The problem is that the message length is not known in advance. By using the \textt{PHP_NORMALLY_READ} parameter, the call blocks until a carriage return or new line has been found. This is okay for output of commands, but there is no new line or carriage return after \texttt{hotelgw>}. This causes the PHP script to hang after the output of the request has been received. To circumvent this, before invoking the \texttt{socket_read} a \texttt{socket_recv} with the peek parameter is obtained to look if the data coming next is output of the issued command or if it is the prompt. If it is the prompt, a standard \texttt{socket_read} is called with the length of the prompt to remove it from the buffer. If the socket is closed before emptying the read buffer, we get an error at the gateway, as the socket as been closed prematurely.
+
+\section{Answers to questions}
+
+\subsection{Question A}
+
+\subsection{Question B}
+
+\subsection{Question C}
+
+\subsection{Question D}
+
+The advantage of using the POST/Redirect/GET pattern is that if users refresh the page after they have send the form, the request isn't send again. This can possible lead to double bookings in case of the hotel reservation system. By redirecting the user if the POST request has been made to another page printing the success message, this is avoided. In most cases, GET requests are idempotent, while POST requests are not.
+
+\end{document}
