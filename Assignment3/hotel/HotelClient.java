@@ -27,12 +27,6 @@ public class HotelClient extends HotelDisplayLogic{
 
 		out = new PrintWriter(System.out);
 
-		if(args.length < 2){
-			out.println("Invalid usage");
-			out.flush();
-			return;
-		}
-
 		/*Parse command line options*/
 		Getopt g = new Getopt("HotelClient", args, "lb:gh");
 
@@ -57,24 +51,20 @@ public class HotelClient extends HotelDisplayLogic{
 			}
 		}
 
-		/*Get values from non option arguments (server address, guest name in case of booking */
-		if((indexFirstNonOption = g.getOptind()) < 0){
-			out.println("Please provide a server address");
-		}
-
-		serverAddress = args[indexFirstNonOption];
-
-		if(action == 2){	//get name at booking room
-			getGuestName(args, indexFirstNonOption + 1, guestName);
-		}
-
-		/*Perform request*/
-		makeHotelObject(serverAddress);
-
-		if(action == -1){	/*error*/
+		if(action == -1 || (indexFirstNonOption = g.getOptind()) == 0){	/*error*/
 			out.println("See HotelClient or HotelClient -h for usage");
 		}
 		else{
+			/*Get values from non option arguments (server address, guest name in case of booking */
+			serverAddress = args[indexFirstNonOption];
+
+			if(action == 2){	//get name at booking room
+				getGuestName(args, indexFirstNonOption + 1, guestName);
+			}
+
+			makeHotelObject(serverAddress);
+
+			/*Perform request*/
 			performAction(out, action, roomType, guestName.toString());
 		}
 
