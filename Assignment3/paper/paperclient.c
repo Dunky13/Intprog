@@ -21,6 +21,7 @@ CLIENT* createClient(char* host){
 	return cl;
 }
 
+//Parse the integer and catch too long numbers or faulty numbers
 int parseInt(char* argv)
 {
 	int id;
@@ -36,13 +37,14 @@ int parseInt(char* argv)
 	}
 }
 
+//Read the file from the path
 struct fileParams *readFile(char* file_path)
 {
 	char* buffer;
 	long length;
 	struct fileParams *out = (struct fileParams*) malloc(sizeof(struct fileParams));
 	FILE* f = fopen (file_path, "rb");
-
+	//if the file exists, fill the buffer and length
 	if (f)
 	{
 		fseek (f, 0, SEEK_END);
@@ -51,10 +53,11 @@ struct fileParams *readFile(char* file_path)
 		buffer = (char *)malloc (length+1);
 		if (buffer)
 		{
-			fread (buffer, length + 1, 1, f);
+			fread (buffer, length + 1, 1, f); //Read to the buffer of file length + \0 character
 		}
 		fclose (f);
 	}
+	//Save it to the struct, struct is used instead of opaque for pointer reasons
 	out->length = length;
 	out->buffer = buffer;
 	return out;
@@ -75,7 +78,7 @@ int getAllArticles(CLIENT *cl)
 	{
 		if(out->id < 0 || out->paper_info == NULL ||
 			(strlen(out->paper_info->author) == 0 && strlen(out->paper_info->title) == 0)
-			)
+			) //Don't print if the paper doesn't exist, or the author AND title are empty
 		{
 			continue;
 		}
@@ -98,6 +101,7 @@ int getArticleInformation(CLIENT *cl, int article_id)
 		printf("Error: %s\n",clnt_sperror(cl,"Get Article Information Error"));
 		return 1;
 	}
+	//Don't print if author AND title are empty
 	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
 	{
 		printf("%s\t%s\n", out->author, out->title);
@@ -122,6 +126,7 @@ int getArticle(CLIENT *cl, int article_id)
 	}
 	if(out->paper_data_len > 0)
 	{
+		//Cannot print as string since it would stop at the \0 character, which for binary files must be printed
 		for(i = 0; i < out->paper_data_len; i++)
 		{
 			printf("%c", out->paper_data_val[i]);
@@ -158,7 +163,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	in->title 	= (title);
 
 	file		= readFile(file_path);
-
+	//Set all the values properly
 	in->paper.paper_data_val = file->buffer;
 	in->paper.paper_data_len = file->length;
 
@@ -197,12 +202,13 @@ int main(int argc, char** argv)
 	if(argc == 1){
 		return printUsage();
 	}
+	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
 	else if(argc > 2)
 	{			
 		cl = createClient(argv[1]);
 	}
 	
-	if(cl == NULL)
+	if(cl == NULL) //If the code is executed but the client could not be created and returned a NULL, print the usage
 	{
 		return printUsage();
 	}
@@ -219,7 +225,7 @@ int main(int argc, char** argv)
 				printf("Could not access file %d - %s - %s %s\n", optind, optarg, argv[optind], argv[optind + 1]);
 			}
 			else
-			{
+			{ //get the three arguments, if there are not exactly 6 arguments the usage is printed
 				output = addArticle(cl, optarg, argv[optind], argv[optind + 1]);
 			}
 			break;
@@ -288,6 +294,7 @@ int main(int argc, char** argv)
 		clnt_destroy(cl);
 		return output;
 	}
+	//This should not happen, since there is a default case defined. But just in case the client needs to be destroyed
 	clnt_destroy(cl);
 	printf("WTF happened? %d args provided", argc);
 	return -1;

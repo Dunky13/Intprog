@@ -10,6 +10,10 @@ struct paper_list_out* tail;
 // [tail,.....,head]
 typedef enum { false, true } bool;
 
+/***
+* Free the whole list after out, if out is not the tail, previous entries are not freed
+* Used only once where out is always the tail
+*/
 void freePreviousListOut(struct paper_list_out* out)
 {
 	struct paper_list_out* tmp;
@@ -28,6 +32,10 @@ bool isPaper(struct paper_list_out* curr, int id)
 	return curr->id == id;
 }
 
+/***
+* Find the paper closest to the ID, this can improve the search a bit, but worst case is O(n)
+* Best case it is a part of O(n)
+*/
 struct paper_list_out* closer(int id, struct paper_list_out* a, struct paper_list_out* b)
 {
 	int toA = a == NULL ? INT_MAX : abs(a->id - id);
@@ -39,6 +47,12 @@ bool hasPapers(){
 	return head != NULL || tail != NULL;
 }
 
+/***
+* Find the paper in the list
+* First look whether the head or tail is proximately closer.
+* There are cases where it will not work, but it is a small improvement for a large server
+* Small use cases don't use this improvement
+*/
 struct paper_list_out* findPaper(int id){
 	struct paper_list_out* curr;
 	bool forward;
@@ -61,6 +75,12 @@ struct paper_list_out* findPaper(int id){
 	return curr;
 }
 
+/***
+* Look whether or not the paper is already in the list, the string compare function is case sensitive
+* Paper {Auth: "Spyros", Title: "Assignment 3"} is not the same as Paper {Auth: "spyros", Title: "assignment 3"}
+* It starts looking through from the tail, there is no best case here since the paper may or may not exist.
+*/
+
 struct paper_list_out* paperExists(struct paper_information *in){
 	struct paper_list_out* curr;
 	curr = tail;
@@ -82,6 +102,7 @@ struct paper_list_out* paperExists(struct paper_information *in){
 	return curr;
 }
 
+
 int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static int_out out = 1;
@@ -96,22 +117,25 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 		return &out;
 	}
 
-	else if(curr == head && curr == tail)
+	else if(curr == head && curr == tail) //If there is only one paper in the server
 	{
 		head 		= NULL;
 		tail 		= NULL;
 	}
-	else if(curr == head)
+	else if(curr == head) //If the selected paper is in the head, move the head back one position
+						  //There will be one position at least since the previous else if catches 
+						  //one paper
 	{
 		head 		= curr->prev;
 		head->next 	= NULL;
 	}
-	else if(curr == tail)
+	else if(curr == tail) //Same as head but at the back of the list
 	{
 		tail 		= curr->next;
 		tail->prev 	= NULL;
 	}
-	else
+	else //If it is neither the head, or the tail it is somewhere in between, and the usecase of 
+		 //1 and 2 papers is caught in the previous else ifs
 	{
 		tmp = curr;
 		curr->next->prev = tmp->prev;
@@ -124,6 +148,9 @@ int_out *remove_paper_1_svc(int_in *in, struct svc_req *req)
 	return &out;
 }
 
+/***
+* Retrieve the paper, if it exists otherwise return an empty object which the client will handle.
+*/
 paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static paper_data* out;
@@ -159,7 +186,10 @@ paper_data *fetch_paper_1_svc(int_in *in, struct svc_req *req)
 	return out;
 }
 
-
+/***
+* Retrieve the information, copy the data and set the paper content to empty, this command does not
+* need to send the whole paper data, only author and title. The next and previous are also not filled
+*/
 paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 {
 	static paper_information* out;
@@ -195,6 +225,9 @@ paper_information *info_paper_1_svc(int_in *in, struct svc_req *req)
 	return out;
 }
 
+/***
+* Same as the info function, but here the previous and next are filled if there is more than 1 paper
+*/
 paper_list_out *list_paper_1_svc(list_in *in, struct svc_req *req)
 {
 	static paper_list_out* out;
@@ -255,6 +288,7 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 {
 	struct paper_list_out* newHead;
 
+	
 	if((newHead = paperExists(in)) == NULL){
 		newHead 						= (struct paper_list_out*) malloc(sizeof(struct paper_list_out));
 		newHead->next					= NULL;
@@ -264,13 +298,13 @@ int_out *add_paper_1_svc(paper_information *in, struct svc_req *req)
 		(newHead->paper_info)->author 	= strdup(in->author);
 		(newHead->paper_info)->title	= strdup(in->title);
 
-		if(head != NULL){
+		if(head != NULL){ //If a head exist we need to set the head to this previous paper
 			newHead->prev = head;
 			head->next = newHead;
-		}
+		}//Otherwise there is no previous paper
 
-		head = newHead;
-		if(tail == NULL)
+		head = newHead; //This paper becomes the new head
+		if(tail == NULL) //If it is the first paper, it becomes the tail as well
 		{
 			tail = newHead;
 		}
