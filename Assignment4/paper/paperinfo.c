@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     int value;
 	
 	fputs("Content-type: application/json\r\n\r\n", stdout);
-
+/*
     if ((varlist = CGI_get_all(0)) == NULL || varlist == 0) {
         printReason("No CGI data received");
         return 0;
@@ -84,7 +84,8 @@ int main(int argc, char **argv) {
 		printReason("Not correct number received");
 		return 0;
 	}
-	
+	*/
+	value = 0;
 	cl = createClient();
 	value = getArticleInformation(cl, value);
 	clnt_destroy(cl);
