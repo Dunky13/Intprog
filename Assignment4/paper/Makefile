@@ -15,6 +15,9 @@ paperserver: paperserver.o rpcfunc_svc.o rpcfunc_xdr.o
 rpcfunc_clnt.c rpcfunc.h rpcfunc_xdr.c rpcfunc_svc.c: rpcfunc.x
 	rpcgen rpcfunc.x
 
+papers.o: papers.c rpcfunc.h
+	$(CC) $(CFLAGS) -c -o papers.o papers.c	
+
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
 
