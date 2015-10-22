@@ -1,5 +1,5 @@
 CC 	= gcc
-CCGI = -I ../ccgi -L ../ccgi
+CCGI = -I ../ccgi
 CFLAGS 	= -g -Wall $(CCGI)
 build: paperserver paperclient
 
@@ -37,4 +37,4 @@ paperserver.o: paperserver.c rpcfunc.h
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o core* *~ paperserver paperclient
+	rm -f *.o *.cgi core* *~ paperserver paperclient
