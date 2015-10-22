@@ -73,19 +73,21 @@ int main(int argc, char **argv) {
 	
 	fputs("Content-type: application/json\r\n\r\n", stdout);
 
-    if ((varlist = CGI_get_all(0)) == NULL || varlist == 0) {
+    if ((varlist = CGI_get_all(0)) == NULL || 
+		varlist == 0 || 
+		(input = CGI_lookup(varlist, name)) == NULL)
+	{
         printReason("No CGI data received");
         return 0;
     }
-	input = CGI_lookup(varlist, name);
-	/*
+	
 	value = parseInt(input);
     CGI_free_varlist(varlist);	
-	if(value < 0){
+	if(value < 0)
+	{
 		printReason("Not correct number received");
 		return 0;
 	}
-	*/
 	value = 0;
 	cl = createClient();
 	value = getArticleInformation(cl, value);
