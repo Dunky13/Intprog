@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	
 	fputs("Content-type: application/json\r\n\r\n", stdout);
 
-    if ((varlist = CGI_get_all(0)) == 0) {
+    if ((varlist = CGI_get_all(0)) == NULL || varlist == 0) {
         printReason("No CGI data received");
         return 0;
     }
