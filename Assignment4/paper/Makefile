@@ -4,7 +4,7 @@ CFLAGS 	= -g -Wall $(CCGI)
 build: paperserver paperclient
 
 papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o 
-	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -lccgi
+	$(CC) -o papers.cgi papers.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
 
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
