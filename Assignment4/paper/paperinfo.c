@@ -69,6 +69,7 @@ int main(int argc, char **argv) {
 	const char* input;
     CGI_varlist *varlist;
     int value;
+	const char *name = "id";
 	
 	fputs("Content-type: application/json\r\n\r\n", stdout);
 
@@ -76,8 +77,8 @@ int main(int argc, char **argv) {
         printReason("No CGI data received");
         return 0;
     }
+	input = CGI_lookup(varlist, name);
 	/*
-	input = CGI_lookup(varlist, "id");
 	value = parseInt(input);
     CGI_free_varlist(varlist);	
 	if(value < 0){
