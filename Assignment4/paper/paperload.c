@@ -89,6 +89,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 int main(int argc, char **argv) {
 	printf("Location: ../");
+	return 0;
 	/*
 	CLIENT *cl;
 	const char* authorVal;
