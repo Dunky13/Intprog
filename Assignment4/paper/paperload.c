@@ -81,14 +81,21 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 int main(int argc, char **argv) {
 
 	CLIENT *cl;
-	const char* authorVal;
-	const char* titleVal;
-	const char* fileVal;
+	
     CGI_varlist *varlist;
     int value;
 	const char *author = "author";
 	const char *title = "title";
 	const char *file = "file";
+	
+	const char* authorTmp;
+	const char* titleTmp;
+	const char* fileTmp;
+	
+	char* authorVal;
+	char* titleVal;
+	char* fileVal;
+	
 	
     if ((varlist = CGI_get_all(0)) == NULL || 
 		varlist == 0 || 
@@ -99,13 +106,21 @@ int main(int argc, char **argv) {
         return 0;
     }
 	
-	if(((authorVal = CGI_lookup(varlist, author)) == NULL) ||
-		((titleVal = CGI_lookup(varlist, title)) == NULL) ||
-		((fileVal = CGI_lookup(varlist, file)) == NULL))
+	if(((authorTmp = CGI_lookup(varlist, author)) == NULL) ||
+		((titleTmp = CGI_lookup(varlist, title)) == NULL) ||
+		((fileTmp = CGI_lookup(varlist, file)) == NULL))
 		{
 			redirectError("No CGI post data received");
 			return 0;
 		}
+	
+	authorVal 	= (char*) malloc(strlen(authorTmp)*sizeof(char));
+	titleVal 	= (char*) malloc(strlen(titleTmp)*sizeof(char));
+	fileVal 	= (char*) malloc(strlen(fileTmp)*sizeof(char));
+	
+	strcpy(authorVal, authorTmp);
+	strcpy(titleVal, titleTmp);
+	strcpy(fileVal, fileTmp);
 	
     CGI_free_varlist(varlist);	
 
