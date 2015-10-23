@@ -46,7 +46,7 @@ int checkFile(char* file, int TEST[])
 {
 	int i;
 	int buffVal;
-	for(int i = 0; i < sizeof(TEST)/sizeof(TEST[0]); i++)
+	for(i = 0; i < sizeof(TEST)/sizeof(TEST[0]); i++)
 	{
 		if(TEST[i] == 0x100)
 			continue;
@@ -65,7 +65,7 @@ struct fileType* getContentType(char* file){
 	struct fileType *out = (struct fileType*) malloc(sizeof(struct fileType));
 	if(firstChar == 0x25)
 	{
-		if(checkFile(file, {0x25, 0x50, 0x44, 0x46})){
+		if(checkFile(file, [0x25, 0x50, 0x44, 0x46])){
 			out->contentType = "application/pdf";
 			out->contentDisposition = ".pdf";
 			return out;
