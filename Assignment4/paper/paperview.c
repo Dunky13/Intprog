@@ -172,6 +172,7 @@ int main(int argc, char **argv) {
     CGI_free_varlist(varlist);	
 	printf("Content-type: application/json\r\n\r\n");
 	printf("Value: %d\n", value);
+	return 0;
 	/*
 	if(value < 0)
 	{
