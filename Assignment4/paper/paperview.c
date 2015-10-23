@@ -120,7 +120,7 @@ struct fileType* getContentType(char* file){
 	}
 	else if(firstChar == 0xFF)
 	{
-		if(checkFile(file, JGP)){
+		if(checkFile(file, JPG)){
 			out->contentType = "image/jpeg";
 			out->contentDisposition = ".jpg";
 			return out;
