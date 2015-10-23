@@ -65,8 +65,8 @@ struct fileType* getContentType(char* file){
 	struct fileType *out = (struct fileType*) malloc(sizeof(struct fileType));
 	
 	int PDF[4] 	= {0x25, 0x50, 0x44, 0x46};
-	int DOCX[8] = {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00};
-	int JAR[7] 	= {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x08};
+	int DOCX[8] = {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00};
+	//int JAR[7] 	= {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x08};
 	int ZIP[7] 	= {0x50, 0x4B, 0x03, 0x04, 0x0A, 0x00, 0x00};
 	int DOC1[8] = {0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1};
 	int DOC2[8] = {0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1, 0x00};
@@ -74,11 +74,14 @@ struct fileType* getContentType(char* file){
 	int RTF[6] 	= {0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31};
 	int JPG[3] 	= {0xFF, 0xD8, 0xFF};
 	
+	int found = 0;
+	
 	if(firstChar == 0x25)
 	{
 		if(checkFile(file, PDF)){
 			out->contentType = "application/pdf";
 			out->contentDisposition = ".pdf";
+			found = 1;
 		}
 	}
 	else if(firstChar == 0x50)
@@ -86,14 +89,17 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, DOCX)){
 			out->contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 			out->contentDisposition = ".docx";
+			found = 1;
 		}
-		if(checkFile(file, JAR)){
+		/*else if(checkFile(file, JAR)){
 			out->contentType = "application/java-archive";
 			out->contentDisposition = ".jar";
-		}
-		if(checkFile(file, ZIP)){
+			found = 1;
+		}*/
+		else if(checkFile(file, ZIP)){
 			out->contentType = "application/zip";
 			out->contentDisposition = ".zip";
+			found = 1;
 		}
 	}
 	else if(firstChar == 0x0D || firstChar == 0xD0 || firstChar == 0xCF)
@@ -103,6 +109,7 @@ struct fileType* getContentType(char* file){
 			checkFile(file, DOC3)){
 			out->contentType = "application/msword";
 			out->contentDisposition = ".doc";
+			found = 1;
 		}
 	}
 	else if(firstChar == 0x7B)
@@ -110,6 +117,7 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, RTF)){
 			out->contentType = "text/richtext";
 			out->contentDisposition = ".rtf";
+			found = 1;
 		}
 	}
 	else if(firstChar == 0xFF)
@@ -117,9 +125,10 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, JPG)){
 			out->contentType = "image/jpeg";
 			out->contentDisposition = ".jpg";
+			found = 1;
 		}
 	}
-	else{
+	if(!found){
 		out->contentType = "text/plain";
 		out->contentDisposition = "";
 	}
