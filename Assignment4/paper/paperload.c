@@ -88,7 +88,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 */
 
 int main(int argc, char **argv) {
-	printf("Location: ../");
+	printf("Location: ../\r\n\r\n");
 	return 0;
 	/*
 	CLIENT *cl;
