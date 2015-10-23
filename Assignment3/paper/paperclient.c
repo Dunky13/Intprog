@@ -197,7 +197,6 @@ int main(int argc, char** argv)
 	if(argc == 1){
 		return printUsage();
 	}
-	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
 	else if(argc > 2)
 	{			
 		cl = createClient(argv[1]);
