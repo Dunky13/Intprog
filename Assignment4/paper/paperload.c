@@ -92,8 +92,8 @@ int main(int argc, char **argv) {
 	
     if ((varlist = CGI_get_all(0)) == NULL || 
 		varlist == 0 || 
-		(varlist = CGI_get_post(varlist)) == NULL || 
-		varlist == 0
+		(varlist = CGI_get_post(varlist, 0)) == NULL || 
+		varlist == 0)
 	{
         redirectError("No CGI post data received");
         return 0;
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 	cl = createClient();
-	value = getArticle(cl, value);
+	value = addArticle(cl, authorVal, titleVal, fileVal);
 	clnt_destroy(cl);
 	if(value < 0){
 		redirectError("Add Article Error");
