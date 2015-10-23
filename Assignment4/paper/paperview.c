@@ -73,6 +73,7 @@ struct fileType* getContentType(char* file){
 	int DOC3[4] = {0x0D, 0x44, 0x4F, 0x43};
 	int RTF[6] 	= {0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31};
 	int JPG[3] 	= {0xFF, 0xD8, 0xFF};
+	int PNG[8] 	= {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
 	
 	int found = 0;
 	
@@ -120,6 +121,14 @@ struct fileType* getContentType(char* file){
 			found = 1;
 		}
 	}
+	else if(firstChar == 0x89)
+	{
+		if(checkFile(file, PNG)){
+			out->contentType = "image/png";
+			out->contentDisposition = ".png";
+			found = 1;
+		}
+	}
 	else if(firstChar == 0xFF)
 	{
 		if(checkFile(file, JPG)){
@@ -130,7 +139,7 @@ struct fileType* getContentType(char* file){
 	}
 	if(!found){
 		out->contentType = "text/plain";
-		out->contentDisposition = "";
+		out->contentDisposition = ".txt";
 	}
 	return out;
 }
