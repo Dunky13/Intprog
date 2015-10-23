@@ -88,9 +88,11 @@ int main(int argc, char **argv) {
 	const char *title = "title";
 	const char *file = "file";
 	
+	
+	
 	const char* authorTmp;
 	const char* titleTmp;
-	const char* fileTmp;
+	CGI_value* fileValue;
 	
 	char* authorVal;
 	char* titleVal;
@@ -98,7 +100,7 @@ int main(int argc, char **argv) {
 	
 	
     if ((varlist = CGI_get_all(0)) == NULL || 
-		varlist == 0 || 
+		varlist == 0|| 
 		(varlist = CGI_get_post(varlist, 0)) == NULL || 
 		varlist == 0)
 	{
@@ -108,19 +110,23 @@ int main(int argc, char **argv) {
 	
 	if(((authorTmp = CGI_lookup(varlist, author)) == NULL) ||
 		((titleTmp = CGI_lookup(varlist, title)) == NULL) ||
-		((fileTmp = CGI_lookup(varlist, file)) == NULL))
+		((fileValue = CGI_lookup_all(varlist, file)) == NULL))
 		{
 			redirectError("No CGI post data received");
 			return 0;
 		}
+	if(fileValue == 0 || fileValue[1] == 0){
+		redirectError("No file was uploaded");
+		return 0;
+	}
 	
 	authorVal 	= (char*) malloc(strlen(authorTmp)*sizeof(char));
 	titleVal 	= (char*) malloc(strlen(titleTmp)*sizeof(char));
-	fileVal 	= (char*) malloc(strlen(fileTmp)*sizeof(char));
+	fileVal 	= (char*) malloc(strlen(fileValue[0])*sizeof(char));
 	
 	strcpy(authorVal, authorTmp);
 	strcpy(titleVal, titleTmp);
-	strcpy(fileVal, fileTmp);
+	strcpy(fileVal, fileValue[0]);
 	
     CGI_free_varlist(varlist);	
 
