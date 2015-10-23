@@ -127,6 +127,10 @@ struct fileType* getContentType(char* file){
 }
 int getArticle(CLIENT *cl, int article_id)
 {
+	printf("Content-type: application/json\r\n\r\n");
+	printf("Value: %d\n", article_id);
+	return 0;
+	/*
 	int_in in;
 	paper_data *out;
 	int i;
@@ -151,6 +155,7 @@ int getArticle(CLIENT *cl, int article_id)
 		}
 	}
 	return 0;
+	*/
 }
 
 int main(int argc, char **argv) {
@@ -170,10 +175,7 @@ int main(int argc, char **argv) {
 	
 	value = parseInt(input);
     CGI_free_varlist(varlist);	
-	printf("Content-type: application/json\r\n\r\n");
-	printf("Value: %d\n", value);
-	return 0;
-	/*
+
 	if(value < 0)
 	{
 		printReason("Not correct number received");
@@ -185,5 +187,4 @@ int main(int argc, char **argv) {
 	clnt_destroy(cl);
 	
 	return value;
-	*/
 }
