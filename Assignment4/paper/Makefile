@@ -3,7 +3,7 @@ CCGI = -I ../ccgi
 CFLAGS 	= -g -Wall $(CCGI)
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-all: build papers paperinfo paperview
+all: build papers paperinfo paperview paperload
 
 build: paperserver paperclient
 
@@ -18,6 +18,10 @@ paperinfo: paperinfo.o rpcfunc_clnt.o rpcfunc_xdr.o
 paperview: paperview.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperview.cgi paperview.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
 	ln -s $(ROOT_DIR)/paperview.cgi ../web/cgi-bin/paperview.cgi	
+	
+paperload: paperload.o rpcfunc_clnt.o rpcfunc_xdr.o 
+	$(CC) -o paperload.cgi paperload.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
+	ln -s $(ROOT_DIR)/paperload.cgi ../web/cgi-bin/paperload.cgi	
 	
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
@@ -36,6 +40,9 @@ paperinfo.o: paperinfo.c rpcfunc.h
 
 paperview.o: paperview.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperview.o paperview.c
+
+paperload.o: paperload.c rpcfunc.h
+	$(CC) $(CFLAGS) -c -o paperload.o paperload.c
 
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
