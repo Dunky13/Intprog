@@ -79,7 +79,6 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, PDF)){
 			out->contentType = "application/pdf";
 			out->contentDisposition = ".pdf";
-			return out;
 		}
 	}
 	else if(firstChar == 0x50)
@@ -87,17 +86,14 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, DOCX)){
 			out->contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 			out->contentDisposition = ".docx";
-			return out;
 		}
 		if(checkFile(file, JAR)){
 			out->contentType = "application/java-archive";
 			out->contentDisposition = ".jar";
-			return out;
 		}
 		if(checkFile(file, ZIP)){
 			out->contentType = "application/zip";
 			out->contentDisposition = ".zip";
-			return out;
 		}
 	}
 	else if(firstChar == 0x0D || firstChar == 0xD0 || firstChar == 0xCF)
@@ -107,7 +103,6 @@ struct fileType* getContentType(char* file){
 			checkFile(file, DOC3)){
 			out->contentType = "application/msword";
 			out->contentDisposition = ".doc";
-			return out;
 		}
 	}
 	else if(firstChar == 0x7B)
@@ -115,7 +110,6 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, RTF)){
 			out->contentType = "text/richtext";
 			out->contentDisposition = ".rtf";
-			return out;
 		}
 	}
 	else if(firstChar == 0xFF)
@@ -123,15 +117,13 @@ struct fileType* getContentType(char* file){
 		if(checkFile(file, JPG)){
 			out->contentType = "image/jpeg";
 			out->contentDisposition = ".jpg";
-			return out;
 		}
 	}
-	else
-	{
+	else{
 		out->contentType = "text/plain";
 		out->contentDisposition = "";
-		return out;
 	}
+	return out;
 }
 int getArticle(CLIENT *cl, int article_id)
 {
