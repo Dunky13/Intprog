@@ -199,8 +199,13 @@ int main(int argc, char** argv)
 	}
 	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
 	else if(argc > 2)
-	{
+	{			
 		cl = createClient(argv[1]);
+	}
+	
+	if(cl == NULL)
+	{
+		return printUsage();
 	}
 	while((c = getopt(argc, argv, "a:f:i:r:hl")) != -1)
 	{
@@ -281,8 +286,10 @@ int main(int argc, char** argv)
 			output = printUsage();
 			break;
 		}
+		clnt_destroy(cl);
 		return output;
 	}
+	clnt_destroy(cl);
 	printf("WTF happened? %d args provided", argc);
 	return -1;
 }
