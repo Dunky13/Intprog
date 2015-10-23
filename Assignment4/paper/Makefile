@@ -3,7 +3,7 @@ CCGI = -I ../ccgi
 CFLAGS 	= -g -Wall $(CCGI)
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-all: build papers paperinfo
+all: build papers paperinfo paperview
 
 build: paperserver paperclient
 
