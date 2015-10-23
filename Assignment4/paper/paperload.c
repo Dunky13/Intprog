@@ -6,7 +6,7 @@
 #include "ccgi.h"
 
 #define HOST "localhost"
-
+/*
 struct fileType{
 	char* contentType;
 	char* contentDisposition;
@@ -60,89 +60,6 @@ int checkFile(char* file, int TEST[])
 	
 }
 
-struct fileType* getContentType(char* file){
-	int firstChar = file[0] < 0 ? 256 + file[0]: file[0];
-	struct fileType *out = (struct fileType*) malloc(sizeof(struct fileType));
-	
-	int PDF[4] 	= {0x25, 0x50, 0x44, 0x46};
-	int DOCX[8] = {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00};
-	//int JAR[7] 	= {0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x08};
-	int ZIP[7] 	= {0x50, 0x4B, 0x03, 0x04, 0x0A, 0x00, 0x00};
-	int DOC1[8] = {0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1};
-	int DOC2[8] = {0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1, 0x00};
-	int DOC3[4] = {0x0D, 0x44, 0x4F, 0x43};
-	int RTF[6] 	= {0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31};
-	int JPG[3] 	= {0xFF, 0xD8, 0xFF};
-	int PNG[8] 	= {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
-	
-	int found = 0;
-	
-	if(firstChar == 0x25)
-	{
-		if(checkFile(file, PDF)){
-			out->contentType = "application/pdf";
-			out->contentDisposition = ".pdf";
-			found = 1;
-		}
-	}
-	else if(firstChar == 0x50)
-	{
-		if(checkFile(file, DOCX)){
-			out->contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-			out->contentDisposition = ".docx";
-			found = 1;
-		}
-		/*else if(checkFile(file, JAR)){
-			out->contentType = "application/java-archive";
-			out->contentDisposition = ".jar";
-			found = 1;
-		}*/
-		else if(checkFile(file, ZIP)){
-			out->contentType = "application/zip";
-			out->contentDisposition = ".zip";
-			found = 1;
-		}
-	}
-	else if(firstChar == 0x0D || firstChar == 0xD0 || firstChar == 0xCF)
-	{
-		if(checkFile(file, DOC1) ||
-			checkFile(file, DOC2) ||
-			checkFile(file, DOC3)){
-			out->contentType = "application/msword";
-			out->contentDisposition = ".doc";
-			found = 1;
-		}
-	}
-	else if(firstChar == 0x7B)
-	{
-		if(checkFile(file, RTF)){
-			out->contentType = "text/richtext";
-			out->contentDisposition = ".rtf";
-			found = 1;
-		}
-	}
-	else if(firstChar == 0x89)
-	{
-		if(checkFile(file, PNG)){
-			out->contentType = "image/png";
-			out->contentDisposition = ".png";
-			found = 1;
-		}
-	}
-	else if(firstChar == 0xFF)
-	{
-		if(checkFile(file, JPG)){
-			out->contentType = "image/jpeg";
-			out->contentDisposition = ".jpg";
-			found = 1;
-		}
-	}
-	if(!found){
-		out->contentType = "text/plain";
-		out->contentDisposition = ".txt";
-	}
-	return out;
-}
 int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
 	paper_information 	*in;
@@ -168,6 +85,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 	printf("%d\n", *out);
 	return 0;
 }
+*/
 
 int main(int argc, char **argv) {
 	printf("Location: ../");
