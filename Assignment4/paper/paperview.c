@@ -170,6 +170,9 @@ int main(int argc, char **argv) {
 	
 	value = parseInt(input);
     CGI_free_varlist(varlist);	
+	printf("Content-type: application/json\r\n\r\n");
+	printf("Value: %d\n", value);
+	/*
 	if(value < 0)
 	{
 		printReason("Not correct number received");
@@ -181,5 +184,5 @@ int main(int argc, char **argv) {
 	clnt_destroy(cl);
 	
 	return value;
-	
+	*/
 }
