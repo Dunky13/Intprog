@@ -1,4 +1,4 @@
-public interface Hotel extends java.rmi.Remote
+public interface HotelInterface extends java.rmi.Remote
 { 
 	public int[] listAvailableRooms() throws java.rmi.RemoteException; 
 

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "rpcfunc.h"
+#include "paperserver.h"
 
 struct paper_list_out* head;
 struct paper_list_out* tail;

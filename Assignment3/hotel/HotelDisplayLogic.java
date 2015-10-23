@@ -1,7 +1,7 @@
 import java.io.PrintWriter;
 
 abstract public class HotelDisplayLogic{
-	protected Hotel hotelObject;
+	protected HotelInterface hotelObject;
 
 	protected void performAction(PrintWriter out, int action, int roomType, String guestName){
 		if(action == 0){

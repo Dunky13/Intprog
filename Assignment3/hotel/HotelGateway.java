@@ -7,7 +7,7 @@ import java.io.IOException;
 public class HotelGateway{
 	static final int PORT = 3333;
 
-	private Hotel hotelObject;
+	private HotelInterface hotelObject;
 
 	public HotelGateway(){
 
@@ -15,7 +15,7 @@ public class HotelGateway{
 
 	private void makeHotelObject(String serverAddress){
 		try{
-		    hotelObject = (Hotel) Naming.lookup("rmi://" + serverAddress + "/HotelService");
+		    hotelObject = (HotelInterface) Naming.lookup("rmi://" + serverAddress + "/HotelService");
 		} 
 		catch (Exception e){
 			System.out.println("Received Exception:");

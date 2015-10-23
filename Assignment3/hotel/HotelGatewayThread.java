@@ -8,7 +8,7 @@ import java.io.IOException;
 class HotelGatewayThread extends HotelDisplayLogic implements Runnable{
 	private Socket clientSocket;
 
-	public HotelGatewayThread(Socket clientSocket, Hotel hotelObject){
+	public HotelGatewayThread(Socket clientSocket, HotelInterface hotelObject){
 		this.clientSocket = clientSocket;
 		this.hotelObject = hotelObject;
 	}

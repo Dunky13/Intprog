@@ -9,7 +9,7 @@ public class HotelClient extends HotelDisplayLogic{
 
 	private void makeHotelObject(String serverAddress){
 		try{
-		    hotelObject = (Hotel) Naming.lookup("rmi://" + serverAddress + "/HotelService");
+		    hotelObject = (HotelInterface) Naming.lookup("rmi://" + serverAddress + "/HotelService");
 		} 
 		catch (Exception e){
 			out.println("Received Exception:");

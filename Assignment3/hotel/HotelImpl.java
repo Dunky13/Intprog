@@ -1,4 +1,4 @@
-public class HotelImpl extends java.rmi.server.UnicastRemoteObject implements Hotel{
+public class HotelImpl extends java.rmi.server.UnicastRemoteObject implements HotelInterface{
 	private HotelRoomType[] rooms;
 	private int totalCapacity;
 

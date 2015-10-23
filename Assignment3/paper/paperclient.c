@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include <unistd.h>
 
-#include "rpcfunc.h"
+#include "paperserver.h"
 
 struct fileParams{
 	char* buffer;
