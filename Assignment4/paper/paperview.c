@@ -127,10 +127,6 @@ struct fileType* getContentType(char* file){
 }
 int getArticle(CLIENT *cl, int article_id)
 {
-	printf("Content-type: application/json\r\n\r\n");
-	printf("Value: %d\n", article_id);
-	return 0;
-	/*
 	int_in in;
 	paper_data *out;
 	int i;
@@ -155,7 +151,6 @@ int getArticle(CLIENT *cl, int article_id)
 		}
 	}
 	return 0;
-	*/
 }
 
 int main(int argc, char **argv) {
