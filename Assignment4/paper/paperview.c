@@ -150,7 +150,7 @@ int getArticle(CLIENT *cl, int article_id)
 		return 1;
 	}
 	contentInfo = getContentType(out->paper_data_val);
-	printf("Content-disposition: attachment; filename=\"paper%02d%s\"\r\n\r\n", article_id, contentInfo->contentDisposition);
+	printf("Content-disposition: inline; filename=\"paper%02d%s\"\r\n\r\n", article_id, contentInfo->contentDisposition);
 	printf("Content-type: %s\r\n\r\n", contentInfo->contentType);
 	if(out->paper_data_len > 0)
 	{
