@@ -61,7 +61,7 @@ int checkFile(char* file, int TEST[])
 }
 
 struct fileType* getContentType(char* file){
-	int firstChar = file[0];
+	int firstChar = file[0] < 0 ? 256 + file[0]: file[0];
 	struct fileType *out = (struct fileType*) malloc(sizeof(struct fileType));
 	
 	int PDF[4] 	= {0x25, 0x50, 0x44, 0x46};
