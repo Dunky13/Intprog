@@ -199,10 +199,13 @@ int main(int argc, char** argv)
 	}
 	//else if(argc == 2) -> should only be -h, and either -h or any other command will show printUsage
 	else if(argc > 2)
-	{
-		if(argv[1][0] == '-')
-			return printUsage();
+	{			
 		cl = createClient(argv[1]);
+	}
+	
+	if(cl == NULL)
+	{
+		return printUsage();
 	}
 	while((c = getopt(argc, argv, "a:f:i:r:hl")) != -1)
 	{
