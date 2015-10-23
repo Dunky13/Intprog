@@ -6,29 +6,18 @@
 #include "ccgi.h"
 
 #define HOST "localhost"
-/*
-struct fileType{
-	char* contentType;
-	char* contentDisposition;
+#define SUCCESS "../paperinfo.php"
+#define ERROR "../papererror.php"
+struct fileParams{
+	char* buffer;
+	long length;
 };
-
-void printReason(char* reason){
-	printf("Content-type: application/json\r\n\r\n");
-	printf("{\"reason\": \"%s\"}", reason);
+void redirectError(char* reason){
+	printf("Location: %s?reason=\"%s\"\r\n\r\n", ERROR, reason);
 }
-int parseInt(const char* argv)
-{
-	int id;
-	char* end;
-	id = strtol(argv, &end, 10);
-	if(!*end)
-	{
-		return id;
-	}
-	else
-	{
-		return -1;
-	}
+
+void redirectSuccess(int id){
+	printf("Location: %s?id=%d&new=1\r\n\r\n", SUCCESS, id);
 }
 
 CLIENT* createClient(){
@@ -36,30 +25,34 @@ CLIENT* createClient(){
 	cl = clnt_create(HOST, RPC_FUNCTIONS, RPC_FUNC_VERS, "tcp");
 	if(cl == NULL)
 	{
-		printReason("Error creating RPC Client");
+		redirectError("Error creating RPC Client");
 		exit(1);
 	}
 	return cl;
 }
-
-int checkFile(char* file, int TEST[])
+struct fileParams *readFile(char* file_path)
 {
-	int i;
-	int buffVal;
-	for(i = 0; i < sizeof(TEST)/sizeof(TEST[0]); i++)
-	{
-		if(TEST[i] == 0x100)
-			continue;
-		buffVal = file[i] < 0 ? 256 + file[i]: file[i];
-		if(buffVal != TEST[i])
-		{
-			return 0;
-		}
-	}
-	return 1;
-	
-}
+	char* buffer;
+	long length;
+	struct fileParams *out = (struct fileParams*) malloc(sizeof(struct fileParams));
+	FILE* f = fopen (file_path, "rb");
 
+	if (f)
+	{
+		fseek (f, 0, SEEK_END);
+		length = ftell (f);
+		fseek (f, 0, SEEK_SET);
+		buffer = (char *)malloc (length+1);
+		if (buffer)
+		{
+			fread (buffer, length + 1, 1, f);
+		}
+		fclose (f);
+	}
+	out->length = length;
+	out->buffer = buffer;
+	return out;
+}
 int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 {
 	paper_information 	*in;
@@ -79,18 +72,14 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 
 	if (out==NULL)
 	{
-		printf("Error: %s\n",clnt_sperror(cl,"Add Article Error"));
-		return 1;
+		redirectError("Add Article Error");
+		return -1;
 	}
-	printf("%d\n", *out);
-	return 0;
+	return (int) out;
 }
-*/
 
 int main(int argc, char **argv) {
-	printf("Location: ../\r\n\r\n");
-	return 0;
-	/*
+
 	CLIENT *cl;
 	const char* authorVal;
 	const char* titleVal;
@@ -106,7 +95,7 @@ int main(int argc, char **argv) {
 		(varlist = CGI_get_post(varlist)) == NULL || 
 		varlist == 0
 	{
-        printReason("No CGI post data received");
+        redirectError("No CGI post data received");
         return 0;
     }
 	
@@ -114,7 +103,7 @@ int main(int argc, char **argv) {
 		((titleVal = CGI_lookup(varlist, title)) == NULL) ||
 		((fileVal = CGI_lookup(varlist, file)) == NULL))
 		{
-			printReason("No CGI post data received");
+			redirectError("No CGI post data received");
 			return 0;
 		}
 	
@@ -122,13 +111,15 @@ int main(int argc, char **argv) {
 
 	if(value < 0)
 	{
-		printReason("Not correct number received");
+		redirectError("Not correct number received");
 		return 0;
 	}
 	cl = createClient();
 	value = getArticle(cl, value);
 	clnt_destroy(cl);
-	
+	if(value < 0){
+		redirectError("Add Article Error");
+	}
+	redirectSuccess(value);
 	return value;
-	*/
 }
