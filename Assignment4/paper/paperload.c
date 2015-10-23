@@ -75,7 +75,7 @@ int addArticle(CLIENT *cl, char* author, char* title, char* file_path)
 		redirectError("Add Article Error");
 		return -1;
 	}
-	return (int) out;
+	return (int) *out;
 }
 
 int main(int argc, char **argv) {
@@ -124,11 +124,6 @@ int main(int argc, char **argv) {
 	
     CGI_free_varlist(varlist);	
 
-	if(value < 0)
-	{
-		redirectError("Not correct number received");
-		return 0;
-	}
 	cl = createClient();
 	value = addArticle(cl, authorVal, titleVal, fileVal);
 	clnt_destroy(cl);
