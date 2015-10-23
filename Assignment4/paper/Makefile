@@ -14,6 +14,10 @@ papers: papers.o rpcfunc_clnt.o rpcfunc_xdr.o
 paperinfo: paperinfo.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperinfo.cgi paperinfo.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
 	ln -s $(ROOT_DIR)/paperinfo.cgi ../web/cgi-bin/paperinfo.cgi	
+
+paperview: paperview.o rpcfunc_clnt.o rpcfunc_xdr.o 
+	$(CC) -o paperview.cgi paperview.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl -L ../ccgi -lccgi
+	ln -s $(ROOT_DIR)/paperview.cgi ../web/cgi-bin/paperview.cgi	
 	
 paperclient: paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o 
 	$(CC) -o paperclient paperclient.o rpcfunc_clnt.o rpcfunc_xdr.o -lnsl  
@@ -29,6 +33,9 @@ papers.o: papers.c rpcfunc.h
 	
 paperinfo.o: paperinfo.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperinfo.o paperinfo.c
+
+paperview.o: paperview.c rpcfunc.h
+	$(CC) $(CFLAGS) -c -o paperview.o paperview.c
 
 paperclient.o: paperclient.c rpcfunc.h
 	$(CC) $(CFLAGS) -c -o paperclient.o paperclient.c
