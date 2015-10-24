@@ -4,10 +4,12 @@
 	</head>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script
+	$(document).ready(function(){
+	
 	$.ajax({
 		method: "GET",
-		url: "cgi-bin/papers.cgi",
 		success: function(data){
+		url: "cgi-bin/papers.cgi",
 			$(".paperlist").empty();
 			$(data).each(function(index){
 				var item = $("<li>").attr("class", "paper");
@@ -18,6 +20,8 @@
 				$(".paperlist").append(item);
 			});
 		}
+	});
+	
 	});
 	</script>
 	<body>
