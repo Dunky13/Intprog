@@ -3,7 +3,7 @@
 		<title>Papers.php</title>
 	</head>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script
+	<script>
 	$(document).ready(function(){
 	
 	$.ajax({
@@ -12,7 +12,7 @@
 		url: "cgi-bin/papers.cgi",
 			$(".paperlist").empty();
 			$(data).each(function(index){
-				var item = $("<li>").attr('class', "paper");
+				var item = $("<li>").attr("class", "paper");
 				var listID = $("<span>").attr("class", "id").text("["+this.id+"]");
 				var listAuthor = $("<span>").attr("class", "author").text(this.author);
 				var listTitle = $("<a>").attr("href", "cgi-bin/paperview.cgi?id="+this.id).attr("class", "title").text(this.title);
