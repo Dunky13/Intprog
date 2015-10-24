@@ -8,8 +8,8 @@
 	
 	$.ajax({
 		method: "GET",
-		success: function(data){
 		url: "cgi-bin/papers.cgi",
+		success: function(data){
 			$(".paperlist").empty();
 			$(data).each(function(index){
 				var item = $("<li>").attr("class", "paper");
