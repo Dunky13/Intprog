@@ -40,9 +40,9 @@ int getAllArticles(CLIENT *cl)
 			continue;
 		}
 		printf("\t{");
-		printf("\t\t\"id:\" %d,\n", out->id);
-		printf("\t\t\"title:\" %s,\n", out->paper_info->title);
-		printf("\t\t\"author:\" %s\n", out->paper_info->author);
+		printf("\t\t\"id\": %d,\n", out->id);
+		printf("\t\t\"title\": \"%s\",\n", out->paper_info->title);
+		printf("\t\t\"author\": \"%s\"\n", out->paper_info->author);
 		printf("\t}%s", out->next == NULL ? "\n" : ",\n");
 	} while((out = out->next) != NULL);
 	printf("]");
