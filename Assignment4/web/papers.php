@@ -1,3 +1,7 @@
+<?php
+include("config.php");
+?>
+
 <html>
 	<head>
 		<title>Papers.php</title>
@@ -8,7 +12,7 @@
 	
 	$.ajax({
 		method: "GET",
-		url: "cgi-bin/papers.cgi",
+		url: "<?php echo $WEB_BASECGI;?>/papers.cgi",
 		success: function(data){
 			$(".paperlist").empty();
 			$(data).each(function(index){
