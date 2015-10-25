@@ -100,19 +100,23 @@ int main(int argc, char **argv) {
 	
 	
     if ((varlist = CGI_get_all(0)) == NULL || 
-		varlist == 0|| 
-		(varlist = CGI_get_post(varlist, 0)) == NULL || 
 		varlist == 0)
 	{
-        redirectError("No CGI post data received");
+        redirectError("No CGI data received");
         return 0;
     }
+	if((varlist = CGI_get_post(varlist, 0)) == NULL || 
+		varlist == 0)
+	{
+		redirectError("No CGI post data received");
+        return 0;
+	}
 	
 	if(((authorTmp = CGI_lookup(varlist, author)) == NULL) ||
 		((titleTmp = CGI_lookup(varlist, title)) == NULL) ||
 		((fileValue = CGI_lookup_all(varlist, file)) == NULL))
 		{
-			redirectError("No CGI post data received");
+			redirectError("Not the right POST data received");
 			return 0;
 		}
 	if(fileValue == 0 || fileValue[1] == 0){
