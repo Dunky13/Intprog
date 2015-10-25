@@ -10,11 +10,10 @@ function defer(method) {
         setTimeout(function() { defer(method) }, 50);
 }
 defer(function(){
-  var paperID = {$paperID};
 	$.ajax({
 		method: "GET",
 		url: "{$cgibase}/paperinfo.cgi",
-		data: {id: paperID},
+		data: {ldelim}id: {$paperID}{rdelim},
 		success: function(data){
 			$(".paperlist").empty();
 			var item = $("<li>").attr("class", "paper");
