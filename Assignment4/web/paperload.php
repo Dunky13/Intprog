@@ -5,7 +5,8 @@ include("config.php");
 	<html>
 
 	<head>
-		<title>Papers.php</title>
+		<title>Paperload.php</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	</head>
 	<body>
 		<form enctype="multipart/form-data" method="post" action="<?php echo $WEB_BASECGI;?>/paperload.cgi">
