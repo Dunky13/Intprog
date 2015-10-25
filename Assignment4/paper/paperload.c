@@ -112,13 +112,21 @@ int main(int argc, char **argv) {
         return 0;
 	}
 	
-	if(((authorTmp = CGI_lookup(varlist, author)) == NULL) ||
-		((titleTmp = CGI_lookup(varlist, title)) == NULL) ||
-		((fileValue = CGI_lookup_all(varlist, file)) == NULL))
-		{
-			redirectError("Not the right POST data received");
-			return 0;
-		}
+	if(((authorTmp = CGI_lookup(varlist, author)) == NULL))
+	{
+		redirectError("Did not receive Author data received");
+		return 0;
+	}
+	if(((titleTmp = CGI_lookup(varlist, title)) == NULL))
+	{
+		redirectError("Did not receive Title data received");
+		return 0;
+	}
+	if(((fileValue = CGI_lookup_all(varlist, file)) == NULL))
+	{
+		redirectError("Did not receive File data received");
+		return 0;
+	}
 	if(fileValue == 0 || fileValue[1] == 0){
 		redirectError("No file was uploaded");
 		return 0;
