@@ -153,7 +153,7 @@ int getArticle(CLIENT *cl, int article_id)
 
 	out = fetch_paper_1(&in, cl);
 
-	if (out==NULL)
+	if (out==NULL || out->paper_data_len == 0)
 	{
 		printReason("Get Article Information Error");
 		return 1;
