@@ -1,6 +1,9 @@
 {extends file='tpl/index.html'}
 
 {block name="content"}
+{if isset($error)}
+<p>Error: {$error}</p>
+{else}
 <table class="roomlist">
 <thead>
     <tr><th>Room Type</th><th>Free Rooms</th></tr>
@@ -11,4 +14,5 @@
 {/foreach}
 </tbody>
 </table>
+{/if}
 {/block}
