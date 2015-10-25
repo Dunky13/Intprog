@@ -1,5 +1,10 @@
 {extends file='tpl/index.html'}
-{block name="hextra"}
+{block name="content"}
+{if isset($error)}
+<p>Error: {$error}</p>
+{else}
+<ul class="paperlist"></ul>
+{/if}
 <script>
 jQuery(document).ready(function(){
 	
@@ -21,11 +26,4 @@ jQuery(document).ready(function(){
 	
 	});
 </script>
-{/block}
-{block name="content"}
-{if isset($error)}
-<p>Error: {$error}</p>
-{else}
-<ul class="paperlist"></ul>
-{/if}
 {/block}
