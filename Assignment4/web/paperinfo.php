@@ -11,7 +11,7 @@ include("config.php");
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script>
 	$(document).ready(function(){
-		var isNew = <?php echo isset($_GET['new'] ? "true" : "false") ?>;
+		var isNew = <?php echo isset($_GET['new']) ? "true" : "false"; ?>;
 		$.ajax({
 			method: "GET",
 			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"];?>",
