@@ -99,13 +99,13 @@ int main(int argc, char **argv) {
 	char* fileVal;
 	
 	
-    if ((varlist = CGI_get_all(0)) == NULL || 
+    if ((varlist = CGI_get_all("/tmp/cgi-upload-XXXXXX")) == NULL || 
 		varlist == 0)
 	{
         redirectError("No CGI data received");
         return 0;
     }
-	if((varlist = CGI_get_post(varlist, 0)) == NULL || 
+	if((varlist = CGI_get_post(varlist, "/tmp/cgi-upload-XXXXXX")) == NULL || 
 		varlist == 0)
 	{
 		redirectError("No CGI post data received");
