@@ -88,7 +88,6 @@ int main(int argc, char **argv) {
 		printReason("Not correct number received");
 		return 0;
 	}
-	value = 0;
 	cl = createClient();
 	value = getArticleInformation(cl, value);
 	clnt_destroy(cl);
