@@ -52,9 +52,9 @@ int getArticleInformation(CLIENT *cl, int article_id)
 	if(!(strlen(out->author) == 0 && strlen(out->title) == 0))
 	{
 		printf("{");
-		printf("\t\"id:\" %d,\n", article_id);
-		printf("\t\"title:\" %s,\n", out->title);
-		printf("\t\"author:\" %s\n", out->author);
+		printf("\t\"id\": %d,\n", article_id);
+		printf("\t\"title\": \"%s\",\n", out->title);
+		printf("\t\"author\": \"%s\"\n", out->author);
 		printf("}");
 	}
 	else
