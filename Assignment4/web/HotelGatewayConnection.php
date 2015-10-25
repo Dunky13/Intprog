@@ -18,7 +18,7 @@ class HotelGatewayConnection{
 		$result = @socket_connect($this->socket, $address, $port);
 
 		if ($result === false){
-			throw new Exception('socket_connect() failed.\nReason: (' . $result . '): ' . socket_strerror(socket_last_error($this->socket)));
+			throw new Exception('socket_connect() failed. Reason: (' . $result . ') = ' . socket_strerror(socket_last_error($this->socket)));
 		}
 	}
 

@@ -3,11 +3,13 @@
 {block name="content"}
 {if isset($error)}
 <p>Error: {$error}</p>
+{elseif !empty($guest_list)}
+	<ol class="guests">
+	{foreach $guest_list as $name}
+	    <li>{$name}</li>
+	{/foreach}
+	</ol>
 {else}
-<ol class="guests">
-{foreach $guest_list as $name}
-    <li>{$name}</li>
-{/foreach}
-</ol>
+<p>List is empty</p>
 {/if}
 {/block}
