@@ -10,6 +10,8 @@ include("config.php");
 	<script>
 	$(document).ready(function(){
 		var isNew = <?php echo isset($_GET['new']) ? "true" : "false"; ?>;
+		if(isNew){$(".new").show();}
+		else	{$(".new").hide();}
 		$.ajax({
 			method: "GET",
 			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"];?>",
@@ -27,7 +29,7 @@ include("config.php");
 	});
 	</script>
 	<body>
-		<ul class="paperlist">
-		</ul>
+		<span class="new">The paper has succesfully uploaded, this is the paper's data</span>
+		<ul class="paperlist"></ul>
 	</body>
 </html>
