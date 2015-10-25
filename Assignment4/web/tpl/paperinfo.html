@@ -1,14 +1,38 @@
 {extends file='tpl/index.html'}
+{block name="hextra"}
+
+
+<script>
+function defer(method) {
+    if (window.jQuery)
+        method();
+    else
+        setTimeout(function() { defer(method) }, 50);
+}
+defer(function(){
+  var paperID = {$paperID};
+	$.ajax({
+		method: "GET",
+		url: "{$cgibase}/paperinfo.cgi",
+		data: {id: paperID},
+		success: function(data){
+			$(".paperlist").empty();
+			var item = $("<li>").attr("class", "paper");
+			var listID = $("<span>").attr("class", "id").text("["+data.id+"]");
+			var listAuthor = $("<span>").attr("class", "author").text(data.author);
+			var listTitle = $("<a>").attr("href", "{$cgibase}/paperview.cgi?id="+data.id).attr("class", "title").text(data.title);
+			item.append(listID).append(listAuthor).append(listTitle);
+			$(".paperlist").append(item);
+		}
+	});
+});
+</script>
+{/block}
 
 {block name="content"}
-{if isset($new)}
-<span class="new">The paper has succesfully uploaded, this is the paper's data:</span>
+{if isset($error)}
+<p>Error: {$error}</p>
+{else}
+<ul class="paperlist"></ul>
 {/if}
-<ul class="paperlist">
-  <li class="paper">
-    <span class="id">[{$paper.id}]</span>
-    <span class="author">{$paper.author}</span>
-    <a href="{$cgibase}/paperview.cgi?id={$paper.id}" class="title">{$paper.title}</a>
-  </li>
-</ul>
 {/block}
