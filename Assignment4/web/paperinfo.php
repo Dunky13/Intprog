@@ -17,4 +17,4 @@ $smarty->assign('cgibase', $WEB_BASECGI);
 $smarty->assign('new', isset($_GET['new']));
 $smarty->assign('paperID', isset($_GET['id']));
 
-$smarty->display('tpl/papers.html');
+$smarty->display('tpl/paperinfo.html');
