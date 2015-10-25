@@ -13,6 +13,6 @@ $smarty->setCacheDir($topdir.'/smarty/cache');
 $smarty->setConfigDir($topdir.'/smarty/configs');
 
 require 'config.php';
-
+$smarty->assign('cgibase', $WEB_BASECGI);
 
 $smarty->display('tpl/papers.html');
