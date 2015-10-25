@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.lang.StringBuffer;
 import java.net.Socket;
 import java.io.IOException;
+import java.net.SocketException;
 
 class HotelGatewayThread extends HotelDisplayLogic implements Runnable{
 	private Socket clientSocket;
@@ -34,8 +35,11 @@ class HotelGatewayThread extends HotelDisplayLogic implements Runnable{
 			try{
 				fullInput = in.readLine();
 			}
+			catch(SocketException e){	//remote has closed connection gracefully
+				closeConnection(out, clientSocket);
+				return;
+			}
 			catch(IOException e){
-				e.printStackTrace();
 				closeConnection(out, clientSocket);
 				return;
 			}

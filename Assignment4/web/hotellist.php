@@ -3,7 +3,6 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-
 $topdir=realpath(".");
 include('smarty/Smarty.class.php');
 $smarty = new Smarty;
@@ -19,7 +18,7 @@ try{
 	$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
 	$response = $hotel_gateway_connection->request('l');
 
-	$counts = explode("\t", $response);
+	$counts = explode("\t", trim($response));
 	$letter = 'A';
 
 	$output = array();

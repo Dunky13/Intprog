@@ -34,7 +34,14 @@ class HotelGatewayConnection{
 		$result = '';
 		$buf = '';
 
-		$this->readPrompt();
+		try{
+			if($this->readPrompt() == 2){		//empty response, for example no guests in list
+				return $result;
+			}
+		}
+		catch(Exception $e){
+			return $e->getMessage();
+		}
 
 		while($out = socket_read($this->socket, self::BUFFER_SIZE, PHP_NORMAL_READ)){
 			$result .= $out;
@@ -49,14 +56,14 @@ class HotelGatewayConnection{
 
 	private function readPrompt(){
 		if(false === ($bytes = socket_recv($this->socket, $buf, self::BUFFER_SIZE, MSG_PEEK))){
-			echo "socket_recv() failed; reason: " . socket_strerror(socket_last_error($socket)) . "\n";
+			throw new Exception("socket_recv() failed; reason: " . socket_strerror(socket_last_error($socket)));
 		}
-		elseif($buf == self::PROMPT){
+		if($buf == self::PROMPT){
 			socket_read($this->socket, $bytes);
-			return true;
+			return 1;
 		}
 
-		return false;
+		return 0;
 	}
 
 	public function __destroy(){

@@ -19,27 +19,29 @@
 \maketitle
 \section{A paper storage server}
 
-The assignment description is very ambiguous. Several statements can be interpreted in multiple ways. One example is that the template contains a `hotel', `paper' and `web' folder. It was unclear what to do with those folders. Initially the thought was that all the paper code - cgi as well as the php - must be in the projects folder, so all the paper storage code in the paper folder. Further more there is a `cgi-bin' folder within the `web' folder.
-This is fixed by having the `Makefile' create symbolic links to the web folder. As well as allowing Apache to follow these symlinks. 
+The assignment description is very ambiguous. Several statements can be interpreted in multiple ways. One example is that the template contains a `hotel', `paper' and `web' folder. It was unclear what to do with those folders. Initially the thought was that all the paper code - cgi as well as the php - must be in the projects folder, so all the paper storage code in the paper folder. Furthermore there is a `cgi-bin' folder within the `web' folder. For the cgi file, this is fixed by having the `Makefile' create symbolic links to the web folder. As well as allowing Apache to follow these symlinks. 
 
 \section{A hotel reservation server}
 
 PHP's \texttt{socket\_read} is normally a blocking call until the specified byte length has been received. The problem is that the message length is not known in advance. By using the \texttt{PHP\_NORMALLY\_READ} parameter, the call blocks until a carriage return or new line has been found. This is okay for output of commands, but there is no new line or carriage return after \texttt{hotelgw}. This causes the PHP script to hang after the output of the request has been received. To circumvent this, before invoking the \texttt{socket\_read} a \texttt{socket\_recv} with the peek parameter is obtained to look if the data coming next is output of the issued command or if it is the prompt. If it is the prompt, a standard \texttt{socket\_read} is called with the length of the prompt to remove it from the buffer. If the socket is closed before emptying the read buffer, we get an error at the gateway, as the socket as been closed prematurely.
 
+The prompt also causes problems at an empty guest list. As there is no output except for a new line, the prompt is printed twice. As the new line disappears mysteriously, \texttt{socket\_read} hangs. We could look if the prompt is printed twice to solve this. However, if the PHP script is really fast, it can also read the socket between the prints of the two prompts. This causes the script to hang again on \texttt{socket\_read}. We did not have a good way to solve this, except for modifying the response of the server.
+
 \section{Answers to questions}
 
 \subsection{Question A}
 
-An alternative would be to execute the code from a PHP script with an \texttt{exec} command. Where the compiled C-code could be executed. The C-code is still necessary as middle ware between Web code (PHP, HTML, JS) and the paper server (C Sun-RPC). Another thing that would need to change is the assignment of the port number. Currently the Sun-RPC code does not define a connecting port since it "knows". 
+An alternative would be to execute the code from a PHP script with an \texttt{exec} command which executes the compiled C-code. The C-code is still necessary as middleware between web code (PHP, HTML, JS) and the paper server (C Sun-RPC). Another thing that would need to change is the assignment of the port number. Currently the Sun-RPC code does not define a connecting port, since it "knows". 
 
 \subsection{Question B}
 
-Pros: It is very fast to display the data on a webpage since JSON needs to be parsed as well as displayed.
-Cons: When using the program for other means than a webpage, parsing JSON is easier and more standardized than a HTML page that can be displayed in many different ways.
+Pros: it is very fast to display the data on a webpage, since JSON needs to be parsed as well as displayed. Additionally, having PHP code in between makes the system more complex.
+
+Cons: When using the program for other means than a webpage, parsing JSON is easier and more standardized than a HTML page that can be displayed in many different ways. Additionally, writing PHP and a webserver that automatically generates necessary headers is easier than having to code in C and create the headers yourself.
 
 \subsection{Question C}
 
-We don't think it is possible since binary files over GET would show in the address bar and possibly crash browsers. If it were possible POST would still be more favorable than GET since POST data can be encoded in a way binary data is not lost. GET is considered `safe' for binary file transfer but even so the address bar would be filled with the file size worth of data. Which can be server megabytes big.
+We don't think it is possible, since binary files over GET would show in the address bar and possibly crash browsers. If it was possible, POST would still be more favorable than GET. POST data can be encoded in a way binary data is not lost. GET is considered `safe' for binary file transfer, but even so the address bar would be filled with the file size worth of data. This  can be serveral megabytes big.
 
 \subsection{Question D}
 
