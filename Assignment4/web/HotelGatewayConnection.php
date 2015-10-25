@@ -9,18 +9,16 @@ class HotelGatewayConnection{
 		$address = gethostbyname($address);
 
 		/* Create a TCP/IP socket. */
-		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		
 		if($this->socket === false){
-			echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-			return;
+			throw new Exception('socket_create() failed. Reason: ' . socket_strerror(socket_last_error()));
 		}
 
-		$result = socket_connect($this->socket, $address, $port);
+		$result = @socket_connect($this->socket, $address, $port);
 
 		if ($result === false){
-			echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($this->socket)) . "\n";
-			return;
+			throw new Exception('socket_connect() failed.\nReason: (' . $result . '): ' . socket_strerror(socket_last_error($this->socket)));
 		}
 	}
 

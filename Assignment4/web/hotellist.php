@@ -15,19 +15,24 @@ $smarty->setConfigDir($topdir.'/smarty/configs');
 require 'config.php';
 require 'HotelGatewayConnection.php';
 
-$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
-$response = $hotel_gateway_connection->request('l');
+try{
+	$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
+	$response = $hotel_gateway_connection->request('l');
 
-$counts = explode("\t", $response);
-$letter = 'A';
+	$counts = explode("\t", $response);
+	$letter = 'A';
 
-$output = array();
+	$output = array();
 
-foreach($counts as $count){
-	$output[] = array('type' => $letter, 'count' => $count);
-	$letter++;
+	foreach($counts as $count){
+		$output[] = array('type' => $letter, 'count' => $count);
+		$letter++;
+	}
+
+	$smarty->assign('results', $output);
 }
-
-$smarty->assign('results', $output);
+catch(Exception $e){
+	$smarty->assign('error', $e->getMessage());
+}
 
 $smarty->display('tpl/hotellist.html');

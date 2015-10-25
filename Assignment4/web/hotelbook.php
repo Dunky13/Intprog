@@ -25,11 +25,16 @@ if(isset($_POST['name'], $_POST['type'])){
 		require 'HotelGatewayConnection.php';
 		require 'config.php';
 		
-		$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
-		$response = $hotel_gateway_connection->request('b ' . $_POST['type'] . ' ' . $_POST['name']);
+		try{
+			$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
+			$response = $hotel_gateway_connection->request('b ' . $_POST['type'] . ' ' . $_POST['name']);
 
-		header('Location: hotelbook.php?response=' . urlencode($response));
-		die();
+			header('Location: hotelbook.php?response=' . urlencode($response));
+			die();
+		}
+		catch(Exception $e){
+			$smarty->assign('error', $e->getMessage());
+		}
 	}
 }
 elseif(isset($_GET['response'])){
