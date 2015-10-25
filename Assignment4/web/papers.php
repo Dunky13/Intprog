@@ -29,7 +29,7 @@ include("config.php");
 	});
 	</script>
 	<body>
-		<ul class="paperlist">
-		</ul>
+		<ul class="paperlist"></ul>
+		<a href="<?php echo $WEB_BASEPHP; ?>">Go Back Home</a>
 	</body>
 </html>
