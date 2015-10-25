@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 include("config.php");
 ?>
 
@@ -16,16 +14,13 @@ include("config.php");
 			method: "GET",
 			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"];?>",
 			success: function(data){
-				console.log(data);
 				$(".paperlist").empty();
-				//$(data).each(function(index){
-					var item = $("<li>").attr("class", "paper");
-					var listID = $("<span>").attr("class", "id").text("["+this.id+"]");
-					var listAuthor = $("<span>").attr("class", "author").text(this.author);
-					var listTitle = $("<a>").attr("href", "cgi-bin/paperview.cgi?id="+this.id).attr("class", "title").text(this.title);
-					item.append(listID).append(listAuthor).append(listTitle);
-					$(".paperlist").append(item);
-				//});
+				var item = $("<li>").attr("class", "paper");
+				var listID = $("<span>").attr("class", "id").text("["+data.id+"]");
+				var listAuthor = $("<span>").attr("class", "author").text(data.author);
+				var listTitle = $("<a>").attr("href", "cgi-bin/paperview.cgi?id="+data.id).attr("class", "title").text(data.title);
+				item.append(listID).append(listAuthor).append(listTitle);
+				$(".paperlist").append(item);
 			}
 		});
 	
