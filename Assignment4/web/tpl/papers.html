@@ -5,14 +5,14 @@ jQuery(document).ready(function(){
 	
 	$.ajax({
 		method: "GET",
-		url: "<?php echo $WEB_BASECGI;?>/papers.cgi",
+		url: "{$cgibase}/papers.cgi",
 		success: function(data){
 			$(".paperlist").empty();
 			$(data).each(function(index){
 				var item = $("<li>").attr("class", "paper");
 				var listID = $("<span>").attr("class", "id").text("["+this.id+"]");
 				var listAuthor = $("<span>").attr("class", "author").text(this.author);
-				var listTitle = $("<a>").attr("href", "cgi-bin/paperview.cgi?id="+this.id).attr("class", "title").text(this.title);
+				var listTitle = $("<a>").attr("href", "{$cgibase}/paperview.cgi?id="+this.id).attr("class", "title").text(this.title);
 				item.append(listID).append(listAuthor).append(listTitle);
 				$(".paperlist").append(item);
 			});
