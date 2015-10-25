@@ -1,13 +1,15 @@
 {extends file='tpl/index.html'}
-{block name="content"}
-{if isset($error)}
-<p>Error: {$error}</p>
-{else}
-<ul class="paperlist"></ul>
-{/if}
+{block name="hextra"}
+
+
 <script>
-jQuery(document).ready(function(){
-	
+function defer(method) {
+    if (window.jQuery)
+        method();
+    else
+        setTimeout(function() { defer(method) }, 50);
+}
+defer(function(){
 	$.ajax({
 		method: "GET",
 		url: "{$cgibase}/papers.cgi",
@@ -23,7 +25,14 @@ jQuery(document).ready(function(){
 			});
 		}
 	});
-	
-	});
+});
 </script>
+{/block}
+
+{block name="content"}
+{if isset($error)}
+<p>Error: {$error}</p>
+{else}
+<ul class="paperlist"></ul>
+{/if}
 {/block}
