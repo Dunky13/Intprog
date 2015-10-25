@@ -30,9 +30,9 @@ defer(function(){
 {/block}
 
 {block name="content"}
-{if isset($error)}
-<p>Error: {$error}</p>
-{else}
-<ul class="paperlist"></ul>
+{if isset($new)}
+<span class="new">The paper has succesfully uploaded, this is the paper's data:</span>
 {/if}
+<ul class="paperlist"></ul>
+
 {/block}
