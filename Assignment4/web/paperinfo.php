@@ -29,7 +29,7 @@ include("config.php");
 	});
 	</script>
 	<body>
-		<span class="new">The paper has succesfully uploaded, this is the paper's data</span>
+		<span class="new">The paper has succesfully uploaded, this is the paper's data:</span>
 		<ul class="paperlist"></ul>
 	</body>
 </html>
