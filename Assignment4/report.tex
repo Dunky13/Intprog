@@ -19,7 +19,7 @@
 \maketitle
 \section{A paper storage server}
 
-The assignment description is very ambiguous. Several statements can be interpreted in multiple ways. One example is that the template contains a `hotel', `paper' and `web' folder. Initially the thought was that all the paper code - cgi as well as the php must be in the projects folder, so all the paper storage code in the paper folder. Further more there is a `cgi-bin' folder within the `web' folder.
+The assignment description is very ambiguous. Several statements can be interpreted in multiple ways. One example is that the template contains a `hotel', `paper' and `web' folder. It was unclear what to do with those folders. Initially the thought was that all the paper code - cgi as well as the php - must be in the projects folder, so all the paper storage code in the paper folder. Further more there is a `cgi-bin' folder within the `web' folder.
 This is fixed by having the `Makefile' create symbolic links to the web folder. As well as allowing Apache to follow these symlinks. 
 
 \section{A hotel reservation server}
