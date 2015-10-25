@@ -14,12 +14,17 @@ $smarty->setConfigDir($topdir.'/smarty/configs');
 require 'config.php';
 require 'HotelGatewayConnection.php';
 
-$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
-$response = $hotel_gateway_connection->request('g');
+try{
+	$hotel_gateway_connection = new HotelGatewayConnection($HOTELGW_ADDRESS, $HOTELGW_PORT);
+	$response = $hotel_gateway_connection->request('g');
 
-$guest_list = explode("\n", $response);
-unset($guest_list[count($guest_list)-1]);//last one is empty
+	$guest_list = explode("\n", $response);
+	unset($guest_list[count($guest_list)-1]);//last one is empty
 
-$smarty->assign('guest_list', $guest_list);
+	$smarty->assign('guest_list', $guest_list);
+}
+catch(Exception $e){
+	$smarty->assign('error', $e->getMessage());
+}
 
 $smarty->display('tpl/participants.html');
