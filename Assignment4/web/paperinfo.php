@@ -15,6 +15,6 @@ $smarty->setConfigDir($topdir.'/smarty/configs');
 require 'config.php';
 $smarty->assign('cgibase', $WEB_BASECGI);
 $smarty->assign('new', isset($_GET['new']));
-$smarty->assign('paperID', isset($_GET['id']));
+$smarty->assign('paperID', $_GET['id']);
 
 $smarty->display('tpl/paperinfo.html');
