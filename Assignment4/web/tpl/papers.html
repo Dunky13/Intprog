@@ -1,17 +1,24 @@
 {extends file='tpl/index.html'}
-
+{block name="hextra"}
+$.ajax({
+		method: "GET",
+		url: "{$cgibase}/papers.cgi",
+		success: function(data){
+			$(".paperlist").empty();
+			$(data).each(function(index){
+				var item = $("<li>").attr("class", "paper");
+				var listID = $("<span>").attr("class", "id").text("["+this.id+"]");
+				var listAuthor = $("<span>").attr("class", "author").text(this.author);
+				var listTitle = $("<a>").attr("href", "{$cgibase}/paperview.cgi?id="+this.id).attr("class", "title").text(this.title);
+				item.append(listID).append(listAuthor).append(listTitle);
+				$(".paperlist").append(item);
+			});
+		}
+{/block}
 {block name="content"}
 {if isset($error)}
 <p>Error: {$error}</p>
 {else}
-<ul class="paperlist">
-{foreach $papers as $paper}
-  <li class="paper">
-    <span class="id">[{$paper.id}]</span>
-    <span class="author">{$paper.author}</span>
-    <a href="{$cgibase}/paperview.cgi?id={$paper.id}" class="title">{$paper.title}</a>
-  </li>
-{/foreach}
-</ul>
+<ul class="paperlist"></ul>
 {/if}
 {/block}
