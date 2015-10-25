@@ -16,6 +16,7 @@ include("config.php");
 			method: "GET",
 			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"];?>",
 			success: function(data){
+				console.log(data);
 				$(".paperlist").empty();
 				//$(data).each(function(index){
 					var item = $("<li>").attr("class", "paper");
