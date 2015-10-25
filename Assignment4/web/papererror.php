@@ -1,14 +1,19 @@
 <?php
-include("config.php");
-$errorMessage = isset($_GET['reason']) ? $_GET['reason'] : "Unknown reason";
-?>
 
-<html>
-	<head>
-		<title>Papererror.php</title>
-	</head>
-	<body>
-		<div class="new">An error has occurred: <span id="error"><?php echo $errorMessage;?></span></div><br/>
-		<a href="<?php echo $WEB_BASEPHP; ?>">Go Back Home</a>
-	</body>
-</html>
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+
+
+$topdir=realpath(".");
+include('smarty/Smarty.class.php');
+$smarty = new Smarty;
+$smarty->setTemplateDir($topdir.'/smarty/templates');
+$smarty->setCompileDir($topdir.'/smarty/templates_c');
+$smarty->setCacheDir($topdir.'/smarty/cache');
+$smarty->setConfigDir($topdir.'/smarty/configs');
+
+require 'config.php';
+$smarty->assign('cgibase', $WEB_BASECGI);
+$smarty->assign('errorMessage', isset($_GET['reason']) ? $_GET['reason'] : "Unknown reason");
+
+$smarty->display('tpl/papererror.html');
