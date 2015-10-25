@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 	}
 	if(((titleTmp = CGI_lookup(varlist, title)) == NULL) || strlen(authorTmp) == 0)
 	{
-		redirectError("Did not receive Title data ")
+		redirectError("Did not receive Title data ");
 		return 0;
 	}
 	if(((fileValue = CGI_lookup_all(varlist, file)) == NULL))
