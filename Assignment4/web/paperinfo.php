@@ -12,7 +12,7 @@ include("config.php");
 		var isNew = <?php echo isset($_GET['new'] ? "true" : "false") ?>;
 		$.ajax({
 			method: "GET",
-			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"]?>",
+			url: "<?php echo $WEB_BASECGI;?>/paperinfo.cgi?id=<?php echo $_GET["id"];?>",
 			success: function(data){
 				$(".paperlist").empty();
 				//$(data).each(function(index){
